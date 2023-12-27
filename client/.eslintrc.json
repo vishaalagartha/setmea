@@ -19,7 +19,13 @@
         "react"
     ],
     "rules": {
-        "react/react-in-jsx-scope": "off"
+        "react/react-in-jsx-scope": "off",
+        "@typescript-eslint/no-misused-promises": [
+        "error",
+        {
+          "checksVoidReturn": false
+        }
+      ]
     },
     "ignorePatterns": ["src/**/*.css", "src/react-app-env.d.ts"]
 }
