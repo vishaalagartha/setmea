@@ -1,14 +1,15 @@
 import type { FC } from 'react'
 import { useNavigate, Outlet } from 'react-router-dom'
 import { useEffect } from 'react'
-import { useAppDispatch } from '../store/rootReducer'
-import { setUser } from '../store/userSlice'
+import { useAppDispatch, useAppSelector } from '../store/rootReducer'
+import { setUser, userSelector } from '../store/userSlice'
 import { fetchUser as fetchUserAPI } from '../api/auth'
 import Header from './Header'
 
 const ProtectedRoute: FC = () => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
+  const user = useAppSelector(userSelector)
 
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -17,9 +18,9 @@ const ProtectedRoute: FC = () => {
       navigate('/login')
     }
     const fetchUser: () => void = async () => {
-      if (typeof uid === 'string') {
+      if (user._id === '' && typeof uid === 'string') {
         const res = await fetchUserAPI({ uid })
-        dispatch(setUser(res))
+        if (res.status === 200) dispatch(setUser(res.data))
       }
     }
     fetchUser()

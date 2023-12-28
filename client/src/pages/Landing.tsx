@@ -1,5 +1,5 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
-import { Row, Col, Form, Typography, Input, Button } from 'antd'
+import { Flex, Col, Form, Typography, Input, Button } from 'antd'
 import useMessage from 'antd/es/message/useMessage'
 import { useForm } from 'antd/es/form/Form'
 import { useDispatch } from 'react-redux'
@@ -12,7 +12,6 @@ import { useNavigate } from 'react-router-dom'
 const Landing: React.FC = () => {
   const [form] = useForm()
   const [registrationModalOpen, setRegistrationModalOpen] = useState(false)
-  // eslint-disable-next-line
   const dispatch = useDispatch()
   const [message, contextHolder] = useMessage()
   const navigate = useNavigate()
@@ -23,13 +22,16 @@ const Landing: React.FC = () => {
       const { username, password } = form.getFieldsValue()
       const res = await login({ username, password })
       if (res.status === 200) {
-        const { token, ...fieldsToStore } = res as { token: string; userId: string }
+        const { token, ...fieldsToStore } = res.data as {
+          token: string
+          _id: string
+        }
         dispatch(setUser(fieldsToStore))
         localStorage.setItem('token', token)
-        localStorage.setItem('id', fieldsToStore.userId)
+        localStorage.setItem('id', fieldsToStore._id)
         navigate('/')
       } else {
-        await message.open({ type: 'error', content: res.message })
+        await message.open({ type: 'error', content: res.data.message })
       }
     } catch (error) {
       console.error(error)
@@ -37,50 +39,48 @@ const Landing: React.FC = () => {
   }
 
   return (
-    <div>
-      <Row>
-        <Col xs={24} sm={24} md={14} lg={14} xl={14}>
-          <Row justify="center" align="middle">
-            {contextHolder}
-            <div>
-              <Typography.Title level={1}>Log In</Typography.Title>
-              <Form form={form}>
-                <Form.Item
-                  name="username"
-                  rules={[{ required: true, message: 'Please input a username' }]}>
-                  <Input prefix={<UserOutlined />} placeholder="Username" className="w-100 h-10" />
-                </Form.Item>
-                <Form.Item
-                  name="password"
-                  rules={[{ required: true, message: 'Please input a password!' }]}>
-                  <Input.Password prefix={<LockOutlined />} placeholder="Password" />
-                </Form.Item>
-                <Form.Item>
-                  <Button
-                    htmlType="submit"
-                    type="primary"
-                    onClick={() => {
-                      void handleLogin()
-                    }}>
-                    Log In
-                  </Button>
-                </Form.Item>
-              </Form>
-              <Typography.Text>
-                Have no account yet?{' '}
-                <Typography.Link
+    <Flex vertical={true} className="h-screen" justify="center">
+      {contextHolder}
+      <Col xs={12}>
+        <Flex vertical={true} justify="center" align="center">
+          <Typography.Title level={1}>Log In</Typography.Title>
+          <Form form={form}>
+            <Form.Item
+              name="username"
+              rules={[{ required: true, message: 'Please input a username' }]}>
+              <Input prefix={<UserOutlined />} placeholder="Username" className="w-100 h-10" />
+            </Form.Item>
+            <Form.Item
+              name="password"
+              rules={[{ required: true, message: 'Please input a password!' }]}>
+              <Input.Password prefix={<LockOutlined />} placeholder="Password" />
+            </Form.Item>
+            <Flex justify="center">
+              <Form.Item>
+                <Button
+                  htmlType="submit"
+                  type="primary"
                   onClick={() => {
-                    setRegistrationModalOpen(true)
+                    void handleLogin()
                   }}>
-                  Sign Up
-                </Typography.Link>
-              </Typography.Text>
-              <RegistrationModal open={registrationModalOpen} setOpen={setRegistrationModalOpen} />
-            </div>
-          </Row>
-        </Col>
-      </Row>
-    </div>
+                  Log In
+                </Button>
+              </Form.Item>
+            </Flex>
+            <Typography.Text>
+              Have no account yet?{' '}
+              <Typography.Link
+                onClick={() => {
+                  setRegistrationModalOpen(true)
+                }}>
+                Sign Up
+              </Typography.Link>
+            </Typography.Text>
+          </Form>
+          <RegistrationModal open={registrationModalOpen} setOpen={setRegistrationModalOpen} />
+        </Flex>
+      </Col>
+    </Flex>
   )
 }
 

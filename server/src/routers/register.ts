@@ -7,17 +7,17 @@ const router = Router()
 
 router.post('/', (async (req: Request, res: Response) => {
   try {
-    const { username, password } = req.body
+    const { username, password, identity } = req.body
     // Check if the andrewId is already taken
     const existingUser = await User.findOne({ username })
     if (existingUser !== null) {
       return res.status(409).json({
-        message: 'Username is already taken',
+        message: 'Username is already taken'
       })
     }
 
     // Create a new user document
-    const user = new User({ username, password })
+    const user = new User({ username, password, identity })
 
     // Save the user document to the database
     await user.save()
@@ -29,7 +29,7 @@ router.post('/', (async (req: Request, res: Response) => {
     console.error(error)
     return res.status(500).json({
       message: 'Error creating user',
-      error,
+      error
     })
   }
 }) as RequestHandler)

@@ -4,7 +4,7 @@ import { validate } from '../utils/auth-helpers'
 const authenticate: (req: Request, res: Response, next: NextFunction) => Promise<any> = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   const authHeader = req.header('authorization')
   if (authHeader === '' || authHeader === undefined) {

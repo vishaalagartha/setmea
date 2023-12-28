@@ -1,15 +1,18 @@
 import jwt from 'jsonwebtoken'
 
-const JWT_SECRET = process.env.JWT_SECRET === '' ? 'jwt_secret' : process.env.JWT_SECRET
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN === '' ? '1d' : process.env.JWT_EXPIRES_IN
-
 const generate: (uid: string) => string = (uid: string) => {
-  return jwt.sign({ uid }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN })
+  if (process.env.JWT_SECRET === null || process.env.JWT_SECRET === undefined || process.env.JWT_EXPIRES_IN === undefined) {
+    throw new Error('JWT_SECRET and JWT_EXPIRES_IN must be defined')
+  }
+  return jwt.sign({ uid }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN })
 }
 
-const validate: (token: string) => jwt.JwtPayload | null = (token: string) => {
+const validate: (token: string) => string | jwt.JwtPayload | null = (token: string) => {
   try {
-    return jwt.verify(token, JWT_SECRET)
+    if (process.env.JWT_SECRET === null || process.env.JWT_SECRET === undefined) {
+      return null
+    }
+    return jwt.verify(token, process.env.JWT_SECRET)
   } catch (err) {
     console.error(err)
     return null

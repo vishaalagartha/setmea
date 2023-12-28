@@ -8,7 +8,7 @@ const router = Router()
 // GET user by user id
 router.get('/:id/', (async (req: express.Request, res: express.Response) => {
   try {
-    const { id } = req.query
+    const { id } = req.params
     const user = await User.findOne({ _id: id })
     if (user === null || user === undefined) {
       res.status(404).json({ message: 'User not found' }).end()
@@ -25,7 +25,7 @@ router.get('/:id/', (async (req: express.Request, res: express.Response) => {
       .status(500)
       .json({
         message: 'Error finding user',
-        error,
+        error
       })
       .end()
   }

@@ -11,13 +11,13 @@ const request: (endpoint: string, options: Record<string, unknown>) => Promise<a
   }
 
   return await fetch(`http://localhost:8080/${endpoint}`, fetchOptions).then(async (response) => {
-    const body = await response.json()
+    const data = await response.json()
 
     if (response.ok) {
-      return { status: response.status, ...body }
+      return { status: response.status, data }
     } else {
       // eslint-disable-next-line
-      throw { status: response.status, ...body }
+      throw { status: response.status, data }
     }
   })
 }

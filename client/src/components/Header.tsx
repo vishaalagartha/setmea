@@ -1,5 +1,5 @@
 import type { FC, ReactNode } from 'react'
-import { Layout, Menu, Button } from 'antd'
+import { Layout, Button } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { resetUser } from '../store/userSlice'
@@ -21,17 +21,15 @@ const Header: FC<HeaderProps> = ({ children }: { children: ReactNode }) => {
   }
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Layout.Sider collapsible breakpoint="lg" collapsedWidth={0}>
-        <Menu theme="dark" mode="inline" />
-      </Layout.Sider>
-      <Layout className="site-layout">
+    <Layout className="h-screen">
+      <Layout>
         <Layout.Header>
+          <div className="logo" />
           <Button type="link" onClick={handleLogout}>
             <div style={{ color: 'white' }}>Logout</div>
           </Button>
         </Layout.Header>
-        <Layout.Content className="m-5">{children}</Layout.Content>
+        <Layout.Content className="m-5 h-full">{children}</Layout.Content>
       </Layout>
     </Layout>
   )

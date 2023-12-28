@@ -1,14 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { RootState } from './rootReducer'
 
+export enum Identity {
+  CLIMBER = 'climber',
+  SETTER = 'setter'
+}
 interface IUser {
   _id: string
   username: string
+  identity: Identity | null
 }
 
 const initialState = {
   _id: '',
-  username: ''
+  username: '',
+  identity: null
 }
 
 const userSlice = createSlice({
