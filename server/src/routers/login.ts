@@ -1,7 +1,7 @@
 import type express from 'express'
 import { Router } from 'express'
 import type { RequestHandler } from 'express'
-import User from '../models/users'
+import User from '../models/user'
 import { generate } from '../utils/auth-helpers'
 
 const router = Router()

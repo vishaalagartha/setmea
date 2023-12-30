@@ -64,7 +64,7 @@ enum State {
   'WA' = 'WA',
   'WV' = 'WV',
   'WI' = 'WI',
-  'WY' = 'WY',
+  'WY' = 'WY'
 }
 
-export type { IGym, State }
+export { State, type IGym }

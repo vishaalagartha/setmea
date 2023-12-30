@@ -24,7 +24,8 @@ server.listen(8080, () => {
   console.log('Server running on http://localhost:8080')
 })
 
-const MONGO_URL = 'mongodb+srv://vishaalagartha:ilostmylaptop123@setmea-cluster.5fzacie.mongodb.net/?retryWrites=true&w=majority'
+const MONGO_URL =
+  'mongodb+srv://vishaalagartha:ilostmylaptop123@setmea-cluster.5fzacie.mongodb.net/?retryWrites=true&w=majority'
 const connect: () => Promise<void> = async () => {
   try {
     await mongoose.connect(MONGO_URL)
@@ -32,6 +33,12 @@ const connect: () => Promise<void> = async () => {
     console.error(error)
   }
 }
-connect().then(() => { console.log('Connected to MongoDB server') }).catch((error) => { console.error(error) })
+connect()
+  .then(() => {
+    console.log('Connected to MongoDB server')
+  })
+  .catch((error) => {
+    console.error(error)
+  })
 
 app.use('/', routers)

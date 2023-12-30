@@ -1,6 +1,5 @@
 interface IGym {
   _id: string
-  _v: number
   name: string
   address: string
   city: string

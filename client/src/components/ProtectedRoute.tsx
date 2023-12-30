@@ -21,6 +21,7 @@ const ProtectedRoute: FC = () => {
       if (user._id === '' && typeof uid === 'string') {
         const res = await fetchUserAPI({ uid })
         if (res.status === 200) dispatch(setUser(res.data))
+        else navigate('/login')
       }
     }
     fetchUser()

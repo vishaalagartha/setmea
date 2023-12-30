@@ -1,7 +1,7 @@
 import type { RequestHandler, Request, Response } from 'express'
 import { Router } from 'express'
 import type { State } from '../types/gym'
-import { createGym, getGyms } from '../controllers/gyms'
+import { createGym, getGyms } from '../controllers/gym'
 
 const router = Router()
 
@@ -9,10 +9,7 @@ const router = Router()
 router.get('/', (async (req: Request, res: Response) => {
   try {
     const gyms = await getGyms()
-    res
-      .status(200)
-      .json(gyms)
-      .end()
+    res.status(200).json(gyms).end()
   } catch (error) {
     console.error(error)
     res
@@ -27,12 +24,14 @@ router.get('/', (async (req: Request, res: Response) => {
 // POST Gym
 router.post('/', (async (req: Request, res: Response) => {
   try {
-    const { name, address, city, state } = req.body as { name: string, address: string, city: string, state: State }
+    const { name, address, city, state } = req.body as {
+      name: string
+      address: string
+      city: string
+      state: State
+    }
     const gym = await createGym(name, address, city, state)
-    res
-      .status(201)
-      .json(gym.toObject())
-      .end()
+    res.status(201).json(gym.toObject()).end()
   } catch (error) {
     console.error(error)
     res

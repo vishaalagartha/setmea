@@ -42,7 +42,6 @@ const login = async ({ username, password }: AuthProps): Promise<any> => {
 
 const fetchUser = async ({ uid }: FetchUserProps): Promise<any> => {
   try {
-    console.log(uid)
     const res = await request(`users/${uid}`, {
       method: 'GET'
     })
