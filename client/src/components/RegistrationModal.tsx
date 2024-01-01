@@ -1,4 +1,4 @@
-import { Input, Modal, Form, Typography, Flex, Button, Radio } from 'antd'
+import { Input, Modal, Form, Typography, Flex, Button } from 'antd'
 import { useForm } from 'antd/es/form/Form'
 import { register } from '../api/auth'
 import { useAppDispatch } from '../store/rootReducer'
@@ -19,16 +19,12 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const [message, contextHolder] = useMessage()
-  const options = [
-    { label: 'Climber', value: 'climber' },
-    { label: 'Setter', value: 'setter' }
-  ]
 
   const handleRegistration: () => void = async () => {
     try {
       await form.validateFields()
-      const { username, password, identity } = form.getFieldsValue()
-      const res = await register({ username, password, identity })
+      const { username, password, email } = form.getFieldsValue()
+      const res = await register({ username, password, identity: 'climber', email })
       if (res.status === 201) {
         const { token, ...fieldsToStore } = res.data as { token: string; userId: string }
         dispatch(setUser(fieldsToStore))
@@ -70,17 +66,17 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
             label="Password"
             name="password"
             rules={[{ required: true, message: 'Please input a password' }]}>
-            <Input name="password" placeholder="Sharma" />
+            <Input.Password name="password" placeholder="Sharma" />
           </Form.Item>
-          <Flex justify="center">
-            <Form.Item
-              label="I am a"
-              name="identity"
-              initialValue="climber"
-              rules={[{ required: true }]}>
-              <Radio.Group options={options} optionType="button" buttonStyle="solid" />
-            </Form.Item>
-          </Flex>
+          <Form.Item
+            label="Email"
+            name="email"
+            rules={[
+              { type: 'email', message: 'Invalid email' },
+              { required: true, message: 'Please input a email' }
+            ]}>
+            <Input name="email" placeholder="crusher@bishop.com" />
+          </Form.Item>
           <Flex justify="space-around">
             <Button type="primary" onClick={handleRegistration}>
               Register

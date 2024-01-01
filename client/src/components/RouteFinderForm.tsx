@@ -1,5 +1,16 @@
 import React, { createContext, useEffect, useState } from 'react'
-import { AutoComplete, Flex, Form, Typography, Select, Input, Button } from 'antd'
+import {
+  AutoComplete,
+  Form,
+  Typography,
+  Select,
+  Input,
+  Button,
+  Row,
+  Col,
+  Divider,
+  Space
+} from 'antd'
 import { getGyms } from '../api/gym'
 import type { IGym } from '../types/gym'
 import { type IRoute, RouteTag } from '../types/route'
@@ -82,49 +93,66 @@ const RouteFinderForm: React.FC = () => {
   }
   return (
     <RoutesContext.Provider value={{ routes, setRoutes, filteredRoutes, setFilteredRoutes }}>
-      <Flex vertical={true}>
-        <Form form={form} layout={'horizontal'} className="flex-col">
-          <Typography.Title className="flex justify-center" level={3}>
-            I&apos;m setting at
-          </Typography.Title>
-          <Form.Item name="gym" className="flex justify-center">
-            <AutoComplete
-              style={{ width: 400 }}
-              placeholder="Pacific Pipe"
-              options={gyms.map((g) => ({
-                label: `${g.name} - ${g.address}, ${g.city}, ${g.state}`,
-                value: `${g.name}`
-              }))}
-              filterOption={(inputValue, option) => {
-                if (option === undefined) return false
-                return option.label.includes(inputValue)
-              }}
-              onSelect={handleSelect}
-              onClear={() => {
-                setRoutes([])
-              }}
-            />
-          </Form.Item>
-        </Form>
-        {routes.length > 0 && (
-          <Flex vertical={true} align="center">
+      <Form form={form}>
+        <Row justify="center">
+          <Typography.Title level={3}>I&apos;m setting at</Typography.Title>
+        </Row>
+        <Row justify="center">
+          <Col xs={24} md={12} lg={10}>
+            <Form.Item name="gym">
+              <AutoComplete
+                placeholder="Pacific Pipe"
+                options={gyms.map((g) => ({
+                  label: `${g.name} - ${g.address}, ${g.city}, ${g.state}`,
+                  value: `${g.name}`
+                }))}
+                filterOption={(inputValue, option) => {
+                  if (option === undefined) return false
+                  return option.label.includes(inputValue)
+                }}
+                onSelect={handleSelect}
+                onClear={() => {
+                  setRoutes([])
+                }}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+      </Form>
+      <Divider />
+      {routes.length > 0 && (
+        <div>
+          <Row justify="center">
             <Typography.Title level={5}>Filter Options</Typography.Title>
-            <Form form={filterForm} className="flex-col align-baseline">
-              <Typography.Text>Keywords (separate by comma):</Typography.Text>
-              <Form.Item name="keywords">
-                <Input placeholder="dyno,deadpoint,endurance" />
-              </Form.Item>
-              <Typography.Text>Tags:</Typography.Text>
-              <Form.Item name="tags">
-                <Select
-                  mode="multiple"
-                  allowClear
-                  style={{ width: 400 }}
-                  placeholder="Add tags to your climb"
-                  options={options}
-                />
-              </Form.Item>
-              <Flex justify="space-around" className="mb-5">
+          </Row>
+          <Form form={filterForm}>
+            <Row justify="center">
+              <Typography.Text>Keywords (separate by comma)</Typography.Text>
+            </Row>
+            <Row justify="center">
+              <Col xs={24} md={12} lg={10}>
+                <Form.Item name="keywords">
+                  <Input placeholder="dyno,deadpoint,endurance" />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row justify="center">
+              <Typography.Text>Tags</Typography.Text>
+            </Row>
+            <Row justify="center">
+              <Col xs={24} md={12} lg={10}>
+                <Form.Item name="tags">
+                  <Select
+                    mode="multiple"
+                    allowClear
+                    placeholder="Add tags to your climb"
+                    options={options}
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row justify="center">
+              <Space>
                 <Button type="primary" onClick={handleFilter}>
                   Filter
                 </Button>
@@ -135,12 +163,13 @@ const RouteFinderForm: React.FC = () => {
                   }}>
                   Reset
                 </Button>
-              </Flex>
-            </Form>
-          </Flex>
-        )}
-        <RouteList routes={filteredRoutes} />
-      </Flex>
+              </Space>
+            </Row>
+          </Form>
+        </div>
+      )}
+      <Divider />
+      {filteredRoutes.length > 0 && <RouteList routes={filteredRoutes} />}
     </RoutesContext.Provider>
   )
 }

@@ -12,15 +12,17 @@ const createRoute: (
   details: string,
   gym: string,
   tags: RouteTag[],
-  user: string
+  user: string,
+  zone: string
 ) => Promise<any> = async (
   goal: string,
   details: string,
   gym: string,
   tags: RouteTag[],
+  zone: string,
   user: string
 ) => {
-  const route = new Route({ goal, details, gym, tags, user })
+  const route = new Route({ goal, details, gym, tags, user, zone })
   await route.save()
 
   return route

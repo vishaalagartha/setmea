@@ -18,9 +18,11 @@ router.post('/', (async (req: express.Request, res: express.Response) => {
       res.status(404).json({ message: 'Invalid credentials' }).end()
       return
     }
-    const isPasswordVerified = user.comparePassword(password)
+    // eslint-disable-next-line
+    const isPasswordVerified = await user.comparePassword(password)
     if (!isPasswordVerified) {
       res.status(401).json({ message: 'Invalid credentials' }).end()
+      return
     }
     const token = generate(user._id.toString())
     const { password: _, ...fieldsToReturn } = user.toObject()

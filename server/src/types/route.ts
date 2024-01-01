@@ -8,6 +8,7 @@ interface IRoute {
   user: string
   setter: string
   votes: number
+  zone: string
   date: Date
 }
 

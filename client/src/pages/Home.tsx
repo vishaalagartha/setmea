@@ -1,6 +1,7 @@
 import React from 'react'
 import { useAppSelector } from '../store/rootReducer'
-import { Identity, userSelector } from '../store/userSlice'
+import { userSelector } from '../store/userSlice'
+import { Identity } from '../types/user'
 import RouteRequestForm from '../components/RouteRequestForm'
 import RouteFinderForm from '../components/RouteFinderForm'
 

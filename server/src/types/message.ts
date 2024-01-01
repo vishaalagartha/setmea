@@ -4,6 +4,7 @@ interface IMessage {
   content: string
   read: boolean
   date: Date
+  expireAt: Date
 }
 
 export type { IMessage }

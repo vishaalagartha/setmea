@@ -22,4 +22,42 @@ const createGym: (
   return gym
 }
 
-export { getGyms, createGym }
+const editGym: (
+  id: string,
+  name: string,
+  address: string,
+  city: string,
+  states: State
+) => Promise<any> = async (id: string, name: string, address: string, city: string, state: State) => {
+  const gym = await Gym.findByIdAndUpdate(id, { name, address, city, state })
+  return gym
+}
+
+const addGymZone: (id: string, zone: string) => Promise<any> = async (id: string, zone: string) => {
+  const gym = await Gym.findById(id)
+  if (gym !== null) {
+    gym.zones.push(zone)
+    await gym.save()
+    return gym
+  }
+  throw new Error('Invalid gym id.')
+}
+
+const deleteGymZone: (id: string, zone: string) => Promise<any> = async (id: string, zone: string) => {
+  const gym = await Gym.findById(id)
+  if (gym !== null) {
+    gym.zones = gym.zones.filter(z => z !== zone)
+    await gym.save()
+    return gym
+  }
+  throw new Error('Invalid gym id.')
+}
+
+const deleteGym: (
+  id: string
+) => Promise<any> = async (id: string) => {
+  const res = await Gym.findByIdAndDelete(id)
+  return res
+}
+
+export { getGyms, createGym, editGym, deleteGym, addGymZone, deleteGymZone }

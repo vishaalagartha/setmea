@@ -10,6 +10,7 @@ const RouteSchema = new mongoose.Schema(
     user: { type: Schema.Types.ObjectId, required: true },
     setter: { type: Schema.Types.ObjectId, default: null },
     votes: { type: Number, default: 0 },
+    zone: { type: String, default: null },
     date: { type: Date, default: Date.now }
   },
   {

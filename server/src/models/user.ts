@@ -6,25 +6,30 @@ const UserSchema = new mongoose.Schema(
   {
     username: { type: String, required: true },
     password: { type: String, required: true },
-    identity: { type: String, required: true, enum: ['climber', 'setter'] }
+    identity: { type: String, required: true, enum: ['climber', 'setter', 'admin', 'superuser'] },
+    email: { type: String, required: true },
+    height: { type: Number },
+    apeIndex: { type: Number },
+    weight: { type: Number },
+    location: { type: String }
   },
   {
     versionKey: false
   }
 )
-
 UserSchema.pre('save', async function (next) {
   try {
     if (this.isModified('password')) {
       if (this.password === undefined) {
         throw new Error('Invalid password')
       }
-      const salt = await bcrypt.genSalt()
+      const salt = await bcrypt.genSalt(10)
       const hashedPassword = await bcrypt.hash(this.password, salt)
       this.password = hashedPassword
     }
     next()
   } catch (error) {
+    console.log('error')
     if (error instanceof Error) next(error)
   }
 })

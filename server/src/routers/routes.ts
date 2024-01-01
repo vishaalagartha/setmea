@@ -4,7 +4,7 @@ import Route from '../models/route'
 import { type RouteTag, type IRouteWithUser, type IRoute } from '../types/route'
 import { createRoute, getRoutesByGym, deleteRoute } from '../controllers/route'
 import setUserIdFromToken from '../middlewares/setUserIdFromToken'
-import { getUserById } from '../controllers/user'
+import User from '../models/user'
 
 const router = Router()
 
@@ -15,8 +15,8 @@ router.get('/', (async (req: Request, res: Response) => {
     const routes = await getRoutesByGym(gymId) as IRoute[]
     const data: IRouteWithUser[] = []
     for (const route of routes) {
-      const user = await getUserById(route.user)
-      if (route instanceof Route) { data.push({ ...route.toObject(), username: user.username }) }
+      const user = await User.findById(route.user)
+      if (user !== null && route instanceof Route) { data.push({ ...route.toObject(), username: user.username }) }
     }
     res.status(200).json(data).end()
   } catch (error) {
@@ -33,14 +33,15 @@ router.get('/', (async (req: Request, res: Response) => {
 // POST route
 router.post('/', setUserIdFromToken, (async (req: Request, res: Response) => {
   try {
-    const { goal, details, gymId, tags, userId } = req.body as {
+    const { goal, details, gymId, tags, userId, zone } = req.body as {
       goal: string
       details: string
       gymId: string
       tags: RouteTag[]
+      zone: string
       userId: string
     }
-    const route = await createRoute(goal, details, gymId, tags, userId)
+    const route = await createRoute(goal, details, gymId, tags, zone, userId)
     res.status(201).json(route.toObject()).end()
   } catch (error) {
     console.error(error)

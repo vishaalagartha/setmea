@@ -6,7 +6,11 @@ import { setUser, userSelector } from '../store/userSlice'
 import { fetchUser as fetchUserAPI } from '../api/auth'
 import Header from './Header'
 
-const ProtectedRoute: FC = () => {
+interface ProtectedRouteProps {
+  admin?: boolean
+}
+
+const ProtectedRoute: FC<ProtectedRouteProps> = ({ admin }) => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const user = useAppSelector(userSelector)
@@ -26,6 +30,12 @@ const ProtectedRoute: FC = () => {
     }
     fetchUser()
   }, [])
+
+  useEffect(() => {
+    if (admin === true && (user.identity === 'setter' || user.identity === 'climber')) {
+      navigate('/login')
+    }
+  }, [user])
 
   return (
     <Header>

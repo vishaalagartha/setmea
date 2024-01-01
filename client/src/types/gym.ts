@@ -4,6 +4,7 @@ interface IGym {
   address: string
   city: string
   state: State
+  zones: string[]
 }
 
 enum State {

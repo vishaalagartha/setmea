@@ -18,7 +18,6 @@ const validate: (token: string) => string | jwt.JwtPayload | null = (token: stri
     }
     return jwt.verify(token, process.env.JWT_SECRET)
   } catch (err) {
-    console.error(err)
     return null
   }
 }

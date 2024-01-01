@@ -7,7 +7,8 @@ const GymSchema = new mongoose.Schema(
     name: { type: String, required: true },
     address: { type: String, required: true },
     city: { type: String, required: true },
-    state: { type: String, enum: Object.values(State), required: true }
+    state: { type: String, enum: Object.values(State), required: true },
+    zones: { type: [String], default: [] }
   },
   {
     versionKey: false

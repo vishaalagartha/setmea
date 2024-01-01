@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import mongoose from 'mongoose'
 import routers from './routers'
+import { init } from './utils/initDb'
 import 'dotenv/config'
 
 const app = express()
@@ -34,8 +35,9 @@ const connect: () => Promise<void> = async () => {
   }
 }
 connect()
-  .then(() => {
+  .then(async () => {
     console.log('Connected to MongoDB server')
+    await init()
   })
   .catch((error) => {
     console.error(error)

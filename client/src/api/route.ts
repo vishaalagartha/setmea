@@ -6,6 +6,7 @@ interface RouteProps {
   details: string
   gymId: string
   tags: [RouteTag]
+  zone: string
 }
 
 const getRoutesByGym = async ({ gymId }: { gymId: string }): Promise<any> => {
@@ -20,11 +21,11 @@ const getRoutesByGym = async ({ gymId }: { gymId: string }): Promise<any> => {
   }
 }
 
-const createRoute = async ({ goal, gymId, details, tags }: RouteProps): Promise<any> => {
+const createRoute = async ({ goal, gymId, details, tags, zone }: RouteProps): Promise<any> => {
   try {
     const res = await request('routes', {
       method: 'POST',
-      body: JSON.stringify({ goal, gymId, details, tags })
+      body: JSON.stringify({ goal, gymId, details, tags, zone })
     })
     return res
   } catch (error) {
