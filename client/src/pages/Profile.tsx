@@ -100,12 +100,12 @@ const Profile: React.FC = () => {
             <InputNumber min={0} disabled={!editing} addonAfter="in" />
           </Form.Item>
         </Col>
-        <Col xs={{ span: 13 }} md={{ span: 6 }}>
+        <Col xs={{ span: 13 }} md={{ span: 6, offset: 1 }}>
           <Form.Item label="Bodyweight" name="weight">
             <InputNumber min={0} disabled={!editing} addonAfter="lbs" />
           </Form.Item>
         </Col>
-        <Col xs={{ span: 13 }} md={{ span: 6 }}>
+        <Col xs={{ span: 13 }} md={{ span: 6, offset: 1 }}>
           <Form.Item label="Ape Index" name="apeIndex">
             <InputNumber disabled={!editing} addonAfter="in" />
           </Form.Item>

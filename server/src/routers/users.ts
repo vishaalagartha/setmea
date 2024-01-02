@@ -92,6 +92,7 @@ router.put('/:id', (async (req: express.Request, res: express.Response) => {
 router.put('/password', (async (req: express.Request, res: express.Response) => {
   try {
     const { email } = req.query as { email: string }
+    console.log(email)
     const user = await User.find({ email })
     if (user === null || user === undefined || !(user instanceof User)) {
       res.status(404).json({ message: 'User with email not found' }).end()

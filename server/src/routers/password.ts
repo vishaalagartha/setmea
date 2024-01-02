@@ -12,7 +12,7 @@ const router = Router()
 router.put('/', (async (req: express.Request, res: express.Response) => {
   try {
     const { email } = req.query as { email: string }
-    const user = await User.find({ email })
+    const user = await User.findOne({ email })
     if (user === null || user === undefined || !(user instanceof User)) {
       res.status(404).json({ message: 'User with email not found' }).end()
       return

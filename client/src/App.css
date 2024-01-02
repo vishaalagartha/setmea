@@ -11,6 +11,13 @@
   background: rgba(255, 255, 255, 0.3);
 }
 
+.ant-typography .landing-link {
+  color: rgb(12 74 110);
+  &:hover {
+    color: rgb(240 249 255);
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;

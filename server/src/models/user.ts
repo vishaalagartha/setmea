@@ -29,7 +29,6 @@ UserSchema.pre('save', async function (next) {
     }
     next()
   } catch (error) {
-    console.log('error')
     if (error instanceof Error) next(error)
   }
 })

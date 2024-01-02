@@ -16,6 +16,7 @@ import type { IGym } from '../types/gym'
 import { type IRoute, RouteTag } from '../types/route'
 import { getRoutesByGym } from '../api/route'
 import RouteList from './RouteList'
+import useMessage from 'antd/es/message/useMessage'
 interface RoutesInterface {
   routes: IRoute[]
   setRoutes: React.Dispatch<React.SetStateAction<IRoute[]>>
@@ -31,6 +32,7 @@ const RouteFinderForm: React.FC = () => {
   const [gyms, setGyms] = useState<IGym[]>([])
   const [routes, setRoutes] = useState<IRoute[]>([])
   const [filteredRoutes, setFilteredRoutes] = useState<IRoute[]>([])
+  const [message, contextHolder] = useMessage()
 
   const options = Object.values(RouteTag).map((t) => ({ name: t, value: t }))
 
@@ -53,6 +55,8 @@ const RouteFinderForm: React.FC = () => {
       const routeData = res.data as IRoute[]
       setRoutes(routeData)
       setFilteredRoutes(routeData)
+      if (routeData.length === 0)
+        await message.open({ type: 'info', content: 'No routes were found.' })
     }
   }
 
@@ -68,7 +72,6 @@ const RouteFinderForm: React.FC = () => {
       if (tags != null) {
         for (const tag of tags) {
           if (route.tags.includes(tag)) {
-            console.log('adding', tag)
             newFilteredRoutes.push(route)
             added = true
             break
@@ -93,6 +96,7 @@ const RouteFinderForm: React.FC = () => {
   }
   return (
     <RoutesContext.Provider value={{ routes, setRoutes, filteredRoutes, setFilteredRoutes }}>
+      {contextHolder}
       <Form form={form}>
         <Row justify="center">
           <Typography.Title level={3}>I&apos;m setting at</Typography.Title>

@@ -10,6 +10,7 @@ import authenticate from '../middlewares/authenticate'
 
 export default express
   .Router()
+  .use('/healthcheck', (req, res) => { res.sendStatus(200).send('Setmea API') })
   .use('/register', register)
   .use('/login', login)
   .use('/password', password)
@@ -17,3 +18,4 @@ export default express
   .use('/gyms', authenticate, gyms)
   .use('/routes', authenticate, routes)
   .use('/messages', authenticate, messages)
+  .use('/', (req, res) => { res.sendStatus(200) })

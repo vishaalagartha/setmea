@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "cross-env NODE_ENV=dev nodemon",
     "lint": "eslint src/**/*.ts --fix",
-    "format": "prettier src/ --write"
+    "format": "prettier src/ --write",
+    "build": "tsc",
+    "package": "zip dist.zip -r dist/* Procfile package*"
   },
   "repository": {
     "type": "git",
