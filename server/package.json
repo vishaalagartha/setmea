@@ -9,7 +9,7 @@
     "lint": "eslint src/**/*.ts --fix",
     "format": "prettier src/ --write",
     "build": "tsc",
-    "package": "zip dist.zip -r dist/* Procfile package*"
+    "package": "zip dist.zip -r dist/* Procfile package* .env"
   },
   "repository": {
     "type": "git",

@@ -1,21 +1,21 @@
 export const colors = {
   white: '#FFFFFF',
-  bg_sky_50: 'rgb(240 249 255)',
-  bg_sky_100: 'rgb(224 242 254)',
-  bg_sky_200: 'rgb(186 230 253)',
-  bg_sky_300: 'rgb(125 211 252)',
-  bg_sky_400: 'rgb(56 189 248)',
-  bg_sky_500: 'rgb(14 165 233)',
-  bg_sky_600: 'rgb(2 132 199)',
-  bg_sky_700: 'rgb(3 105 161)',
-  bg_sky_800: 'rgb(7 89 133)',
-  bg_sky_900: 'rgb(12 74 110)',
-  bg_sky_950: 'rgb(8 47 73)',
-  bg_slate_200: 'rgb(226 232 240)',
-  bg_slate_300: 'rgb(203 213 225)',
-  bg_slate_400: 'rgb(148 163 184)',
-  bg_slate_500: 'rgb(100 116 139)',
-  bg_slate_600: 'rgb(71 85 105)'
+  bg_sky_50: '#f0f9ff',
+  bg_sky_100: '#e0f2fe',
+  bg_sky_200: '#bae6fd',
+  bg_sky_300: '#7dd3fc',
+  bg_sky_400: '#38bdf8',
+  bg_sky_500: '#0ea5e9',
+  bg_sky_600: '#0284c7',
+  bg_sky_700: '#0369a1',
+  bg_sky_800: '#075985',
+  bg_sky_900: '#0c4a6e',
+  bg_sky_950: '#082f49',
+  bg_slate_200: '#e2e8f0',
+  bg_slate_300: '#cbd5e1',
+  bg_slate_400: '#94a3b8',
+  bg_slate_500: '#64748b',
+  bg_slate_600: '#47550a'
 }
 
 /*

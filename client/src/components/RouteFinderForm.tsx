@@ -20,8 +20,8 @@ import useMessage from 'antd/es/message/useMessage'
 interface RoutesInterface {
   routes: IRoute[]
   setRoutes: React.Dispatch<React.SetStateAction<IRoute[]>>
-  filteredRoutes: IRoute[]
-  setFilteredRoutes: React.Dispatch<React.SetStateAction<IRoute[]>>
+  filteredRoutes: IRoute[] | undefined
+  setFilteredRoutes: React.Dispatch<React.SetStateAction<IRoute[]>> | undefined
 }
 
 export const RoutesContext = createContext<RoutesInterface | undefined>(undefined)

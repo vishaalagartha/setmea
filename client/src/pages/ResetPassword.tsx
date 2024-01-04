@@ -2,7 +2,7 @@ import { Flex, Form, Input, Typography, Button } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import useMessage from 'antd/es/message/useMessage'
 import { useForm } from 'antd/es/form/Form'
-import { resetPassword } from '../api/auth'
+import { resetPasswordViaEmail } from '../api/auth'
 import React from 'react'
 
 const PasswordReset: React.FC = () => {
@@ -25,7 +25,7 @@ const PasswordReset: React.FC = () => {
       const userId = queryParameters.get('id')
       if (token !== null && userId !== null) {
         localStorage.setItem('token', token)
-        const res = await resetPassword(userId, password1)
+        const res = await resetPasswordViaEmail(userId, password1)
         if (res.status === 200) {
           await message.open({
             type: 'success',

@@ -1,4 +1,8 @@
+import mongoose from 'mongoose'
 import User from '../models/user'
+
+const MONGO_URL =
+  `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PW}@setmea-cluster.5fzacie.mongodb.net/?retryWrites=true&w=majority`
 
 const init: () => Promise<void> = async () => {
   try {
@@ -12,4 +16,16 @@ const init: () => Promise<void> = async () => {
   }
 }
 
-export { init }
+const connect: () => void = () => {
+  void (async () => {
+    try {
+      await mongoose.connect(MONGO_URL)
+      console.log('Connected to MongoDB server')
+      await init()
+    } catch (error) {
+      console.error(error)
+    }
+  })()
+}
+
+export { connect }

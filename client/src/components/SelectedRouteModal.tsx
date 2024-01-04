@@ -36,7 +36,7 @@ const SelectedRouteModal: React.FC<SelectedRouteModalProps> = ({
       await form.validateFields()
       let res = await deleteRoute({ routeId: route._id })
       setRoutes(routes.filter((r) => r._id !== route._id))
-      setFilteredRoutes(filteredRoutes.filter((r) => r._id !== route._id))
+      setFilteredRoutes !== undefined && setFilteredRoutes(filteredRoutes.filter((r) => r._id !== route._id))
       if (res.status === 200) {
         await message.open({ type: 'success', content: 'Fulfilled request!' })
       } else {

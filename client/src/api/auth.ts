@@ -60,7 +60,7 @@ const fetchUser = async ({ uid }: FetchUserProps): Promise<any> => {
 
 const requestResetPassword = async (email: string): Promise<any> => {
   try {
-    const res = await request(`password?email=${email}`, {
+    const res = await request(`password/request?email=${email}`, {
       method: 'PUT'
     })
     return res
@@ -70,9 +70,9 @@ const requestResetPassword = async (email: string): Promise<any> => {
   }
 }
 
-const resetPassword = async (userId: string, password: string): Promise<any> => {
+const resetPasswordViaEmail = async (userId: string, password: string): Promise<any> => {
   try {
-    const res = await request(`password`, {
+    const res = await request(`password/reset`, {
       method: 'PATCH',
       body: JSON.stringify({ userId, password })
     })
@@ -83,4 +83,24 @@ const resetPassword = async (userId: string, password: string): Promise<any> => 
   }
 }
 
-export { register, login, fetchUser, requestResetPassword, resetPassword }
+const resetPasswordViaPassword = async (oldPassword: string, newPassword: string): Promise<any> => {
+  try {
+    const res = await request(`password`, {
+      method: 'PUT',
+      body: JSON.stringify({ oldPassword, newPassword })
+    })
+    return res
+  } catch (error) {
+    console.error(error)
+    return error
+  }
+}
+
+export {
+  register,
+  login,
+  fetchUser,
+  requestResetPassword,
+  resetPasswordViaEmail,
+  resetPasswordViaPassword
+}

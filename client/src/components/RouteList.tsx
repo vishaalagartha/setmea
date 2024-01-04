@@ -20,7 +20,7 @@ const RouteList: React.FC<RouteListProps> = ({ routes }: RouteListProps) => {
           setOpen={setOpenRouteModal}
         />
       )}
-      <Col xs={24} md={12} lg={10}>
+      <Col xs={20} md={12} lg={10}>
         <List
           bordered={true}
           dataSource={routes}

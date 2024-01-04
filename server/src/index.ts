@@ -3,10 +3,9 @@ import http from 'http'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
-import mongoose from 'mongoose'
 import routers from './routers'
-import { init } from './utils/initDb'
 import 'dotenv/config'
+import { connect } from './utils/initDb'
 
 const app = express()
 
@@ -27,22 +26,6 @@ server.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`)
 })
 
-const MONGO_URL =
-  'mongodb+srv://vishaalagartha:ilostmylaptop123@setmea-cluster.5fzacie.mongodb.net/?retryWrites=true&w=majority'
-const connect: () => Promise<void> = async () => {
-  try {
-    await mongoose.connect(MONGO_URL)
-  } catch (error) {
-    console.error(error)
-  }
-}
 connect()
-  .then(async () => {
-    console.log('Connected to MongoDB server')
-    await init()
-  })
-  .catch((error) => {
-    console.error(error)
-  })
 
 app.use('/', routers)

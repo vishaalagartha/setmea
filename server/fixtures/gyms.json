@@ -1,0 +1,102 @@
+[{
+  "_id": {
+    "$oid": "6593297db8821ed7c1dcfed5"
+  },
+  "name": "Pacific Pipe",
+  "address": "2140 Mandela Pkwy",
+  "city": "Oakland",
+  "state": "CA",
+  "zones": [
+    "Solar Flare",
+    "The School",
+    "Welcome Wall",
+    "Top Out",
+    "1st Alcove",
+    "Comp Slabs",
+    "Soccer Ball",
+    "2nd Alcove"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6594ea019859d6137e733d41"
+  },
+  "name": "Berkeley Ironworks",
+  "address": "800 Potter St.",
+  "city": "Berkeley",
+  "state": "CA",
+  "zones": [
+    "Campus Board",
+    "Slab",
+    "Mushroom",
+    "Vert Wall",
+    "The Pillar",
+    "The Wave"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6594ea7a9859d6137e733d62"
+  },
+  "name": "Great Western Power Company",
+  "address": "520 20th St.",
+  "city": "Oakland",
+  "state": "CA",
+  "zones": [
+    "The Prow",
+    "Vert Wall",
+    "The Fridge",
+    "The Cave"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6594eabb9859d6137e733d78"
+  },
+  "name": "Diablo Rock Gym",
+  "address": "1220 Diamond Way # 140",
+  "city": "Concord",
+  "state": "CA",
+  "zones": [
+    "Cave",
+    "Vert Right",
+    "Vert Left",
+    "Inner Chalkstone",
+    "Outer Chalkstone",
+    "Topout"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6594ec4aade78fc10af9fa80"
+  },
+  "name": "Dogpatch Boulders",
+  "address": "2573 3rd St",
+  "city": "San Francisco",
+  "state": "CA",
+  "zones": [
+    "Front Arch",
+    "Wave",
+    "Back Topout",
+    "Alcove",
+    "Great Roof",
+    "Comp Wall",
+    "Expansion"
+  ]
+},
+{
+  "_id": {
+    "$oid": "6594edcfade78fc10af9faaa"
+  },
+  "name": "Mission Cliffs",
+  "address": "2295 Harrison St.",
+  "city": "San Francisco",
+  "state": "CA",
+  "zones": [
+    "Jewel",
+    "Top Out Wall",
+    "The Cave",
+    "Mushroom",
+    "Smith Rock Wall"
+  ]
+}]

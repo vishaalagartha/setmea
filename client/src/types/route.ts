@@ -7,6 +7,8 @@ interface IRoute {
   user: string
   username: string
   date: string
+  requestedSetter: string
+  setter: string
 }
 
 enum RouteTag {

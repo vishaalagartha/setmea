@@ -1,5 +1,5 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
-import { Form, Typography, Input, Button, Divider, Row, Col } from 'antd'
+import { Form, Typography, Input, Button, Divider, Row, Col, Image } from 'antd'
 import useMessage from 'antd/es/message/useMessage'
 import { useForm } from 'antd/es/form/Form'
 import { useDispatch } from 'react-redux'
@@ -8,6 +8,7 @@ import RegistrationModal from '../components/RegistrationModal'
 import PasswordResetModal from '../components/PasswordResetModal'
 import { login } from '../api/auth'
 import { useNavigate } from 'react-router-dom'
+import Logo from '../assets/logo.png'
 import { useEffect, useState } from 'react'
 import Particles, { initParticlesEngine } from '@tsparticles/react'
 // import { loadAll } from "@/tsparticles/all"; // if you are going to use `loadAll`, install the "@tsparticles/all" package too.
@@ -100,7 +101,7 @@ const Landing: React.FC = () => {
       }
     },
     background: {
-      color: '#0284c7'
+      color: '#0c4a6e'
     }
   }
 
@@ -138,10 +139,10 @@ const Landing: React.FC = () => {
         />
         <div className="absolute left-0 bottom-0 right-0 m-auto w-full top-48">
           {contextHolder}
-          <Row justify="center">
-            <Typography.Title level={1}>
-              <div className="text-white">Log In</div>
-            </Typography.Title>
+          <Row justify="center" className="mb-10">
+            <Col xs={10} md={6}>
+              <Image src={Logo} preview={false} />
+            </Col>
           </Row>
           <Form form={form}>
             <Row justify="center">

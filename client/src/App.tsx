@@ -12,7 +12,10 @@ import AdminHome from './pages/admin/AdminHome'
 import AdminGyms from './pages/admin/AdminGyms'
 import AdminSetters from './pages/admin/AdminSetters'
 import AdminUsers from './pages/admin/AdminUsers'
+import RouteRequests from './pages/RouteRequests'
 import { colors } from './utils/theme'
+import { Identity } from './types/user'
+import SetRequests from './pages/SetRequests'
 
 /*
 Colors:
@@ -50,14 +53,23 @@ const App: React.FC = () => {
           },
           Layout: {
             headerBg: colors.bg_sky_950,
+            headerHeight: 100,
+            headerPadding: '0px 10px 0px 20px',
             bodyBg: colors.white
+          },
+          Menu: {
+            colorBgBase: colors.bg_sky_950,
+            itemBg: colors.bg_sky_950,
+            itemSelectedBg: colors.bg_sky_950,
+            itemSelectedColor: colors.bg_sky_950,
+            itemActiveBg: colors.bg_sky_950
           }
         }
       }}>
       <Layout>
         <BrowserRouter>
           <Routes>
-            <Route element={<ProtectedRoute admin={true} />} path="/admin">
+            <Route element={<ProtectedRoute identity={Identity.ADMIN} />} path="/admin">
               <Route Component={AdminHome} path="/admin/" />
               <Route Component={AdminGyms} path="/admin/gyms" />
               <Route Component={AdminSetters} path="/admin/setters" />
@@ -65,9 +77,15 @@ const App: React.FC = () => {
             </Route>
             <Route Component={Landing} path="/login" />
             <Route Component={PasswordReset} path="/passwordReset" />
-            <Route element={<ProtectedRoute admin={false} />} path="/">
+            <Route element={<ProtectedRoute identity={undefined} />} path="/">
               <Route Component={Home} path="/" />
               <Route Component={Profile} path="/profile" />
+            </Route>
+            <Route element={<ProtectedRoute identity={Identity.SETTER} />} path="/">
+              <Route Component={SetRequests} path="/set-requests" />
+            </Route>
+            <Route element={<ProtectedRoute identity={Identity.CLIMBER} />} path="/">
+              <Route Component={RouteRequests} path="/route-requests" />
             </Route>
           </Routes>
         </BrowserRouter>

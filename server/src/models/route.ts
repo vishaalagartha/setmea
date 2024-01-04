@@ -8,6 +8,7 @@ const RouteSchema = new mongoose.Schema(
     gym: { type: Schema.Types.ObjectId, required: true },
     tags: { type: [String], enum: RouteTag, required: false },
     user: { type: Schema.Types.ObjectId, required: true },
+    requestedSetter: { type: Schema.Types.ObjectId, default: null },
     setter: { type: Schema.Types.ObjectId, default: null },
     votes: { type: Number, default: 0 },
     zone: { type: String, default: null },

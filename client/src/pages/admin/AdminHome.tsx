@@ -14,7 +14,7 @@ Admin capabilities:
 const AdminHome: React.FC = () => {
   return (
     <Row justify="center">
-      <Col xs={24} md={6} lg={6} className="m-5">
+      <Col xs={20} md={6} lg={6} className="m-5">
         <Card
           className="h-full"
           title={
@@ -32,7 +32,7 @@ const AdminHome: React.FC = () => {
           </Link>
         </Card>
       </Col>
-      <Col xs={24} md={6} lg={6} className="m-5">
+      <Col xs={20} md={6} lg={6} className="m-5">
         <Card
           className="h-full"
           title={
@@ -48,7 +48,7 @@ const AdminHome: React.FC = () => {
           </Link>
         </Card>
       </Col>
-      <Col xs={24} md={6} lg={6} className="m-5">
+      <Col xs={20} md={6} lg={6} className="m-5">
         <Card
           className="h-full"
           title={

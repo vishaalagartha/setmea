@@ -9,6 +9,7 @@ import { states } from '../../utils/constants'
 
 const AdminGyms: React.FC = () => {
   const [gyms, setGyms] = useState<IGym[]>([])
+  const [autocompleteForm] = useForm()
   const [form] = useForm()
   const [zoneForm] = useForm()
   const [openGymForm, setOpenGymForm] = useState(false)
@@ -34,10 +35,10 @@ const AdminGyms: React.FC = () => {
       const { name, address, city, state } = form.getFieldsValue()
       const res = await editGym({ id: selectedGym._id, name, address, city, state })
       if (res.status === 200) {
-        await message.open({ type: 'success', content: 'Successfully edited gym!' })
         fetchGyms()
         setSelectedGym(undefined)
         form.setFieldsValue({ name: '', city: '', address: '', state: '' })
+        await message.open({ type: 'success', content: 'Successfully edited gym!' })
       } else {
         await message.open({ type: 'error', content: res.data.message })
       }
@@ -52,10 +53,10 @@ const AdminGyms: React.FC = () => {
       if (selectedGym === undefined) return
       const res = await deleteGym({ id: selectedGym._id })
       if (res.status === 200) {
-        await message.open({ type: 'success', content: 'Successfully deleted gym!' })
         setSelectedGym(undefined)
         fetchGyms()
         form.setFieldsValue({ name: '', city: '', address: '', state: '' })
+        await message.open({ type: 'success', content: 'Successfully deleted gym!' })
       } else {
         await message.open({ type: 'error', content: res.data.message })
       }
@@ -72,9 +73,9 @@ const AdminGyms: React.FC = () => {
       const res = await addGymZone(selectedGym._id, zone)
       if (res.status === 200) {
         setSelectedGym({ ...selectedGym, zones: [...selectedGym.zones, zone] })
-        await message.open({ type: 'success', content: 'Successfully added zone to gym!' })
         fetchGyms()
         zoneForm.setFieldsValue({ zone: '' })
+        await message.open({ type: 'success', content: 'Successfully added zone to gym!' })
       } else {
         await message.open({ type: 'error', content: res.data.message })
       }
@@ -88,10 +89,10 @@ const AdminGyms: React.FC = () => {
       if (selectedGym === undefined) return
       const res = await deleteZone(selectedGym._id, zone)
       if (res.status === 200) {
-        setSelectedGym({ ...selectedGym, zones: selectedGym.zones.filter((z) => z !== zone) })
-        await message.open({ type: 'success', content: 'Successfully deleted zone.' })
         fetchGyms()
+        setSelectedGym({ ...selectedGym, zones: selectedGym.zones.filter((z) => z !== zone) })
         zoneForm.setFieldsValue({ zone: '' })
+        await message.open({ type: 'success', content: 'Successfully deleted zone.' })
       } else {
         await message.open({ type: 'error', content: res.data.message })
       }
@@ -103,22 +104,27 @@ const AdminGyms: React.FC = () => {
   return (
     <Flex vertical={true} align="center">
       {contextHolder}
-      <AutoComplete
-        options={gyms.map((g) => ({
-          label: `${g.name} - ${g.address}, ${g.city}, ${g.state}`,
-          value: `${g.name}`
-        }))}
-        style={{ width: '50%' }}
-        filterOption={(inputValue, option) => {
-          if (option === undefined) return false
-          return option.label.includes(inputValue)
-        }}
-        onSelect={(value) => {
-          const gym = gyms.find((g) => g.name === value)
-          setSelectedGym(gym)
-          form.setFieldsValue({ ...gym })
-        }}
-      />
+      <Form form={autocompleteForm} className="w-1/2">
+        <Form.Item name="name" className="w-full">
+          <AutoComplete
+            className="w-full"
+            options={gyms.map((g) => ({
+              label: `${g.name} - ${g.address}, ${g.city}, ${g.state}`,
+              value: `${g.name}`
+            }))}
+            filterOption={(inputValue, option) => {
+              if (option === undefined) return false
+              return option.label.includes(inputValue)
+            }}
+            onSelect={(value) => {
+              const gym = gyms.find((g) => g.name === value)
+              setSelectedGym(gym)
+              form.setFieldsValue({ ...gym })
+            }}
+          />
+        </Form.Item>
+      </Form>
+
       {selectedGym !== undefined && (
         <Flex vertical={true} align="center" className="my-5">
           <Form form={form}>
@@ -158,6 +164,7 @@ const AdminGyms: React.FC = () => {
                 onClick={() => {
                   setSelectedGym(undefined)
                   form.setFieldsValue({ name: '', city: '', address: '', state: '' })
+                  autocompleteForm.setFieldValue('name', '')
                 }}>
                 Cancel
               </Button>
@@ -167,7 +174,7 @@ const AdminGyms: React.FC = () => {
       )}
       <Divider />
       {selectedGym !== undefined && (
-        <div>
+        <div className="w-1/2">
           <Typography.Title level={4} className="flex justify-center">
             Add or Remove Zones
           </Typography.Title>
@@ -176,6 +183,7 @@ const AdminGyms: React.FC = () => {
           {selectedGym.zones.map((name: string, i) => {
             return (
               <Tag
+                className="m-1"
                 key={i}
                 closable={true}
                 onClose={() => {

@@ -7,6 +7,7 @@ interface RouteProps {
   gymId: string
   tags: [RouteTag]
   zone: string
+  requestedSetterId: string | undefined
 }
 
 const getRoutesByGym = async ({ gymId }: { gymId: string }): Promise<any> => {
@@ -21,11 +22,18 @@ const getRoutesByGym = async ({ gymId }: { gymId: string }): Promise<any> => {
   }
 }
 
-const createRoute = async ({ goal, gymId, details, tags, zone }: RouteProps): Promise<any> => {
+const createRoute = async ({
+  goal,
+  gymId,
+  details,
+  tags,
+  zone,
+  requestedSetterId
+}: RouteProps): Promise<any> => {
   try {
     const res = await request('routes', {
       method: 'POST',
-      body: JSON.stringify({ goal, gymId, details, tags, zone })
+      body: JSON.stringify({ goal, gymId, details, tags, zone, requestedSetterId })
     })
     return res
   } catch (error) {
@@ -50,4 +58,28 @@ const deleteRoute = async ({ routeId }: DeleteRouteProps): Promise<any> => {
   }
 }
 
-export { createRoute, getRoutesByGym, deleteRoute }
+const getClimberRequests = async (): Promise<any> => {
+  try {
+    const res = await request(`routes/route-requests`, {
+      method: 'GET'
+    })
+    return res
+  } catch (error) {
+    console.error(error)
+    return error
+  }
+}
+
+const getSetterRequests = async (): Promise<any> => {
+  try {
+    const res = await request(`routes/set-requests`, {
+      method: 'GET'
+    })
+    return res
+  } catch (error) {
+    console.error(error)
+    return error
+  }
+}
+
+export { createRoute, getRoutesByGym, deleteRoute, getClimberRequests, getSetterRequests }

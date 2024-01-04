@@ -6,6 +6,7 @@ interface IRoute {
   gym: IGym
   tags: RouteTag[]
   user: string
+  requestedSetter: string
   setter: string
   votes: number
   zone: string
