@@ -1,10 +1,9 @@
 import type { RequestHandler, Request, Response } from 'express'
 import { Router } from 'express'
 import Route from '../models/route'
-import { type RouteTag, type IRouteWithUser, type IRoute } from '../types/route'
-import { createRoute, getRoutesByGym, deleteRoute } from '../controllers/route'
+import { type RouteTag, type IRoute } from '../types/route'
+import { getRoutesByGym, deleteRoute, formatRoutes } from '../controllers/route'
 import setUserIdFromToken from '../middlewares/setUserIdFromToken'
-import User from '../models/user'
 
 const router = Router()
 
@@ -13,11 +12,7 @@ router.get('/', (async (req: Request, res: Response) => {
   try {
     const { gymId } = req.query as { gymId: string }
     const routes = await getRoutesByGym(gymId) as IRoute[]
-    const data: IRouteWithUser[] = []
-    for (const route of routes) {
-      const user = await User.findById(route.user)
-      if (user !== null && route instanceof Route) { data.push({ ...route.toObject(), username: user.username }) }
-    }
+    const data = await formatRoutes(routes)
     res.status(200).json(data).end()
   } catch (error) {
     console.error(error)
@@ -33,7 +28,7 @@ router.get('/', (async (req: Request, res: Response) => {
 // POST route
 router.post('/', setUserIdFromToken, (async (req: Request, res: Response) => {
   try {
-    const { goal, details, gymId, tags, userId, zone, requestedSetterId } = req.body as {
+    const { goal, details, gymId, tags, userId, zone, requestedSetterId, grade } = req.body as {
       goal: string
       details: string
       gymId: string
@@ -41,8 +36,9 @@ router.post('/', setUserIdFromToken, (async (req: Request, res: Response) => {
       zone: string
       userId: string
       requestedSetterId: string
+      grade: number
     }
-    const route = new Route({ goal, details, gym: gymId, tags, user: userId, zone, requestedSetter: requestedSetterId })
+    const route = new Route({ goal, details, gym: gymId, tags, user: userId, zone, requestedSetter: requestedSetterId, grade })
     await route.save()
     res.status(201).json(route.toObject()).end()
   } catch (error) {
@@ -78,7 +74,8 @@ router.get('/route-requests', setUserIdFromToken, (async (req: Request, res: Res
   try {
     const { userId } = req.body as { userId: string }
     const routes = await Route.find({ user: userId })
-    res.status(200).json(routes).end()
+    const data = await formatRoutes(routes)
+    res.status(200).json(data).end()
   } catch (error) {
     console.error(error)
     res
@@ -95,12 +92,56 @@ router.get('/set-requests', setUserIdFromToken, (async (req: Request, res: Respo
   try {
     const { userId } = req.body as { userId: string }
     const routes = await Route.find({ requestedSetter: userId })
-    const data: IRouteWithUser[] = []
-    for (const route of routes) {
-      const user = await User.findById(route.user)
-      if (user !== null && route instanceof Route) { data.push({ ...route.toObject(), username: user.username }) }
-    }
+    const data = await formatRoutes(routes)
     res.status(200).json(data).end()
+  } catch (error) {
+    console.error(error)
+    res
+      .status(500)
+      .json({
+        message: error.message
+      })
+      .end()
+  }
+}) as RequestHandler)
+
+// POST vote by route id
+router.post('/:id/votes', setUserIdFromToken, (async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+    const { userId } = req.body as { userId: string }
+    const route = await Route.findById(id)
+    if (route !== null) {
+      route.votes = [...route.votes, userId]
+      await route.save()
+      res.status(201).json(route.toObject()).end()
+      return
+    }
+    throw new Error('Unable to find route.')
+  } catch (error) {
+    console.error(error)
+    res
+      .status(500)
+      .json({
+        message: error.message
+      })
+      .end()
+  }
+}) as RequestHandler)
+
+// DELETE vote by route id
+router.delete('/:id/votes', setUserIdFromToken, (async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+    const { userId } = req.body as { userId: string }
+    const route = await Route.findById(id)
+    if (route !== null) {
+      route.votes = route.votes.filter((v) => v !== userId)
+      await route.save()
+      res.status(200).json(route.toObject()).end()
+      return
+    }
+    throw new Error('Unable to find route.')
   } catch (error) {
     console.error(error)
     res

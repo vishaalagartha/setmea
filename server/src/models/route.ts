@@ -3,6 +3,7 @@ import { RouteTag, type IRoute } from '../types/route'
 
 const RouteSchema = new mongoose.Schema(
   {
+    open: { type: Boolean, default: true },
     goal: { type: String, required: true },
     details: { type: String, required: false },
     gym: { type: Schema.Types.ObjectId, required: true },
@@ -10,9 +11,10 @@ const RouteSchema = new mongoose.Schema(
     user: { type: Schema.Types.ObjectId, required: true },
     requestedSetter: { type: Schema.Types.ObjectId, default: null },
     setter: { type: Schema.Types.ObjectId, default: null },
-    votes: { type: Number, default: 0 },
+    votes: { type: [String], default: [] },
     zone: { type: String, default: null },
-    date: { type: Date, default: Date.now }
+    grade: { type: Number, default: null, min: 0, max: 17 },
+    date: { type: Date, default: Date.now },
   },
   {
     versionKey: false

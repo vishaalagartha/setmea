@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
 import { useAppSelector } from '../store/rootReducer'
-import { Flex, Button } from 'antd'
+import { Flex, Button, Space } from 'antd'
 import { userSelector } from '../store/userSlice'
 import { Identity } from '../types/user'
 import RouteRequestForm from '../components/RouteRequestForm'
-import RouteFinderForm from '../components/RouteFinderForm'
+import RouteFinderForm from './FindRoutes'
 import { Link, useNavigate } from 'react-router-dom'
 
 const Home: React.FC = () => {
@@ -18,9 +18,14 @@ const Home: React.FC = () => {
     <div>
       <Flex justify="end">
         {identity === Identity.CLIMBER && (
-          <Link to="/route-requests">
-            <Button type="primary">View my pending requests</Button>
-          </Link>
+          <Space direction="vertical" align="end">
+            <Link to="/browse">
+              <Button type="primary">Browse Requests</Button>
+            </Link>
+            <Link to="/route-requests">
+              <Button>View my pending requests</Button>
+            </Link>
+          </Space>
         )}
         {identity === Identity.SETTER && (
           <Link to="/set-requests">

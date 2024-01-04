@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Tag, Typography, Row, Col, Space, List, Button } from 'antd'
+import { Typography, Row, Col } from 'antd'
 import { type IRoute } from '../types/route'
 import { deleteRoute, getClimberRequests } from '../api/route'
-import { dateToString } from '../utils/date'
-import { DeleteOutlined } from '@ant-design/icons'
 import useMessage from 'antd/es/message/useMessage'
+import { RoutesContext } from '../components/RoutesContext'
+import RouteList from '../components/RouteList'
 
 const RouteRequests: React.FC = () => {
   const [routes, setRoutes] = useState<IRoute[]>([])
@@ -37,59 +37,33 @@ const RouteRequests: React.FC = () => {
   }
 
   return (
-    <div>
+    <RoutesContext.Provider
+      value={{
+        routes,
+        setRoutes,
+        filteredRoutes: undefined,
+        setFilteredRoutes: undefined,
+        selectedRoute: undefined,
+        setSelectedRoute: undefined,
+        onDelete: handleDeleteRequest
+      }}>
       {contextHolder}
       <Row justify="center">
         <Typography.Title>My Pending Requests</Typography.Title>
       </Row>
-      <Row justify="center">
-        <Col xs={20} md={12} lg={10}>
-          {routes.length === 0 && (
-            <Typography.Title level={3} className="flex justify-center">
-              You have no pending requests!
-            </Typography.Title>
-          )}
-          {routes.length > 0 && (
-            <List
-              bordered={true}
-              dataSource={routes}
-              renderItem={(item, i) => {
-                return (
-                  <List.Item key={i} className="flex-col">
-                    <Row justify="space-between" className="w-full">
-                      <Typography.Title level={5}>Goal: {item.goal}</Typography.Title>
-                      <Button
-                        danger
-                        onClick={() => {
-                          handleDeleteRequest(item._id)
-                        }}
-                        icon={<DeleteOutlined />}
-                      />
-                    </Row>
-                    <Row className="w-full">
-                      <Typography.Text>Request on {dateToString(item.date)}</Typography.Text>
-                    </Row>
-                    <Row className="w-full">
-                      <Col xs={24}>{item.details}</Col>
-                    </Row>
-                    <Row className="w-full">
-                      <Typography.Title level={5}>Tags:</Typography.Title>
-                    </Row>
-                    <Row className="w-full">
-                      <Space>
-                        {item.tags.map((t, i) => (
-                          <Tag key={i}>{t}</Tag>
-                        ))}
-                      </Space>
-                    </Row>
-                  </List.Item>
-                )
-              }}
-            />
-          )}
-        </Col>
-      </Row>
-    </div>
+      {routes.length === 0 && (
+        <Row justify="center">
+          <Col xs={20} md={12} lg={10}>
+            {routes.length === 0 && (
+              <Typography.Title level={3} className="flex justify-center">
+                You have no pending requests!
+              </Typography.Title>
+            )}
+          </Col>
+        </Row>
+      )}
+      {routes.length > 0 && <RouteList />}
+    </RoutesContext.Provider>
   )
 }
 

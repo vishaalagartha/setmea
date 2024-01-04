@@ -8,13 +8,18 @@ interface IRoute {
   user: string
   requestedSetter: string
   setter: string
-  votes: number
+  votes: string[]
   zone: string
+  grade: number
   date: Date
+  open: boolean
 }
 
-interface IRouteWithUser extends IRoute {
+interface IRouteData extends IRoute {
   username: string
+  requestedSetterUsername: string | undefined
+  setterUsername: string | undefined
+  voterUsernames: string[]
 }
 
 enum RouteTag {
@@ -26,4 +31,4 @@ enum RouteTag {
   slab = 'slab'
 }
 
-export { RouteTag, type IRoute, type IRouteWithUser }
+export { RouteTag, type IRoute, type IRouteData }

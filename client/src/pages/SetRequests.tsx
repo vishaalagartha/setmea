@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { Tag, Typography, Row, Col, Space, List } from 'antd'
+import { Typography, Row, Col } from 'antd'
 import { type IRoute } from '../types/route'
 import { getSetterRequests } from '../api/route'
-import { dateToString } from '../utils/date'
+import RouteList from '../components/RouteList'
 import SelectedRouteModal from '../components/SelectedRouteModal'
-import { RoutesContext } from '../components/RouteFinderForm'
+import { RoutesContext } from '../components/RoutesContext'
 
 const SetRequests: React.FC = () => {
   const [routes, setRoutes] = useState<IRoute[]>([])
-  const [openRouteModal, setOpenRouteModal] = useState(false)
   const [selectedRoute, setSelectedRoute] = useState<IRoute>()
 
   useEffect(() => {
@@ -24,62 +23,31 @@ const SetRequests: React.FC = () => {
 
   return (
     <RoutesContext.Provider
-      value={{ routes, setRoutes, filteredRoutes: undefined, setFilteredRoutes: undefined }}>
+      value={{
+        routes,
+        setRoutes,
+        filteredRoutes: undefined,
+        setFilteredRoutes: undefined,
+        selectedRoute,
+        setSelectedRoute,
+        onDelete: undefined
+      }}>
       <Row justify="center">
-        <Typography.Title>My Pending Requests</Typography.Title>
+        <Typography.Title>My Pending Sets</Typography.Title>
       </Row>
-      {selectedRoute !== undefined && (
-        <SelectedRouteModal
-          route={selectedRoute}
-          open={openRouteModal}
-          setOpen={setOpenRouteModal}
-        />
+      <SelectedRouteModal />
+      {routes.length === 0 && (
+        <Row justify="center">
+          <Col xs={20} md={12} lg={10}>
+            {routes.length === 0 && (
+              <Typography.Title level={3} className="flex justify-center">
+                You have no pending sets.
+              </Typography.Title>
+            )}
+          </Col>
+        </Row>
       )}
-      <Row justify="center">
-        <Col xs={20} md={12} lg={10}>
-          {routes.length === 0 && (
-            <Typography.Title level={3} className="flex justify-center">
-              You have no pending sets.
-            </Typography.Title>
-          )}
-          {routes.length > 0 && (
-            <List
-              bordered={true}
-              dataSource={routes}
-              renderItem={(item, i) => {
-                return (
-                  <List.Item
-                    key={i}
-                    className="cursor-pointer"
-                    onClick={() => {
-                      setOpenRouteModal(true)
-                      setSelectedRoute(item)
-                    }}>
-                    <div>
-                      <Row>
-                        <Typography.Title level={5}>Goal: {item.goal}</Typography.Title>
-                      </Row>
-                      <Row>
-                        <Typography.Text>Request on {dateToString(item.date)}</Typography.Text>
-                      </Row>
-                      <Row>User: {item.username}</Row>
-                      <Row>
-                        <Col xs={24}>{item.details}</Col>
-                      </Row>
-                      <Typography.Title level={5}>Tags:</Typography.Title>
-                      <Space>
-                        {item.tags.map((t, i) => (
-                          <Tag key={i}>{t}</Tag>
-                        ))}
-                      </Space>
-                    </div>
-                  </List.Item>
-                )
-              }}
-            />
-          )}
-        </Col>
-      </Row>
+      {routes.length > 0 && <RouteList />}
     </RoutesContext.Provider>
   )
 }

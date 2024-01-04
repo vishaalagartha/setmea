@@ -61,7 +61,6 @@ const Profile: React.FC = () => {
   const handlePasswordReset: () => void = async () => {
     try {
       await passwordForm.validateFields()
-      console.log(passwordForm.getFieldsValue())
       const { pw, pw1, pw2 } = passwordForm.getFieldsValue() as {
         pw: string
         pw1: string
@@ -77,6 +76,7 @@ const Profile: React.FC = () => {
           type: 'success',
           content: 'Successfully reset password.'
         })
+        passwordForm.setFieldsValue({ pw: '', pw1: '', pw2: '' })
       } else {
         await message.open({ type: 'error', content: res.data.message })
       }

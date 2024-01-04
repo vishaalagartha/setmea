@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   AutoComplete,
   Form,
@@ -15,24 +15,23 @@ import { getGyms } from '../api/gym'
 import type { IGym } from '../types/gym'
 import { type IRoute, RouteTag } from '../types/route'
 import { getRoutesByGym } from '../api/route'
-import RouteList from './RouteList'
+import RouteList from '../components/RouteList'
 import useMessage from 'antd/es/message/useMessage'
-interface RoutesInterface {
-  routes: IRoute[]
-  setRoutes: React.Dispatch<React.SetStateAction<IRoute[]>>
-  filteredRoutes: IRoute[] | undefined
-  setFilteredRoutes: React.Dispatch<React.SetStateAction<IRoute[]>> | undefined
-}
+import { useAppSelector } from '../store/rootReducer'
+import { userSelector } from '../store/userSlice'
+import { Identity } from '../types/user'
+import { RoutesContext } from '../components/RoutesContext'
+import SelectedRouteModal from '../components/SelectedRouteModal'
 
-export const RoutesContext = createContext<RoutesInterface | undefined>(undefined)
-
-const RouteFinderForm: React.FC = () => {
+const FindRoutes: React.FC = () => {
   const [form] = Form.useForm()
   const [filterForm] = Form.useForm()
   const [gyms, setGyms] = useState<IGym[]>([])
   const [routes, setRoutes] = useState<IRoute[]>([])
   const [filteredRoutes, setFilteredRoutes] = useState<IRoute[]>([])
   const [message, contextHolder] = useMessage()
+  const [selectedRoute, setSelectedRoute] = useState<IRoute>()
+  const user = useAppSelector(userSelector)
 
   const options = Object.values(RouteTag).map((t) => ({ name: t, value: t }))
 
@@ -79,6 +78,7 @@ const RouteFinderForm: React.FC = () => {
         }
       }
       if (added) continue
+      if (keywords === undefined) continue
       for (const keyword of keywords.split(',')) {
         if (
           keyword.length !== 0 &&
@@ -95,11 +95,25 @@ const RouteFinderForm: React.FC = () => {
     setFilteredRoutes(newFilteredRoutes)
   }
   return (
-    <RoutesContext.Provider value={{ routes, setRoutes, filteredRoutes, setFilteredRoutes }}>
+    <RoutesContext.Provider
+      value={{
+        routes,
+        setRoutes,
+        filteredRoutes,
+        setFilteredRoutes,
+        selectedRoute,
+        setSelectedRoute: user.identity !== Identity.SETTER ? undefined : setSelectedRoute,
+        onDelete: undefined
+      }}>
       {contextHolder}
       <Form form={form}>
         <Row justify="center">
-          <Typography.Title level={3}>I&apos;m setting at</Typography.Title>
+          {user.identity === Identity.CLIMBER && (
+            <Typography.Title level={3}>I&apos;m climbing at</Typography.Title>
+          )}
+          {user.identity === Identity.SETTER && (
+            <Typography.Title level={3}>I&apos;m setting at</Typography.Title>
+          )}
         </Row>
         <Row justify="center">
           <Col xs={24} md={12} lg={10}>
@@ -173,9 +187,10 @@ const RouteFinderForm: React.FC = () => {
         </div>
       )}
       <Divider />
-      {filteredRoutes.length > 0 && <RouteList routes={filteredRoutes} />}
+      <SelectedRouteModal />
+      {filteredRoutes.length > 0 && <RouteList />}
     </RoutesContext.Provider>
   )
 }
 
-export default RouteFinderForm
+export default FindRoutes

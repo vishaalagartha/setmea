@@ -7,6 +7,7 @@ interface RouteProps {
   gymId: string
   tags: [RouteTag]
   zone: string
+  grade: number
   requestedSetterId: string | undefined
 }
 
@@ -28,12 +29,13 @@ const createRoute = async ({
   details,
   tags,
   zone,
+  grade,
   requestedSetterId
 }: RouteProps): Promise<any> => {
   try {
     const res = await request('routes', {
       method: 'POST',
-      body: JSON.stringify({ goal, gymId, details, tags, zone, requestedSetterId })
+      body: JSON.stringify({ goal, gymId, details, tags, zone, grade, requestedSetterId })
     })
     return res
   } catch (error) {
@@ -82,4 +84,36 @@ const getSetterRequests = async (): Promise<any> => {
   }
 }
 
-export { createRoute, getRoutesByGym, deleteRoute, getClimberRequests, getSetterRequests }
+const voteRoute = async (id: string): Promise<any> => {
+  try {
+    const res = await request(`routes/${id}/votes`, {
+      method: 'POST'
+    })
+    return res
+  } catch (error) {
+    console.error(error)
+    return error
+  }
+}
+
+const unvoteRoute = async (id: string): Promise<any> => {
+  try {
+    const res = await request(`routes/${id}/votes`, {
+      method: 'DELETE'
+    })
+    return res
+  } catch (error) {
+    console.error(error)
+    return error
+  }
+}
+
+export {
+  createRoute,
+  getRoutesByGym,
+  deleteRoute,
+  getClimberRequests,
+  getSetterRequests,
+  voteRoute,
+  unvoteRoute
+}

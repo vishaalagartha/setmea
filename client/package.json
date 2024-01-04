@@ -32,7 +32,7 @@
     "eject": "react-scripts eject",
     "lint": "eslint src/* --ext .tsx",
     "lint:fix": "eslint src/* --fix --ext .tsx",
-    "format": "prettier src/ --write",
+    "format": "prettier src/ --write --config .prettierrc",
     "sync": "NODE_ENV='production' && npm run build && aws s3 sync --profile 'threadalytics' ./build 's3://setmea.com/' && aws s3 sync --profile 'threadalytics' ./build 's3://www.setmea.com/'"
   },
   "eslintConfig": {

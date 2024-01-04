@@ -8,7 +8,13 @@ interface IRoute {
   username: string
   date: string
   requestedSetter: string
+  requestedSetterUsername: string
+  grade: number
   setter: string
+  setterUsername: string
+  votes: string[]
+  voterUsernames: string[]
+  open: boolean
 }
 
 enum RouteTag {

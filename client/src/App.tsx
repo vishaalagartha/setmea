@@ -16,6 +16,7 @@ import RouteRequests from './pages/RouteRequests'
 import { colors } from './utils/theme'
 import { Identity } from './types/user'
 import SetRequests from './pages/SetRequests'
+import FindRoutes from './pages/FindRoutes'
 
 /*
 Colors:
@@ -85,6 +86,7 @@ const App: React.FC = () => {
               <Route Component={SetRequests} path="/set-requests" />
             </Route>
             <Route element={<ProtectedRoute identity={Identity.CLIMBER} />} path="/">
+              <Route Component={FindRoutes} path="/browse" />
               <Route Component={RouteRequests} path="/route-requests" />
             </Route>
           </Routes>

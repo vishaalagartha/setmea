@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { AutoComplete, Form, Input, Typography, Button, Select, Row, Col } from 'antd'
+import { AutoComplete, Form, Input, Typography, Button, Select, Row, Col, InputNumber } from 'antd'
 import { getGyms } from '../api/gym'
 import { RouteTag } from '../types/route'
 import type { IGym } from '../types/gym'
@@ -44,6 +44,7 @@ const RouteRequestForm: React.FC = () => {
         details,
         tags,
         zone,
+        grade,
         requestedSetter: requestedSetterName
       } = form.getFieldsValue()
       const gym = gyms.find((g) => g.name === gymName)
@@ -55,6 +56,7 @@ const RouteRequestForm: React.FC = () => {
         details,
         tags,
         zone,
+        grade,
         requestedSetterId: setter === undefined ? undefined : setter._id
       })
       if (res.status === 201) {
@@ -173,6 +175,13 @@ const RouteRequestForm: React.FC = () => {
                   return option.label.includes(inputValue)
                 }}
               />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row justify="center">
+          <Col xs={22} md={12} lg={8}>
+            <Form.Item name="grade" label="Grade request">
+              <InputNumber prefix="V" min={0} max={17} />
             </Form.Item>
           </Col>
         </Row>
