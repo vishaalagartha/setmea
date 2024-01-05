@@ -104,7 +104,8 @@ const FindRoutes: React.FC = () => {
         selectedRoute,
         setSelectedRoute: user.identity !== Identity.SETTER ? undefined : setSelectedRoute,
         onDelete: undefined
-      }}>
+      }}
+    >
       {contextHolder}
       <Form form={form}>
         <Row justify="center">
@@ -178,7 +179,8 @@ const FindRoutes: React.FC = () => {
                   onClick={() => {
                     filterForm.setFieldsValue({ keywords: '', tags: [] })
                     setFilteredRoutes(routes)
-                  }}>
+                  }}
+                >
                   Reset
                 </Button>
               </Space>

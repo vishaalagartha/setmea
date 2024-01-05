@@ -6,6 +6,7 @@ import Landing from './pages/Landing'
 import Profile from './pages/Profile'
 import './App.css'
 import 'antd/dist/reset.css'
+import 'bootstrap/dist/css/bootstrap.min.css'
 import ProtectedRoute from './components/ProtectedRoute'
 import PasswordReset from './pages/ResetPassword'
 import AdminHome from './pages/admin/AdminHome'
@@ -66,7 +67,8 @@ const App: React.FC = () => {
             itemActiveBg: colors.bg_sky_950
           }
         }
-      }}>
+      }}
+    >
       <Layout>
         <BrowserRouter>
           <Routes>

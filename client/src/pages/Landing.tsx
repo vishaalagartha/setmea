@@ -149,7 +149,8 @@ const Landing: React.FC = () => {
               <Col xs={20} md={8}>
                 <Form.Item
                   name="username"
-                  rules={[{ required: true, message: 'Please input a username' }]}>
+                  rules={[{ required: true, message: 'Please input a username' }]}
+                >
                   <Input prefix={<UserOutlined />} placeholder="Username" className="w-100 h-10" />
                 </Form.Item>
               </Col>
@@ -158,7 +159,8 @@ const Landing: React.FC = () => {
               <Col xs={20} md={8}>
                 <Form.Item
                   name="password"
-                  rules={[{ required: true, message: 'Please input a password!' }]}>
+                  rules={[{ required: true, message: 'Please input a password!' }]}
+                >
                   <Input.Password prefix={<LockOutlined />} placeholder="Password" />
                 </Form.Item>
               </Col>
@@ -169,7 +171,8 @@ const Landing: React.FC = () => {
                   className="text-sky-600"
                   onClick={() => {
                     void handleLogin()
-                  }}>
+                  }}
+                >
                   Log In
                 </Button>
               </Form.Item>
@@ -181,7 +184,8 @@ const Landing: React.FC = () => {
                   className="landing-link"
                   onClick={() => {
                     setRegistrationModalOpen(true)
-                  }}>
+                  }}
+                >
                   Sign Up
                 </Typography.Link>
               </Typography.Text>
@@ -194,7 +198,8 @@ const Landing: React.FC = () => {
                   className="landing-link"
                   onClick={() => {
                     setResetPasswordModalOpen(true)
-                  }}>
+                  }}
+                >
                   Reset it here.
                 </Typography.Link>
               </Typography.Text>

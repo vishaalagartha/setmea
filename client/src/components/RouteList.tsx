@@ -114,7 +114,8 @@ const RouteList: React.FC = () => {
                 className={user.identity === Identity.SETTER ? 'cursor-pointer' : ''}
                 onClick={() => {
                   setSelectedRoute !== undefined && setSelectedRoute(item)
-                }}>
+                }}
+              >
                 <div className="w-full">
                   <Row justify="space-between">
                     <Typography.Title level={5}>Goal: {item.goal}</Typography.Title>
@@ -148,7 +149,9 @@ const RouteList: React.FC = () => {
                   </Row>
                   <Space className="my-3">
                     {item.grade && (
-                      <Typography.Text><strong>Requested grade:</strong> V{item.grade}</Typography.Text>
+                      <Typography.Text>
+                        <strong>Requested grade:</strong> V{item.grade}
+                      </Typography.Text>
                     )}
                     {item.requestedSetter && (
                       <Typography.Text>

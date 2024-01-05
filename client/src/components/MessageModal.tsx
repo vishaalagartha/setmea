@@ -58,7 +58,8 @@ const MessageModal: React.FC<MessageModalProps> = ({ message, setMessage }: Mess
             Send
           </Button>
         </Flex>
-      }>
+      }
+    >
       {contextHolder}
       <Flex vertical={true} align="center">
         <Form form={form} className="w-3/4">

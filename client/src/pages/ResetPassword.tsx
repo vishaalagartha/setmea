@@ -54,13 +54,15 @@ const PasswordReset: React.FC = () => {
         <Form.Item
           label="Password"
           name="password1"
-          rules={[{ required: true, message: 'Please input a new password' }]}>
+          rules={[{ required: true, message: 'Please input a new password' }]}
+        >
           <Input.Password />
         </Form.Item>
         <Form.Item
           label="Retype Password"
           name="password2"
-          rules={[{ required: true, message: 'Please retype your password' }]}>
+          rules={[{ required: true, message: 'Please retype your password' }]}
+        >
           <Input.Password />
         </Form.Item>
         <Flex justify="center">

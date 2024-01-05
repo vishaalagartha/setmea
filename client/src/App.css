@@ -2,12 +2,8 @@
   text-align: center;
 }
 
-.logo {
-  float: left;
-  width: 120px;
-  height: 31px;
-  margin: 16px 24px 16px 0;
-  background: rgba(255, 255, 255, 0.3);
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 30 30%27%3e%3cpath stroke=%27rgba%2825, 165, 233, 1%29%27 stroke-linecap=%27round%27 stroke-miterlimit=%2710%27 stroke-width=%272%27 d=%27M4 7h22M4 15h22M4 23h22%27/%3e%3c/svg%3e") !important;
 }
 
 .ant-typography .landing-link {
@@ -16,9 +12,6 @@
 
 .ant-typography .landing-link &:hover {
   color: rgb(240 249 255);
-}
-.menu-icon {
-  font-size: 1.5rem !important;
 }
 
 .ant-menu-horizontal {

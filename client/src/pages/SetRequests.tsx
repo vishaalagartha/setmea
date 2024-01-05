@@ -31,7 +31,8 @@ const SetRequests: React.FC = () => {
         selectedRoute,
         setSelectedRoute,
         onDelete: undefined
-      }}>
+      }}
+    >
       <Row justify="center">
         <Typography.Title>My Pending Sets</Typography.Title>
       </Row>

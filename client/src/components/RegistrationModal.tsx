@@ -52,20 +52,23 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
           <Typography.Title level={3}>Register</Typography.Title>
         </Flex>
       }
-      footer={null}>
+      footer={null}
+    >
       {contextHolder}
       <Flex vertical={true} align="center">
         <Form form={form} className="w-3/4">
           <Form.Item
             label="Username"
             name="username"
-            rules={[{ required: true, message: 'Please input a username' }]}>
+            rules={[{ required: true, message: 'Please input a username' }]}
+          >
             <Input name="username" placeholder="Chris" />
           </Form.Item>
           <Form.Item
             label="Password"
             name="password"
-            rules={[{ required: true, message: 'Please input a password' }]}>
+            rules={[{ required: true, message: 'Please input a password' }]}
+          >
             <Input.Password name="password" placeholder="Sharma" />
           </Form.Item>
           <Form.Item
@@ -74,7 +77,8 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
             rules={[
               { type: 'email', message: 'Invalid email' },
               { required: true, message: 'Please input a email' }
-            ]}>
+            ]}
+          >
             <Input name="email" placeholder="crusher@bishop.com" />
           </Form.Item>
           <Flex justify="space-around">
@@ -86,7 +90,8 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
               onClick={() => {
                 setOpen(false)
                 form.setFieldsValue({ username: '', password: '', identity: 'climber' })
-              }}>
+              }}
+            >
               Cancel
             </Button>
           </Flex>

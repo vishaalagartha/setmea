@@ -1,10 +1,18 @@
 import type { FC, ReactNode } from 'react'
 import { useState, useEffect } from 'react'
-import { Layout, Flex, Dropdown, Badge, Typography, Image, Menu, Row, Col } from 'antd'
+import { Layout, Flex, Dropdown, Badge, Typography, Image } from 'antd'
 import { useNavigate, Link } from 'react-router-dom'
+import { Navbar, Nav, Container } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { resetUser, userSelector } from '../store/userSlice'
-import { BellOutlined, LogoutOutlined, ArrowRightOutlined, UserOutlined } from '@ant-design/icons'
+import {
+  SearchOutlined,
+  BellOutlined,
+  LogoutOutlined,
+  ArrowRightOutlined,
+  UserOutlined,
+  UnorderedListOutlined
+} from '@ant-design/icons'
 import { getReceiverMessages } from '../api/messages'
 import { type IMessage } from '../types/message'
 import { useAppSelector } from '../store/rootReducer'
@@ -12,6 +20,7 @@ import useMessage from 'antd/es/message/useMessage'
 import MessageModal from './MessageModal'
 import { dateToString } from '../utils/date'
 import Logo from '../assets/logo.png'
+import { Identity } from '../types/user'
 
 interface HeaderProps {
   children: ReactNode
@@ -33,6 +42,7 @@ const Header: FC<HeaderProps> = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [unreadCount, setUnreadCount] = useState(0)
+  const [toggled, setToggled] = useState(false)
   const [messages, setMessages] = useState<IMessage[]>([])
   const user = useAppSelector(userSelector)
   const [message, contextHolder] = useMessage()
@@ -65,200 +75,124 @@ const Header: FC<HeaderProps> = ({ children }: { children: ReactNode }) => {
     navigate(0)
   }
 
-  const items = [
-    {
-      key: '1',
-      label: (
-        <div
-          className="text-3xl hover:text-sky-500 menu-icon"
-          onClick={() => {
-            navigate('/profile')
-          }}>
-          <UserOutlined className="text-3xl hover:text-sky-500 menu-icon" />
-        </div>
-      )
-    },
-    {
-      key: '2',
-      label: (
-        <Dropdown
-          menu={{
-            items: messages.map((m, i) => {
-              const { date } = m as { date: string }
-              const item = {
-                key: i,
-                label: (
-                  <Flex
-                    vertical={true}
-                    onClick={() => {
-                      setSelectedMessage(m)
-                      setMessages(
-                        messages.map((message) => {
-                          if (message._id === m._id) return { ...message, read: true }
-                          return message
-                        })
-                      )
-                    }}>
-                    <Flex>
-                      {m.senderUsername} sent you a message! <ArrowRightOutlined className="ml-2" />{' '}
-                    </Flex>
-                    <Flex>
-                      <Typography.Text>{dateToString(date)}</Typography.Text>
-                    </Flex>
-                  </Flex>
-                ),
-                icon: !m.read && <UnreadCircle />
-              }
-              return item
-            })
-          }}
-          trigger={['click']}
-          onOpenChange={(open) => {
-            setUnreadCount(0)
-          }}>
-          <div className="flex align-middle cursor-pointer">
-            <BellOutlined className="text-3xl text-white hover:text-sky-500" />
-            <Badge count={unreadCount} style={{ position: 'absolute', bottom: 15, right: 20 }} />
-          </div>
-        </Dropdown>
-      )
-    }
-  ]
+  const messageElements =
+    messages.length === 0
+      ? [{ key: '1', label: 'You currently have no messages!' }]
+      : messages.map((m, i) => {
+          const { date } = m as { date: string }
+          const item = {
+            key: i,
+            label: (
+              <Flex
+                vertical={true}
+                onClick={() => {
+                  setSelectedMessage(m)
+                  setMessages(
+                    messages.map((message) => {
+                      if (message._id === m._id) return { ...message, read: true }
+                      return message
+                    })
+                  )
+                }}>
+                <Flex>
+                  {m.senderUsername} sent you a message! <ArrowRightOutlined className="ml-2" />{' '}
+                </Flex>
+                <Flex>
+                  <Typography.Text>{dateToString(date)}</Typography.Text>
+                </Flex>
+              </Flex>
+            ),
+            icon: !m.read && <UnreadCircle />
+          }
+          return item
+        })
+
+  console.log(messageElements)
 
   return (
     <div>
       {contextHolder}
       <MessageModal message={selectedMessage} setMessage={setSelectedMessage} />
-      <Layout.Header>
-        <Menu mode="horizontal" direction="rtl" style={{ display: 'block' }}>
-          <Menu.Item key="1">
-            <Image src={Logo} preview={false} height={40} />
-            <Link to="/" />
-          </Menu.Item>
-          <Menu.Item key="4" style={{ float: 'right' }} className="mr-1" onClick={handleLogout}>
-            <LogoutOutlined className="text-3xl text-white hover:text-sky-500 menu-icon" />
-          </Menu.Item>
-          <Menu.Item
-            key="2"
-            style={{ float: 'right' }}
-            onClick={() => {
-              navigate('/profile')
-            }}>
-            <UserOutlined className="text-3xl text-white hover:text-sky-500 menu-icon" />
-          </Menu.Item>
-          <Menu.Item key="3" style={{ float: 'right' }}>
-            <Dropdown
-              menu={{
-                items: messages.map((m, i) => {
-                  const { date } = m as { date: string }
-                  const item = {
-                    key: i,
-                    label: (
-                      <Flex
-                        vertical={true}
-                        onClick={() => {
-                          setSelectedMessage(m)
-                          setMessages(
-                            messages.map((message) => {
-                              if (message._id === m._id) return { ...message, read: true }
-                              return message
-                            })
-                          )
-                        }}>
-                        <Flex>
-                          {m.senderUsername} sent you a message!{' '}
-                          <ArrowRightOutlined className="ml-2" />{' '}
-                        </Flex>
-                        <Flex>
-                          <Typography.Text>{dateToString(date)}</Typography.Text>
-                        </Flex>
-                      </Flex>
-                    ),
-                    icon: !m.read && <UnreadCircle />
-                  }
-                  return item
-                })
-              }}
-              trigger={['click']}
-              onOpenChange={(open) => {
-                setUnreadCount(0)
-              }}>
-              <div>
-                <BellOutlined className="text-3xl text-white hover:text-sky-500 menu-icon" />
-                <Badge
-                  count={unreadCount}
-                  style={{ position: 'absolute', bottom: 15, right: 20 }}
-                />
-              </div>
-            </Dropdown>
-          </Menu.Item>
-        </Menu>
-
-        {/*
-        <Flex justify="space-between" align="center">
-          <Link to="/">
-            <Image src={Logo} preview={false} height={70} />
-          </Link>
-          <Space size="large">
-            <div
-              className="flex align-middle cursor-pointer"
-              onClick={() => {
-                navigate('/profile')
-              }}>
-              <UserOutlined className="text-3xl text-white hover:text-sky-500" />
-            </div>
-            <Dropdown
-              menu={{
-                items: messages.map((m, i) => {
-                  const { date } = m as { date: string }
-                  const item = {
-                    key: i,
-                    label: (
-                      <Flex
-                        vertical={true}
-                        onClick={() => {
-                          setSelectedMessage(m)
-                          setMessages(
-                            messages.map((message) => {
-                              if (message._id === m._id) return { ...message, read: true }
-                              return message
-                            })
-                          )
-                        }}>
-                        <Flex>
-                          {m.senderUsername} sent you a message!{' '}
-                          <ArrowRightOutlined className="ml-2" />{' '}
-                        </Flex>
-                        <Flex>
-                          <Typography.Text>{dateToString(date)}</Typography.Text>
-                        </Flex>
-                      </Flex>
-                    ),
-                    icon: !m.read && <UnreadCircle />
-                  }
-                  return item
-                })
-              }}
-              trigger={['click']}
-              onOpenChange={(open) => {
-                setUnreadCount(0)
-              }}>
-              <div className="flex align-middle cursor-pointer">
-                <BellOutlined className="text-3xl text-white hover:text-sky-500" />
-                <Badge
-                  count={unreadCount}
-                  style={{ position: 'absolute', bottom: 15, right: 20 }}
-                />
-              </div>
-            </Dropdown>
-            <div className="flex align-middle cursor-pointer" onClick={handleLogout}>
-              <LogoutOutlined className="text-3xl text-white hover:text-sky-500" />
-            </div>
-          </Space>
-
-        </Flex>
-            */}
-      </Layout.Header>
+      <Navbar
+        expand="lg"
+        variant="dark"
+        className="bg-sky-950"
+        onToggle={(toggled) => {
+          setToggled(toggled)
+        }}>
+        <Container>
+          <Navbar.Brand>
+            <Link to="/">
+              <Image src={Logo} preview={false} height={70} />
+            </Link>
+          </Navbar.Brand>
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+          <Navbar.Collapse className="justify-end" id="responsive-navbar-nav">
+            <Nav>
+              {user.identity === Identity.CLIMBER && (
+                <Nav.Link href="/browse" className="mx-3">
+                  <div className="flex text-slate-50 hover:text-sky-500">
+                    <SearchOutlined className="text-3xl" />
+                    {toggled && <div className="ml-3">Browse Requests</div>}
+                  </div>
+                </Nav.Link>
+              )}
+              {user.identity === Identity.CLIMBER && (
+                <Nav.Link href="/route-requests" className="mx-3">
+                  <div className="flex text-slate-50 hover:text-sky-500">
+                    <UnorderedListOutlined className="text-3xl" />
+                    {toggled && <div className="ml-3">My Requests</div>}
+                  </div>
+                </Nav.Link>
+              )}
+              {user.identity === Identity.SETTER && (
+                <Nav.Link href="/set-requests" className="mx-3">
+                  <div className="flex text-slate-50 hover:text-sky-500">
+                    <UnorderedListOutlined className="text-3xl" />
+                    {toggled && <div className="ml-3">My Set Requests</div>}
+                  </div>
+                </Nav.Link>
+              )}
+              <Nav.Link className="mx-3">
+                <div
+                  className="flex text-slate-50 hover:text-sky-500"
+                  onClick={() => {
+                    navigate('/profile')
+                  }}>
+                  <UserOutlined className="text-3xl" />
+                  {toggled && <div className="ml-3">My Profile</div>}
+                </div>
+              </Nav.Link>
+              <Nav.Link className="mx-3">
+                <Dropdown
+                  menu={{
+                    items: messageElements
+                  }}
+                  trigger={['click']}
+                  onOpenChange={(open) => {
+                    setUnreadCount(0)
+                  }}>
+                  <div className="flex align-middle cursor-pointer text-slate-50 hover:text-sky-500">
+                    <BellOutlined className="text-3xl" />
+                    <Badge
+                      className="text-3xl"
+                      count={unreadCount}
+                      style={{ position: 'absolute', bottom: 15, right: 20 }}
+                    />
+                    {toggled && <div className="ml-3">Messages</div>}
+                  </div>
+                </Dropdown>
+              </Nav.Link>
+              <Nav.Link className="mx-3">
+                <div className="flex text-slate-50 hover:text-sky-500" onClick={handleLogout}>
+                  <LogoutOutlined className="text-3xl" />
+                  {toggled && <div className="ml-3">Logout</div>}
+                </div>
+              </Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
       <Layout.Content className="m-5">{children}</Layout.Content>
     </div>
   )

@@ -48,7 +48,8 @@ const PasswordResetModal: React.FC<PasswordResetModalProps> = ({
           <Typography.Title level={3}>Reset Password</Typography.Title>
         </Flex>
       }
-      footer={null}>
+      footer={null}
+    >
       {contextHolder}
       <Flex vertical={true} align="center">
         <Form form={form}>

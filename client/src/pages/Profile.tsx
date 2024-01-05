@@ -100,7 +100,8 @@ const Profile: React.FC = () => {
             <Form.Item
               label="Username"
               name="username"
-              rules={[{ required: true, message: 'Please input a username' }]}>
+              rules={[{ required: true, message: 'Please input a username' }]}
+            >
               <Input disabled={!editing} />
             </Form.Item>
           </Col>
@@ -108,7 +109,8 @@ const Profile: React.FC = () => {
             <Form.Item
               label="Email"
               name="email"
-              rules={[{ required: true, message: 'Please input a username' }]}>
+              rules={[{ required: true, message: 'Please input a username' }]}
+            >
               <Input disabled={!editing} />
             </Form.Item>
           </Col>
@@ -151,7 +153,8 @@ const Profile: React.FC = () => {
                 onClick={() => {
                   form.setFieldsValue({ ...user })
                   setEditing(false)
-                }}>
+                }}
+              >
                 Cancel
               </Button>
             </Space>
@@ -161,7 +164,8 @@ const Profile: React.FC = () => {
               type="primary"
               onClick={() => {
                 setEditing(true)
-              }}>
+              }}
+            >
               Edit Settings
             </Button>
           )}
@@ -178,7 +182,8 @@ const Profile: React.FC = () => {
             <Form.Item
               label="Current Password"
               name="pw"
-              rules={[{ required: true, message: 'Please enter your current password.' }]}>
+              rules={[{ required: true, message: 'Please enter your current password.' }]}
+            >
               <Input.Password />
             </Form.Item>
           </Col>
@@ -193,7 +198,8 @@ const Profile: React.FC = () => {
                   required: true,
                   message: 'Please enter your new password.'
                 }
-              ]}>
+              ]}
+            >
               <Input.Password />
             </Form.Item>
           </Col>
@@ -208,7 +214,8 @@ const Profile: React.FC = () => {
                   required: true,
                   message: 'Please confirm your password.'
                 }
-              ]}>
+              ]}
+            >
               <Input.Password />
             </Form.Item>
           </Col>

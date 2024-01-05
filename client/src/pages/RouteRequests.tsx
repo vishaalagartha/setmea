@@ -46,7 +46,8 @@ const RouteRequests: React.FC = () => {
         selectedRoute: undefined,
         setSelectedRoute: undefined,
         onDelete: handleDeleteRequest
-      }}>
+      }}
+    >
       {contextHolder}
       <Row justify="center">
         <Typography.Title>My Pending Requests</Typography.Title>

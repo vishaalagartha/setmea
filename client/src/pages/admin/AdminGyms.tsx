@@ -131,25 +131,29 @@ const AdminGyms: React.FC = () => {
             <Form.Item
               label="Gym Name"
               name="name"
-              rules={[{ required: true, message: 'Please input a name' }]}>
+              rules={[{ required: true, message: 'Please input a name' }]}
+            >
               <Input />
             </Form.Item>
             <Form.Item
               label="Gym Address"
               name="address"
-              rules={[{ required: true, message: 'Please input an address' }]}>
+              rules={[{ required: true, message: 'Please input an address' }]}
+            >
               <Input />
             </Form.Item>
             <Form.Item
               label="City"
               name="city"
-              rules={[{ required: true, message: 'Please input a city' }]}>
+              rules={[{ required: true, message: 'Please input a city' }]}
+            >
               <Input />
             </Form.Item>
             <Form.Item
               label="State"
               name="state"
-              rules={[{ required: true, message: 'Please input a state' }]}>
+              rules={[{ required: true, message: 'Please input a state' }]}
+            >
               <Select options={states} />
             </Form.Item>
             <Flex justify="space-around">
@@ -165,7 +169,8 @@ const AdminGyms: React.FC = () => {
                   setSelectedGym(undefined)
                   form.setFieldsValue({ name: '', city: '', address: '', state: '' })
                   autocompleteForm.setFieldValue('name', '')
-                }}>
+                }}
+              >
                 Cancel
               </Button>
             </Flex>
@@ -188,7 +193,8 @@ const AdminGyms: React.FC = () => {
                 closable={true}
                 onClose={() => {
                   handleDeleteZone(name)
-                }}>
+                }}
+              >
                 {name}
               </Tag>
             )
@@ -197,7 +203,8 @@ const AdminGyms: React.FC = () => {
             <Form.Item
               label="Zone name"
               name="zone"
-              rules={[{ required: true, message: 'Please input zone name' }]}>
+              rules={[{ required: true, message: 'Please input zone name' }]}
+            >
               <Input />
             </Form.Item>
             <Flex justify="center" align="center" className="mt-5">
@@ -214,7 +221,8 @@ const AdminGyms: React.FC = () => {
             type="primary"
             onClick={() => {
               setOpenGymForm(true)
-            }}>
+            }}
+          >
             Create New Gym
           </Button>
         </Flex>
