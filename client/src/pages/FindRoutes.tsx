@@ -14,7 +14,7 @@ import {
 import { getGyms } from '../api/gym'
 import type { IGym } from '../types/gym'
 import { type IRoute, RouteTag } from '../types/route'
-import { getRoutesByGym } from '../api/route'
+import { getOpenRoutesByGym } from '../api/route'
 import RouteList from '../components/RouteList'
 import useMessage from 'antd/es/message/useMessage'
 import { useAppSelector } from '../store/rootReducer'
@@ -49,7 +49,7 @@ const FindRoutes: React.FC = () => {
   const handleSelect: (gymName: string) => void = async (gymName: string) => {
     const gym = gyms.find((g) => g.name === gymName)
     if (gym === undefined) return
-    const res = await getRoutesByGym({ gymId: gym._id })
+    const res = await getOpenRoutesByGym({ gymId: gym._id })
     if (res.status === 200) {
       const routeData = res.data as IRoute[]
       setRoutes(routeData)
@@ -104,8 +104,7 @@ const FindRoutes: React.FC = () => {
         selectedRoute,
         setSelectedRoute: user.identity !== Identity.SETTER ? undefined : setSelectedRoute,
         onDelete: undefined
-      }}
-    >
+      }}>
       {contextHolder}
       <Form form={form}>
         <Row justify="center">
@@ -179,8 +178,7 @@ const FindRoutes: React.FC = () => {
                   onClick={() => {
                     filterForm.setFieldsValue({ keywords: '', tags: [] })
                     setFilteredRoutes(routes)
-                  }}
-                >
+                  }}>
                   Reset
                 </Button>
               </Space>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Typography, Row, Col } from 'antd'
 import { type IRoute } from '../types/route'
-import { deleteRoute, getClimberRequests } from '../api/route'
+import { deleteRoute, getClimberOpenRequests } from '../api/route'
 import useMessage from 'antd/es/message/useMessage'
 import { RoutesContext } from '../components/RoutesContext'
 import RouteList from '../components/RouteList'
@@ -12,7 +12,7 @@ const RouteRequests: React.FC = () => {
 
   useEffect(() => {
     const fetchRequests: () => void = async () => {
-      const res = await getClimberRequests()
+      const res = await getClimberOpenRequests()
       if (res.status === 200) {
         const routes = res.data as IRoute[]
         setRoutes(routes)
@@ -46,8 +46,7 @@ const RouteRequests: React.FC = () => {
         selectedRoute: undefined,
         setSelectedRoute: undefined,
         onDelete: handleDeleteRequest
-      }}
-    >
+      }}>
       {contextHolder}
       <Row justify="center">
         <Typography.Title>My Pending Requests</Typography.Title>

@@ -21,8 +21,7 @@ const AdminHome: React.FC = () => {
             <Flex>
               <Typography.Title level={3}>Gyms Hub</Typography.Title>
             </Flex>
-          }
-        >
+          }>
           <Typography.Title level={4}>
             Facilitates access to create gyms and gym zones.
           </Typography.Title>
@@ -40,8 +39,7 @@ const AdminHome: React.FC = () => {
             <Flex>
               <Typography.Title level={3}>Setters Hub</Typography.Title>
             </Flex>
-          }
-        >
+          }>
           <Typography.Title level={4}>Create credentials for and delete setters.</Typography.Title>
           <Link to="/admin/setters">
             <Button type="primary" icon={<ArrowRightOutlined />}>
@@ -57,8 +55,7 @@ const AdminHome: React.FC = () => {
             <Flex>
               <Typography.Title level={3}>Users Hub</Typography.Title>
             </Flex>
-          }
-        >
+          }>
           <Typography.Title level={4}>Manage unruly users.</Typography.Title>
           <Link to="/admin/users">
             <Button type="primary" icon={<ArrowRightOutlined />}>

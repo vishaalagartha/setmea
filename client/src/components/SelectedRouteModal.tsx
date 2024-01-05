@@ -3,7 +3,7 @@ import { useForm } from 'antd/es/form/Form'
 import { useContext } from 'react'
 import useMessage from 'antd/es/message/useMessage'
 import { type IRoute } from '../types/route'
-import { deleteRoute } from '../api/route'
+import { closeRoute } from '../api/route'
 import { sendMessage } from '../api/messages'
 import { useAppSelector } from '../store/rootReducer'
 import { userSelector } from '../store/userSlice'
@@ -28,7 +28,7 @@ const SelectedRouteModal: React.FC = () => {
   const handleFullfill: () => void = async () => {
     try {
       await form.validateFields()
-      let res = await deleteRoute({ routeId: selectedRoute._id })
+      let res = await closeRoute(selectedRoute._id)
       setRoutes(routes.filter((r) => r._id !== selectedRoute._id))
       setFilteredRoutes !== undefined &&
         setFilteredRoutes(filteredRoutes.filter((r) => r._id !== selectedRoute._id))
@@ -80,8 +80,7 @@ const SelectedRouteModal: React.FC = () => {
             Fulfill {selectedRoute.username}&apos;s request!
           </Button>
         </Flex>
-      }
-    >
+      }>
       {contextHolder}
       <Flex vertical={true}>
         <Typography.Title level={5}>Requester: {selectedRoute.username}</Typography.Title>

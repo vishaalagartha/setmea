@@ -2,11 +2,6 @@ import Route from '../models/route'
 import type { IRoute, IRouteData } from '../types/route'
 import User from '../models/user'
 
-const getRoutesByGym: (gymId: string) => Promise<any> = async (gymId) => {
-  const routes = await Route.find({ gym: gymId })
-  return routes
-}
-
 const formatRoutes: (routes: IRoute[]) => Promise<IRouteData[]> = async (routes: IRoute[]) => {
   const data: IRouteData[] = []
   for (const route of routes) {
@@ -46,4 +41,4 @@ const deleteRoute: (
   }
 }
 
-export { getRoutesByGym, deleteRoute, formatRoutes }
+export { deleteRoute, formatRoutes }

@@ -2,7 +2,7 @@ import type { RequestHandler, Request, Response } from 'express'
 import { Router } from 'express'
 import Route from '../models/route'
 import { type RouteTag, type IRoute } from '../types/route'
-import { getRoutesByGym, deleteRoute, formatRoutes } from '../controllers/route'
+import { deleteRoute, formatRoutes } from '../controllers/route'
 import setUserIdFromToken from '../middlewares/setUserIdFromToken'
 
 const router = Router()
@@ -10,8 +10,8 @@ const router = Router()
 // GET all routes by gym
 router.get('/', (async (req: Request, res: Response) => {
   try {
-    const { gymId } = req.query as { gymId: string }
-    const routes = await getRoutesByGym(gymId) as IRoute[]
+    const { gymId, open } = req.query as { gymId: string, open: boolean | undefined }
+    const routes = await Route.find({ gym: gymId, open })
     const data = await formatRoutes(routes)
     res.status(200).json(data).end()
   } catch (error) {
@@ -73,7 +73,8 @@ router.delete('/:id', (async (req: Request, res: Response) => {
 router.get('/route-requests', setUserIdFromToken, (async (req: Request, res: Response) => {
   try {
     const { userId } = req.body as { userId: string }
-    const routes = await Route.find({ user: userId })
+    const { open } = req.params
+    const routes = await Route.find({ user: userId, open })
     const data = await formatRoutes(routes)
     res.status(200).json(data).end()
   } catch (error) {
@@ -91,7 +92,8 @@ router.get('/route-requests', setUserIdFromToken, (async (req: Request, res: Res
 router.get('/set-requests', setUserIdFromToken, (async (req: Request, res: Response) => {
   try {
     const { userId } = req.body as { userId: string }
-    const routes = await Route.find({ requestedSetter: userId })
+    const { open } = req.params
+    const routes = await Route.find({ requestedSetter: userId, open })
     const data = await formatRoutes(routes)
     res.status(200).json(data).end()
   } catch (error) {
@@ -142,6 +144,24 @@ router.delete('/:id/votes', setUserIdFromToken, (async (req: Request, res: Respo
       return
     }
     throw new Error('Unable to find route.')
+  } catch (error) {
+    console.error(error)
+    res
+      .status(500)
+      .json({
+        message: error.message
+      })
+      .end()
+  }
+}) as RequestHandler)
+
+// PATCH route by route id
+router.patch('/:id', (async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+    const updateQuery = req.body as IRoute
+    const route = await Route.findByIdAndUpdate(id, updateQuery, { new: true })
+    res.status(200).json(route).end()
   } catch (error) {
     console.error(error)
     res

@@ -67,8 +67,7 @@ const App: React.FC = () => {
             itemActiveBg: colors.bg_sky_950
           }
         }
-      }}
-    >
+      }}>
       <Layout>
         <BrowserRouter>
           <Routes>

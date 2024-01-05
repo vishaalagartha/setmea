@@ -1,7 +1,6 @@
 import { useContext } from 'react'
 import { List, Typography, Space, Row, Tag, Col, Button, Divider } from 'antd'
 import { type IRoute } from '../types/route'
-import SelectedRouteModal from './SelectedRouteModal'
 import { dateToString } from '../utils/date'
 import { RoutesContext } from '../components/RoutesContext'
 import { DeleteOutlined, LikeFilled, LikeOutlined } from '@ant-design/icons'
@@ -34,11 +33,11 @@ const RouteList: React.FC = () => {
           }
         ])
       } else {
-        message.open({ type: 'error', content: res.data.message })
+        await message.open({ type: 'error', content: res.data.message })
       }
     } catch (error) {
       console.error(error)
-      message.open({ type: 'error', content: JSON.stringify(error) })
+      await message.open({ type: 'error', content: JSON.stringify(error) })
     }
   }
 
@@ -55,16 +54,17 @@ const RouteList: React.FC = () => {
           }
         ])
       } else {
-        message.open({ type: 'error', content: res.data.message })
+        await message.open({ type: 'error', content: res.data.message })
       }
     } catch (error) {
       console.error(error)
-      message.open({ type: 'error', content: JSON.stringify(error) })
+      await message.open({ type: 'error', content: JSON.stringify(error) })
     }
   }
 
   return (
     <Row justify="center">
+      {contextHolder}
       <Col xs={20} md={12} lg={10}>
         <List
           bordered={true}
@@ -75,7 +75,7 @@ const RouteList: React.FC = () => {
             onDelete is defined if user is the creator 
             Otherwise, render the like/unlike buttons
             */
-            const ActionButton = () => {
+            const ActionButton: React.FC = () => {
               if (setSelectedRoute !== undefined) return null
               else if (onDelete !== undefined)
                 return (
@@ -114,8 +114,7 @@ const RouteList: React.FC = () => {
                 className={user.identity === Identity.SETTER ? 'cursor-pointer' : ''}
                 onClick={() => {
                   setSelectedRoute !== undefined && setSelectedRoute(item)
-                }}
-              >
+                }}>
                 <div className="w-full">
                   <Row justify="space-between">
                     <Typography.Title level={5}>Goal: {item.goal}</Typography.Title>
@@ -148,12 +147,12 @@ const RouteList: React.FC = () => {
                     </Col>
                   </Row>
                   <Space className="my-3">
-                    {item.grade && (
+                    {item.grade !== undefined && (
                       <Typography.Text>
                         <strong>Requested grade:</strong> V{item.grade}
                       </Typography.Text>
                     )}
-                    {item.requestedSetter && (
+                    {item.requestedSetter !== undefined && (
                       <Typography.Text>
                         <strong>Requested setter:</strong> {item.requestedSetterUsername}
                       </Typography.Text>

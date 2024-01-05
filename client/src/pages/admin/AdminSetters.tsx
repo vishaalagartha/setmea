@@ -99,8 +99,7 @@ const AdminSetters: React.FC = () => {
         <Form.Item
           label="Username"
           name="username"
-          rules={[{ required: true, message: 'Please input a username' }]}
-        >
+          rules={[{ required: true, message: 'Please input a username' }]}>
           <Input placeholder="Chris" />
         </Form.Item>
         <Form.Item
@@ -109,8 +108,7 @@ const AdminSetters: React.FC = () => {
           rules={[
             { type: 'email', message: 'Invalid email' },
             { required: true, message: 'Please input a email' }
-          ]}
-        >
+          ]}>
           <Input placeholder="crusher@bishop.com" />
         </Form.Item>
         <Flex justify="center">

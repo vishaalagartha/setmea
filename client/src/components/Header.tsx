@@ -11,7 +11,8 @@ import {
   LogoutOutlined,
   ArrowRightOutlined,
   UserOutlined,
-  UnorderedListOutlined
+  UnorderedListOutlined,
+  HistoryOutlined
 } from '@ant-design/icons'
 import { getReceiverMessages } from '../api/messages'
 import { type IMessage } from '../types/message'
@@ -107,8 +108,6 @@ const Header: FC<HeaderProps> = ({ children }: { children: ReactNode }) => {
           return item
         })
 
-  console.log(messageElements)
-
   return (
     <div>
       {contextHolder}
@@ -123,7 +122,7 @@ const Header: FC<HeaderProps> = ({ children }: { children: ReactNode }) => {
         <Container>
           <Navbar.Brand>
             <Link to="/">
-              <Image src={Logo} preview={false} height={70} />
+              <Image src={Logo} preview={false} width={200} />
             </Link>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -145,11 +144,27 @@ const Header: FC<HeaderProps> = ({ children }: { children: ReactNode }) => {
                   </div>
                 </Nav.Link>
               )}
+              {user.identity === Identity.CLIMBER && (
+                <Nav.Link href="/route-history" className="mx-3">
+                  <div className="flex text-slate-50 hover:text-sky-500">
+                    <HistoryOutlined className="text-3xl" />
+                    {toggled && <div className="ml-3">My History</div>}
+                  </div>
+                </Nav.Link>
+              )}
               {user.identity === Identity.SETTER && (
                 <Nav.Link href="/set-requests" className="mx-3">
                   <div className="flex text-slate-50 hover:text-sky-500">
                     <UnorderedListOutlined className="text-3xl" />
                     {toggled && <div className="ml-3">My Set Requests</div>}
+                  </div>
+                </Nav.Link>
+              )}
+              {user.identity === Identity.SETTER && (
+                <Nav.Link href="/set-history" className="mx-3">
+                  <div className="flex text-slate-50 hover:text-sky-500">
+                    <HistoryOutlined className="text-3xl" />
+                    {toggled && <div className="ml-3">My History</div>}
                   </div>
                 </Nav.Link>
               )}

@@ -41,37 +41,32 @@ const GymForm: React.FC<GymFormProps> = ({ open, setOpen }: GymFormProps) => {
           <Typography.Title level={3}>Create Gym</Typography.Title>
         </Flex>
       }
-      footer={null}
-    >
+      footer={null}>
       {contextHolder}
       <Flex vertical={true} align="center">
         <Form form={form} className="w-3/4">
           <Form.Item
             label="Gym Name"
             name="name"
-            rules={[{ required: true, message: 'Please input a name' }]}
-          >
+            rules={[{ required: true, message: 'Please input a name' }]}>
             <Input />
           </Form.Item>
           <Form.Item
             label="Gym Address"
             name="address"
-            rules={[{ required: true, message: 'Please input an address' }]}
-          >
+            rules={[{ required: true, message: 'Please input an address' }]}>
             <Input />
           </Form.Item>
           <Form.Item
             label="City"
             name="city"
-            rules={[{ required: true, message: 'Please input a city' }]}
-          >
+            rules={[{ required: true, message: 'Please input a city' }]}>
             <Input />
           </Form.Item>
           <Form.Item
             label="State"
             name="state"
-            rules={[{ required: true, message: 'Please input a state' }]}
-          >
+            rules={[{ required: true, message: 'Please input a state' }]}>
             <Select options={states} />
           </Form.Item>
           <Flex justify="space-around">
@@ -83,8 +78,7 @@ const GymForm: React.FC<GymFormProps> = ({ open, setOpen }: GymFormProps) => {
               onClick={() => {
                 setOpen(false)
                 form.setFieldsValue({ name: '', city: '', address: '', state: '' })
-              }}
-            >
+              }}>
               Cancel
             </Button>
           </Flex>

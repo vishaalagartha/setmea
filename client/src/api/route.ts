@@ -11,9 +11,21 @@ interface RouteProps {
   requestedSetterId: string | undefined
 }
 
-const getRoutesByGym = async ({ gymId }: { gymId: string }): Promise<any> => {
+const getOpenRoutesByGym = async ({ gymId }: { gymId: string }): Promise<any> => {
   try {
-    const res = await request(`routes?gymId=${gymId}`, {
+    const res = await request(`routes?gymId=${gymId}&open=true`, {
+      method: 'GET'
+    })
+    return res
+  } catch (error) {
+    console.error(error)
+    return error
+  }
+}
+
+const getClosedRoutesByGym = async ({ gymId }: { gymId: string }): Promise<any> => {
+  try {
+    const res = await request(`routes?gymId=${gymId}&open=false`, {
       method: 'GET'
     })
     return res
@@ -44,11 +56,7 @@ const createRoute = async ({
   }
 }
 
-interface DeleteRouteProps {
-  routeId: string
-}
-
-const deleteRoute = async ({ routeId }: DeleteRouteProps): Promise<any> => {
+const deleteRoute = async ({ routeId }: { routeId: string }): Promise<any> => {
   try {
     const res = await request(`routes/${routeId}`, {
       method: 'DELETE'
@@ -60,9 +68,22 @@ const deleteRoute = async ({ routeId }: DeleteRouteProps): Promise<any> => {
   }
 }
 
-const getClimberRequests = async (): Promise<any> => {
+const closeRoute = async (routeId: string): Promise<any> => {
   try {
-    const res = await request(`routes/route-requests`, {
+    const res = await request(`routes/${routeId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ open: false })
+    })
+    return res
+  } catch (error) {
+    console.error(error)
+    return error
+  }
+}
+
+const getClimberOpenRequests = async (): Promise<any> => {
+  try {
+    const res = await request(`routes/route-requests?open=true`, {
       method: 'GET'
     })
     return res
@@ -72,9 +93,33 @@ const getClimberRequests = async (): Promise<any> => {
   }
 }
 
-const getSetterRequests = async (): Promise<any> => {
+const getClimberClosedRequests = async (): Promise<any> => {
   try {
-    const res = await request(`routes/set-requests`, {
+    const res = await request(`routes/route-requests?open=false`, {
+      method: 'GET'
+    })
+    return res
+  } catch (error) {
+    console.error(error)
+    return error
+  }
+}
+
+const getSetterOpenRequests = async (): Promise<any> => {
+  try {
+    const res = await request(`routes/set-requests?open=true`, {
+      method: 'GET'
+    })
+    return res
+  } catch (error) {
+    console.error(error)
+    return error
+  }
+}
+
+const getSetterClosedRequests = async (): Promise<any> => {
+  try {
+    const res = await request(`routes/set-requests?open=false`, {
       method: 'GET'
     })
     return res
@@ -110,10 +155,14 @@ const unvoteRoute = async (id: string): Promise<any> => {
 
 export {
   createRoute,
-  getRoutesByGym,
+  getOpenRoutesByGym,
+  getClosedRoutesByGym,
   deleteRoute,
-  getClimberRequests,
-  getSetterRequests,
+  closeRoute,
+  getClimberOpenRequests,
+  getClimberClosedRequests,
+  getSetterOpenRequests,
+  getSetterClosedRequests,
   voteRoute,
   unvoteRoute
 }

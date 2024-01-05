@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Typography, Row, Col } from 'antd'
 import { type IRoute } from '../types/route'
-import { getSetterRequests } from '../api/route'
+import { getSetterOpenRequests } from '../api/route'
 import RouteList from '../components/RouteList'
 import SelectedRouteModal from '../components/SelectedRouteModal'
 import { RoutesContext } from '../components/RoutesContext'
@@ -12,7 +12,7 @@ const SetRequests: React.FC = () => {
 
   useEffect(() => {
     const fetchSets: () => void = async () => {
-      const res = await getSetterRequests()
+      const res = await getSetterOpenRequests()
       if (res.status === 200) {
         const routes = res.data as IRoute[]
         setRoutes(routes)
@@ -31,8 +31,7 @@ const SetRequests: React.FC = () => {
         selectedRoute,
         setSelectedRoute,
         onDelete: undefined
-      }}
-    >
+      }}>
       <Row justify="center">
         <Typography.Title>My Pending Sets</Typography.Title>
       </Row>

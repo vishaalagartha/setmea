@@ -87,8 +87,7 @@ const AdminUsers: React.FC = () => {
           <Typography.Title level={3}>Send {selectedClimber.username} a message</Typography.Title>
           <Form.Item
             name="content"
-            rules={[{ required: true, message: 'Please input a message.' }]}
-          >
+            rules={[{ required: true, message: 'Please input a message.' }]}>
             <Input.TextArea />
           </Form.Item>
           <Flex justify="center">

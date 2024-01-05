@@ -1,5 +1,5 @@
 import { createContext } from 'react'
-import { IRoute } from '../types/route'
+import type { IRoute } from '../types/route'
 
 interface RoutesInterface {
   routes: IRoute[]
