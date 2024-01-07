@@ -204,7 +204,7 @@ router.patch('/:id', setUserIdFromToken, (async (req: Request, res: Response) =>
     const route = await Route.findByIdAndUpdate(id, { open, setter: userId }, { new: true })
     if (route?.votes !== undefined && setter !== null) {
       for (const voter of route.votes) {
-        const content = `${setter.username} set a climb you liked! <a href="/${route._id.toString()}">Click here to view the route.</a>`
+        const content = `${setter.username} set a climb you liked! <a href="/routes/${route._id.toString()}">Click here to view the route.</a>`
         await createMessage(userId, voter, content)
       }
     }

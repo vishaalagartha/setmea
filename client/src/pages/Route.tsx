@@ -47,7 +47,7 @@ const Route: React.FC = () => {
         route.user,
         `${
           user.username
-        } fulfilled your route request. <a href='/${route._id.toString()}>Click here to view your request.</a>`
+        } fulfilled your route request. <a href='/routes/${route._id.toString()}>Click here to view your request.</a>`
       )
       const { content } = form.getFieldsValue() as { content: string }
       if (content !== undefined && content.length > 0) {
