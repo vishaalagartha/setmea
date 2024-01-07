@@ -10,7 +10,8 @@ const initialState = {
   height: undefined,
   weight: undefined,
   apeIndex: undefined,
-  avatar: ''
+  avatar: '',
+  location: ''
 }
 
 const userSlice = createSlice({

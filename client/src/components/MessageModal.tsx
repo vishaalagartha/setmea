@@ -63,7 +63,7 @@ const MessageModal: React.FC<MessageModalProps> = ({ message, setMessage }: Mess
       <Flex vertical={true} align="center">
         <Form form={form} className="w-3/4">
           <Typography.Title level={3}>{message.senderUsername} says:</Typography.Title>
-          <Typography.Text>{message.content}</Typography.Text>
+          <div dangerouslySetInnerHTML={{ __html: message.content }} />
           <Divider />
           <Typography.Text>Respond to {message.senderUsername}:</Typography.Text>
           <Form.Item name="content">

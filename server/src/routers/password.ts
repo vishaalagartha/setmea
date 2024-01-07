@@ -28,7 +28,7 @@ router.put('/request', (async (req: express.Request, res: express.Response) => {
     res
       .status(500)
       .json({
-        message: 'Error finding user',
+        message: error.message,
         error
       })
       .end()

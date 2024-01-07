@@ -1,37 +1,58 @@
-import { useContext } from 'react'
 import { List, Typography, Space, Row, Tag, Col, Button, Divider } from 'antd'
 import { type IRoute } from '../types/route'
 import { dateToString } from '../utils/date'
-import { RoutesContext } from '../components/RoutesContext'
 import { DeleteOutlined, LikeFilled, LikeOutlined } from '@ant-design/icons'
 import { useAppSelector } from '../store/rootReducer'
 import { userSelector } from '../store/userSlice'
 import useMessage from 'antd/es/message/useMessage'
-import { unvoteRoute, voteRoute } from '../api/route'
+import { deleteRoute, unvoteRoute, voteRoute } from '../api/route'
+import { useNavigate } from 'react-router-dom'
 import { Identity } from '../types/user'
 
-const RouteList: React.FC = () => {
+interface RouteListProps {
+  routes: IRoute[]
+  setRoutes: React.Dispatch<React.SetStateAction<IRoute[]>>
+  filteredRoutes: IRoute[] | undefined
+  setFilteredRoutes: React.Dispatch<React.SetStateAction<IRoute[]>> | undefined
+}
+
+const RouteList: React.FC<RouteListProps> = ({
+  routes,
+  setRoutes,
+  filteredRoutes,
+  setFilteredRoutes
+}: RouteListProps) => {
   const user = useAppSelector(userSelector)
   const [message, contextHolder] = useMessage()
-  const { routes, setRoutes, setSelectedRoute, onDelete } = useContext(RoutesContext) as {
-    routes: IRoute[]
-    setRoutes: React.Dispatch<React.SetStateAction<IRoute[]>>
-    setSelectedRoute: React.Dispatch<React.SetStateAction<IRoute | undefined>>
-    onDelete: ((id: string) => void) | undefined
-  }
+
+  const navigate = useNavigate()
 
   const handleLike: (route: IRoute) => void = async (route: IRoute) => {
     try {
       const res = await voteRoute(route._id)
       if (res.status === 201) {
-        setRoutes([
-          ...routes.filter((r) => r._id !== route._id),
-          {
-            ...route,
-            votes: [...route.votes, user._id],
-            voterUsernames: [...route.voterUsernames, user.username]
-          }
-        ])
+        setRoutes(
+          [
+            ...routes.filter((r) => r._id !== route._id),
+            {
+              ...route,
+              votes: [...route.votes, user._id],
+              voterUsernames: [...route.voterUsernames, user.username]
+            }
+          ].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+        )
+        setFilteredRoutes !== undefined &&
+          filteredRoutes !== undefined &&
+          setFilteredRoutes(
+            [
+              ...filteredRoutes.filter((r) => r._id !== route._id),
+              {
+                ...route,
+                votes: [...route.votes, user._id],
+                voterUsernames: [...route.voterUsernames, user.username]
+              }
+            ].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+          )
       } else {
         await message.open({ type: 'error', content: res.data.message })
       }
@@ -45,14 +66,54 @@ const RouteList: React.FC = () => {
     try {
       const res = await unvoteRoute(route._id)
       if (res.status === 200) {
-        setRoutes([
-          ...routes.filter((r) => r._id !== route._id),
-          {
-            ...route,
-            votes: route.votes.filter((v) => v !== user._id),
-            voterUsernames: route.voterUsernames.filter((v) => v !== user.username)
-          }
-        ])
+        setRoutes(
+          [
+            ...routes.filter((r) => r._id !== route._id),
+            {
+              ...route,
+              votes: route.votes.filter((v) => v !== user._id),
+              voterUsernames: route.voterUsernames.filter((v) => v !== user.username)
+            }
+          ].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+        )
+        setFilteredRoutes !== undefined &&
+          filteredRoutes !== undefined &&
+          setFilteredRoutes(
+            [
+              ...filteredRoutes.filter((r) => r._id !== route._id),
+              {
+                ...route,
+                votes: route.votes.filter((v) => v !== user._id),
+                voterUsernames: route.voterUsernames.filter((v) => v !== user.username)
+              }
+            ].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+          )
+      } else {
+        await message.open({ type: 'error', content: res.data.message })
+      }
+    } catch (error) {
+      console.error(error)
+      await message.open({ type: 'error', content: JSON.stringify(error) })
+    }
+  }
+
+  const handleDeleteRequest: (id: string) => void = async (id: string) => {
+    try {
+      const res = await deleteRoute({ routeId: id })
+      setRoutes(
+        routes
+          .filter((r) => r._id !== id)
+          .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      )
+      setFilteredRoutes !== undefined &&
+        filteredRoutes !== undefined &&
+        setFilteredRoutes(
+          filteredRoutes
+            .filter((r) => r._id !== id)
+            .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+        )
+      if (res.status === 200) {
+        await message.open({ type: 'success', content: 'Deleted request.' })
       } else {
         await message.open({ type: 'error', content: res.data.message })
       }
@@ -76,13 +137,14 @@ const RouteList: React.FC = () => {
             Otherwise, render the like/unlike buttons
             */
             const ActionButton: React.FC = () => {
-              if (setSelectedRoute !== undefined) return null
-              else if (onDelete !== undefined)
+              if (!item.open || user.identity === Identity.SETTER) return null
+              if (user._id === item.user)
                 return (
                   <Button
                     danger
-                    onClick={() => {
-                      onDelete(item._id)
+                    onClick={(e: React.MouseEvent<HTMLElement>) => {
+                      handleDeleteRequest(item._id)
+                      e.stopPropagation()
                     }}
                     icon={<DeleteOutlined />}
                   />
@@ -91,8 +153,9 @@ const RouteList: React.FC = () => {
                 return (
                   <Button
                     type="primary"
-                    onClick={() => {
+                    onClick={(e: React.MouseEvent<HTMLElement>) => {
                       handleUnlike(item)
+                      e.stopPropagation()
                     }}
                     icon={<LikeFilled />}
                   />
@@ -100,8 +163,9 @@ const RouteList: React.FC = () => {
               else if (!isLiked && user._id !== item.user)
                 return (
                   <Button
-                    onClick={() => {
+                    onClick={(e: React.MouseEvent<HTMLElement>) => {
                       handleLike(item)
+                      e.stopPropagation()
                     }}
                     icon={<LikeOutlined />}
                   />
@@ -111,9 +175,9 @@ const RouteList: React.FC = () => {
             return (
               <List.Item
                 key={i}
-                className={user.identity === Identity.SETTER ? 'cursor-pointer' : ''}
+                className={'cursor-pointer'}
                 onClick={() => {
-                  setSelectedRoute !== undefined && setSelectedRoute(item)
+                  navigate(`/routes/${item._id}`, { state: item })
                 }}>
                 <div className="w-full">
                   <Row justify="space-between">
@@ -126,7 +190,12 @@ const RouteList: React.FC = () => {
                     </Typography.Title>
                   </Row>
                   <Row>
-                    <Typography.Title level={5}>Requester: {item.username}</Typography.Title>
+                    <Typography.Title level={5}>
+                      Requester:{' '}
+                      <Typography.Link href={`/profile/${item.user}`}>
+                        {item.username}
+                      </Typography.Link>
+                    </Typography.Title>
                   </Row>
                   <Row>Additional Details:</Row>
                   <Row>
@@ -154,10 +223,25 @@ const RouteList: React.FC = () => {
                     )}
                     {item.requestedSetter !== undefined && (
                       <Typography.Text>
-                        <strong>Requested setter:</strong> {item.requestedSetterUsername}
+                        <strong>Requested setter:</strong>{' '}
+                        <Typography.Link href={`/profile/${item.requestedSetter}`}>
+                          {item.requestedSetterUsername}
+                        </Typography.Link>
                       </Typography.Text>
                     )}
                   </Space>
+                  <div>
+                    {item.setter !== undefined && (
+                      <Row>
+                        <Typography.Text>
+                          <strong>Setter:</strong>{' '}
+                          <Typography.Link href={`/profile/${item.setter}`}>
+                            {item.setterUsername}
+                          </Typography.Link>
+                        </Typography.Text>
+                      </Row>
+                    )}
+                  </div>
                 </div>
               </List.Item>
             )

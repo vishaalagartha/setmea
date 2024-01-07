@@ -7,6 +7,7 @@ export enum Identity {
 interface IUser {
   _id: string
   username: string
+  location: string
   identity: Identity | undefined
   email: string
   height: number | undefined

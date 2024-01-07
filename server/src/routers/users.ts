@@ -2,9 +2,8 @@ import type express from 'express'
 import { Router } from 'express'
 import type { RequestHandler } from 'express'
 import User from '../models/user'
-import { generate } from '../utils/auth-helpers'
-import { sendMail } from '../utils/email'
 import setUserIdFromToken from '../middlewares/setUserIdFromToken'
+import { IUser } from 'types/user'
 const router = Router()
 
 // GET users identity
@@ -71,6 +70,23 @@ router.delete('/:id', setUserIdFromToken, (async (req: express.Request, res: exp
     }
     await User.findByIdAndDelete(id)
     res.status(200).json({ message: 'Deleted user.' }).end()
+  } catch (error) {
+    console.error(error)
+    res
+      .status(500)
+      .json({
+        message: error.message
+      })
+      .end()
+  }
+}) as RequestHandler)
+
+// PUT user by id
+router.put('/:id', (async (req: express.Request, res: express.Response) => {
+  try {
+    const { id } = req.params
+    const user = await User.findByIdAndUpdate(id, req.body as IUser, { new: true })
+    res.status(200).json(user).end()
   } catch (error) {
     console.error(error)
     res

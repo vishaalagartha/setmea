@@ -1,0 +1,117 @@
+[{
+  "_id": {
+    "$oid": "6599a025d94b4aaeb9136776"
+  },
+  "open": true,
+  "goal": "crimp strength",
+  "details": "a 10-15 move crimp line that is very board style. My outdoor project has a lot of underclings so include a lot of undercling moves.",
+  "gym": {
+    "$oid": "6593297db8821ed7c1dcfed5"
+  },
+  "tags": [
+    "crimp"
+  ],
+  "user": {
+    "$oid": "65999fd4d94b4aaeb9136771"
+  },
+  "requestedSetter": null,
+  "setter": null,
+  "votes": [
+    "6599c5358b678a123309da75"
+  ],
+  "zone": "Solar Flare",
+  "grade": 6,
+  "date": {
+    "$date": "2024-01-06T18:47:01.533Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6599c51a8b678a123309da72"
+  },
+  "open": false,
+  "goal": "pinch strength",
+  "details": "a very short boulder problem consisting of wide compression on pinches. I tend to excel at narrow pinches, so set me something with wide pinches. I'm 6 ft with a +4 ape, so make sure it's super wide!",
+  "gym": {
+    "$oid": "6593297db8821ed7c1dcfed5"
+  },
+  "tags": [
+    "pinch",
+    "compression"
+  ],
+  "user": {
+    "$oid": "6599c4c68b678a123309da6d"
+  },
+  "requestedSetter": {
+    "$oid": "65998c21d94b4aaeb9136768"
+  },
+  "setter": {
+    "$oid": "65998c21d94b4aaeb9136768"
+  },
+  "votes": [
+    "6599c5358b678a123309da75",
+    "65999fd4d94b4aaeb9136771"
+  ],
+  "zone": "Welcome Wall",
+  "grade": 10,
+  "date": {
+    "$date": "2024-01-06T21:24:42.887Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6599c6298b678a123309da88"
+  },
+  "open": true,
+  "goal": "balance and technical footwork",
+  "details": "I want to send Kumba in Yosemite. It's a test piece V9 slab on thin edges and granite. Here is a link to a video for more reference: https://betabase.blogspot.com/2010/01/1-16-10-kumba.html",
+  "gym": {
+    "$oid": "6593297db8821ed7c1dcfed5"
+  },
+  "tags": [
+    "slab",
+    "crimp"
+  ],
+  "user": {
+    "$oid": "6599c5358b678a123309da75"
+  },
+  "requestedSetter": {
+    "$oid": "6599c5948b678a123309da7f"
+  },
+  "setter": null,
+  "votes": [
+    "65999fd4d94b4aaeb9136771"
+  ],
+  "zone": "Comp Slabs",
+  "grade": 9,
+  "date": {
+    "$date": "2024-01-06T21:29:13.947Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6599ee939653d78458f38ed0"
+  },
+  "open": true,
+  "goal": "jumping and dyno ability",
+  "details": "awesome comp-style double clutch. Make it lateral, because I tend to do well on vertical dynos. I especially struggle jumping off of slippery feet, so make the feet very slick.",
+  "gym": {
+    "$oid": "6593297db8821ed7c1dcfed5"
+  },
+  "tags": [
+    "competition"
+  ],
+  "user": {
+    "$oid": "6599c4c68b678a123309da6d"
+  },
+  "requestedSetter": {
+    "$oid": "6599c5948b678a123309da7f"
+  },
+  "setter": null,
+  "votes": [],
+  "zone": "Soccer Ball",
+  "grade": 4,
+  "date": {
+    "$date": "2024-01-07T00:21:39.609Z"
+  }
+}]

@@ -3,7 +3,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { ConfigProvider, Layout } from 'antd'
 import Home from './pages/Home'
 import Landing from './pages/Landing'
-import Profile from './pages/Profile'
+import MyProfile from './pages/MyProfile'
+import UserProfile from './pages/UserProfile'
 import './App.css'
 import 'antd/dist/reset.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -18,6 +19,8 @@ import { colors } from './utils/theme'
 import { Identity } from './types/user'
 import SetRequests from './pages/SetRequests'
 import FindRoutes from './pages/FindRoutes'
+import RoutePage from './pages/Route'
+import RouteHistory from './pages/RouteHistory'
 
 /*
 Colors:
@@ -39,9 +42,17 @@ const App: React.FC = () => {
           },
           Typography: {
             colorLink: colors.bg_sky_700,
-            colorLinkActive: colors.bg_sky_600
+            colorLinkActive: colors.bg_sky_600,
+            colorText: colors.bg_sky_950,
+            colorTextHeading: colors.bg_sky_950
           },
           Input: {
+            borderRadius: 10,
+            colorBorder: colors.bg_sky_700,
+            colorPrimaryBorder: colors.bg_sky_700,
+            activeBorderColor: colors.bg_sky_600
+          },
+          InputNumber: {
             borderRadius: 10,
             colorBorder: colors.bg_sky_700,
             colorPrimaryBorder: colors.bg_sky_700,
@@ -65,6 +76,9 @@ const App: React.FC = () => {
             itemSelectedBg: colors.bg_sky_950,
             itemSelectedColor: colors.bg_sky_950,
             itemActiveBg: colors.bg_sky_950
+          },
+          List: {
+            colorBorder: colors.bg_sky_500
           }
         }
       }}>
@@ -81,14 +95,18 @@ const App: React.FC = () => {
             <Route Component={PasswordReset} path="/passwordReset" />
             <Route element={<ProtectedRoute identity={undefined} />} path="/">
               <Route Component={Home} path="/" />
-              <Route Component={Profile} path="/profile" />
+              <Route Component={MyProfile} path="/profile" />
+              <Route Component={UserProfile} path="/profile/:id" />
+              <Route Component={RoutePage} path="/routes/:id" />
             </Route>
             <Route element={<ProtectedRoute identity={Identity.SETTER} />} path="/">
               <Route Component={SetRequests} path="/set-requests" />
+              <Route Component={RouteHistory} path="/set-history" />
             </Route>
             <Route element={<ProtectedRoute identity={Identity.CLIMBER} />} path="/">
               <Route Component={FindRoutes} path="/browse" />
               <Route Component={RouteRequests} path="/route-requests" />
+              <Route Component={RouteHistory} path="/route-history" />
             </Route>
           </Routes>
         </BrowserRouter>

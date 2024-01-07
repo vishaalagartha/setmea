@@ -20,8 +20,6 @@ import useMessage from 'antd/es/message/useMessage'
 import { useAppSelector } from '../store/rootReducer'
 import { userSelector } from '../store/userSlice'
 import { Identity } from '../types/user'
-import { RoutesContext } from '../components/RoutesContext'
-import SelectedRouteModal from '../components/SelectedRouteModal'
 
 const FindRoutes: React.FC = () => {
   const [form] = Form.useForm()
@@ -95,16 +93,7 @@ const FindRoutes: React.FC = () => {
     setFilteredRoutes(newFilteredRoutes)
   }
   return (
-    <RoutesContext.Provider
-      value={{
-        routes,
-        setRoutes,
-        filteredRoutes,
-        setFilteredRoutes,
-        selectedRoute,
-        setSelectedRoute: user.identity !== Identity.SETTER ? undefined : setSelectedRoute,
-        onDelete: undefined
-      }}>
+    <div>
       {contextHolder}
       <Form form={form}>
         <Row justify="center">
@@ -187,9 +176,15 @@ const FindRoutes: React.FC = () => {
         </div>
       )}
       <Divider />
-      <SelectedRouteModal />
-      {filteredRoutes.length > 0 && <RouteList />}
-    </RoutesContext.Provider>
+      {filteredRoutes.length > 0 && (
+        <RouteList
+          routes={routes}
+          setRoutes={setRoutes}
+          filteredRoutes={filteredRoutes}
+          setFilteredRoutes={setFilteredRoutes}
+        />
+      )}
+    </div>
   )
 }
 

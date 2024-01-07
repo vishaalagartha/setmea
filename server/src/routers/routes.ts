@@ -1,9 +1,11 @@
 import type { RequestHandler, Request, Response } from 'express'
 import { Router } from 'express'
 import Route from '../models/route'
-import { type RouteTag, type IRoute } from '../types/route'
+import { type RouteTag } from '../types/route'
+import User from '../models/user'
 import { deleteRoute, formatRoutes } from '../controllers/route'
 import setUserIdFromToken from '../middlewares/setUserIdFromToken'
+import { createMessage } from '../controllers/message'
 
 const router = Router()
 
@@ -14,6 +16,82 @@ router.get('/', (async (req: Request, res: Response) => {
     const routes = await Route.find({ gym: gymId, open })
     const data = await formatRoutes(routes)
     res.status(200).json(data).end()
+  } catch (error) {
+    console.error(error)
+    res
+      .status(500)
+      .json({
+        message: error.message
+      })
+      .end()
+  }
+}) as RequestHandler)
+
+// GET all route requests by user id
+router.get('/route-requests', (async (req: Request, res: Response) => {
+  try {
+    const { open, userId } = req.query
+    const routes = await Route.find({ user: userId, open })
+    const data = await formatRoutes(routes)
+    res.status(200).json(data).end()
+  } catch (error) {
+    console.error(error)
+    res
+      .status(500)
+      .json({
+        message: error.message
+      })
+      .end()
+  }
+}) as RequestHandler)
+
+// GET all set requests by user id
+router.get('/set-requests', setUserIdFromToken, (async (req: Request, res: Response) => {
+  try {
+    const { open, userId } = req.query
+    const routes = await Route.find({ requestedSetter: userId, open })
+    const data = await formatRoutes(routes)
+    res.status(200).json(data).end()
+  } catch (error) {
+    console.error(error)
+    res
+      .status(500)
+      .json({
+        message: error.message
+      })
+      .end()
+  }
+}) as RequestHandler)
+
+// GET all sets by user id
+router.get('/sets', setUserIdFromToken, (async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.body as { userId: string }
+    const routes = await Route.find({ setter: userId })
+    const data = await formatRoutes(routes)
+    res.status(200).json(data).end()
+  } catch (error) {
+    console.error(error)
+    res
+      .status(500)
+      .json({
+        message: error.message
+      })
+      .end()
+  }
+}) as RequestHandler)
+
+// GET route by id
+router.get('/:id', (async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+    const route = await Route.findById(id)
+    if (route === null) {
+      res.status(404).json({ message: 'Route not found' }).end()
+      return
+    }
+    const data = await formatRoutes([route])
+    res.status(200).json(data[0]).end()
   } catch (error) {
     console.error(error)
     res
@@ -58,44 +136,6 @@ router.delete('/:id', (async (req: Request, res: Response) => {
     const { id } = req.params
     await deleteRoute(id)
     res.status(200).json({ message: 'Deleted route.' }).end()
-  } catch (error) {
-    console.error(error)
-    res
-      .status(500)
-      .json({
-        message: error.message
-      })
-      .end()
-  }
-}) as RequestHandler)
-
-// GET all route requests by user id
-router.get('/route-requests', setUserIdFromToken, (async (req: Request, res: Response) => {
-  try {
-    const { userId } = req.body as { userId: string }
-    const { open } = req.params
-    const routes = await Route.find({ user: userId, open })
-    const data = await formatRoutes(routes)
-    res.status(200).json(data).end()
-  } catch (error) {
-    console.error(error)
-    res
-      .status(500)
-      .json({
-        message: error.message
-      })
-      .end()
-  }
-}) as RequestHandler)
-
-// GET all set requests by user id
-router.get('/set-requests', setUserIdFromToken, (async (req: Request, res: Response) => {
-  try {
-    const { userId } = req.body as { userId: string }
-    const { open } = req.params
-    const routes = await Route.find({ requestedSetter: userId, open })
-    const data = await formatRoutes(routes)
-    res.status(200).json(data).end()
   } catch (error) {
     console.error(error)
     res
@@ -156,11 +196,18 @@ router.delete('/:id/votes', setUserIdFromToken, (async (req: Request, res: Respo
 }) as RequestHandler)
 
 // PATCH route by route id
-router.patch('/:id', (async (req: Request, res: Response) => {
+router.patch('/:id', setUserIdFromToken, (async (req: Request, res: Response) => {
   try {
     const { id } = req.params
-    const updateQuery = req.body as IRoute
-    const route = await Route.findByIdAndUpdate(id, updateQuery, { new: true })
+    const { open, userId } = req.body as { open: boolean, userId: string }
+    const setter = await User.findById(userId)
+    const route = await Route.findByIdAndUpdate(id, { open, setter: userId }, { new: true })
+    if (route?.votes !== undefined && setter !== null) {
+      for (const voter of route.votes) {
+        const content = `${setter.username} set a climb you liked! <a href="/${route._id.toString()}">Click here to view the route.</a>`
+        await createMessage(userId, voter, content)
+      }
+    }
     res.status(200).json(route).end()
   } catch (error) {
     console.error(error)

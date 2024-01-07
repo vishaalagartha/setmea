@@ -1,49 +1,42 @@
 import nodemailer from 'nodemailer'
+import path from 'path'
 import { type SentMessageInfo } from 'nodemailer/lib/smtp-transport'
+import fs from 'fs'
+import handlebars from 'handlebars'
 
-const transport = nodemailer.createTransport({
-  host: 'smtp-relay.brevo.com',
-  port: 587,
-  auth: {
-    user: 'vishaalagartha@gmail.com',
-    pass: 'TwIYxW4kb9CGq7Op'
-  }
-})
-
-const createTemplate: (token: string, username: string, userId: string) => string = (token: string, username: string, userId: string) => {
-  const url = process.env.NODE_ENV === 'dev' ? process.env.CLIENT_DEV_URL : process.env.CLIENT_PROD_URL
-  const link = `${url}/passwordReset?token=${token}&id=${userId}`
-  return (
-    `
-    <html>
-    <head>
-        <style>
-
-        </style>
-    </head>
-    <body>
-        <p>Hi ${username},</p>
-        <p>You requested to reset your password.</p>
-        <p>Please, click the link below to reset your password</p>
-        <a href="${link}">Reset Password</a>
-    </body>
-    </html>
-    `)
-}
 
 const sendMail: (email: string, token: string, username: string, userId: string) => Promise<SentMessageInfo> = async (email: string, token: string, username: string, userId: string) => {
-  const template = createTemplate(token, username, userId)
-  console.log(template)
+  const transport = nodemailer.createTransport({
+    service: 'Gmail',
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth: {
+      user: process.env.GMAIL,
+      pass: process.env.GMAIL_PASS
+    }
+  })
+  const url = process.env.NODE_ENV === 'dev' ? process.env.CLIENT_DEV_URL : process.env.CLIENT_PROD_URL
+  const link = `${url}/passwordReset?token=${token}&id=${userId}`
+  const filePath = path.join(__dirname, './reset-template.html')
+  const file = fs.readFileSync(filePath, 'utf-8')
+  const template = handlebars.compile(file)
+  const replacements = {
+    name: username,
+    link
+  }
+
+  const htmlToSend = template(replacements)
   try {
     const res = await transport.sendMail({
       from: '"Setmea" <vishaalagartha@gmail.com>', // sender address
       to: email, // list of receivers
       subject: 'Reset Your Setmea Password', // Subject line
-      html: template // html body
+      html: htmlToSend
     })
     return res
   } catch (e) {
-    throw new Error('Error sending email.')
+    throw new Error(JSON.stringify(e))
   }
 }
 

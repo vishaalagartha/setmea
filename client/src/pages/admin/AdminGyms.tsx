@@ -38,6 +38,7 @@ const AdminGyms: React.FC = () => {
         fetchGyms()
         setSelectedGym(undefined)
         form.setFieldsValue({ name: '', city: '', address: '', state: '' })
+        autocompleteForm.setFieldValue('name', '')
         await message.open({ type: 'success', content: 'Successfully edited gym!' })
       } else {
         await message.open({ type: 'error', content: res.data.message })
@@ -57,6 +58,7 @@ const AdminGyms: React.FC = () => {
         fetchGyms()
         form.setFieldsValue({ name: '', city: '', address: '', state: '' })
         await message.open({ type: 'success', content: 'Successfully deleted gym!' })
+        autocompleteForm.setFieldValue('name', '')
       } else {
         await message.open({ type: 'error', content: res.data.message })
       }

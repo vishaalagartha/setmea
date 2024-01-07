@@ -81,9 +81,9 @@ const closeRoute = async (routeId: string): Promise<any> => {
   }
 }
 
-const getClimberOpenRequests = async (): Promise<any> => {
+const getClimberOpenRequests = async (userId: string): Promise<any> => {
   try {
-    const res = await request(`routes/route-requests?open=true`, {
+    const res = await request(`routes/route-requests?open=true&userId=${userId}`, {
       method: 'GET'
     })
     return res
@@ -93,9 +93,9 @@ const getClimberOpenRequests = async (): Promise<any> => {
   }
 }
 
-const getClimberClosedRequests = async (): Promise<any> => {
+const getClimberClosedRequests = async (userId: string): Promise<any> => {
   try {
-    const res = await request(`routes/route-requests?open=false`, {
+    const res = await request(`routes/route-requests?open=false&userId=${userId}`, {
       method: 'GET'
     })
     return res
@@ -105,9 +105,9 @@ const getClimberClosedRequests = async (): Promise<any> => {
   }
 }
 
-const getSetterOpenRequests = async (): Promise<any> => {
+const getSetterOpenRequests = async (userId: string): Promise<any> => {
   try {
-    const res = await request(`routes/set-requests?open=true`, {
+    const res = await request(`routes/set-requests?open=true&userId=${userId}`, {
       method: 'GET'
     })
     return res
@@ -117,9 +117,9 @@ const getSetterOpenRequests = async (): Promise<any> => {
   }
 }
 
-const getSetterClosedRequests = async (): Promise<any> => {
+const getSetterClosedRequests = async (userId: string): Promise<any> => {
   try {
-    const res = await request(`routes/set-requests?open=false`, {
+    const res = await request(`routes/set-requests?open=false&userId=${userId}`, {
       method: 'GET'
     })
     return res
@@ -153,6 +153,18 @@ const unvoteRoute = async (id: string): Promise<any> => {
   }
 }
 
+const getRoute = async (id: string): Promise<any> => {
+  try {
+    const res = await request(`routes/${id}`, {
+      method: 'GET'
+    })
+    return res
+  } catch (error) {
+    console.error(error)
+    return error
+  }
+}
+
 export {
   createRoute,
   getOpenRoutesByGym,
@@ -164,5 +176,6 @@ export {
   getSetterOpenRequests,
   getSetterClosedRequests,
   voteRoute,
-  unvoteRoute
+  unvoteRoute,
+  getRoute
 }

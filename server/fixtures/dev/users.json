@@ -1,0 +1,57 @@
+[{
+  "_id": {
+    "$oid": "6598e57704345cf4a4d28eb3"
+  },
+  "username": "admin",
+  "password": "$2b$10$AfeAhNSt144WM6C75lp5mumqutiYktmfCamu3YsOYQzIxXIbzD3e.",
+  "identity": "admin",
+  "email": "test@test.com"
+},
+{
+  "_id": {
+    "$oid": "65998c21d94b4aaeb9136768"
+  },
+  "username": "setter1",
+  "password": "$2b$10$FOcXR.bJQ7.cNdZVLegXsO2OXir5reapfptPMOVk.b9QKSSxi9VKq",
+  "identity": "setter",
+  "email": "setter1@gmail.com"
+},
+{
+  "_id": {
+    "$oid": "65999fd4d94b4aaeb9136771"
+  },
+  "username": "climber1",
+  "password": "$2b$10$Qx0h6/N72tOGxJS/wM2wnedn2GDKDWleXamedMD/ZiCh9SQv1xprK",
+  "identity": "climber",
+  "email": "climber1@gmail.com",
+  "apeIndex": 3,
+  "height": 72,
+  "weight": 150
+},
+{
+  "_id": {
+    "$oid": "6599c4c68b678a123309da6d"
+  },
+  "username": "climber2",
+  "password": "$2b$10$pAS/Jzt93bQ2VXozIPl/gewL/ek4KoHOQVkw2OsrQJVJoWYt7keaK",
+  "identity": "climber",
+  "email": "climber2@gmail.com"
+},
+{
+  "_id": {
+    "$oid": "6599c5358b678a123309da75"
+  },
+  "username": "climber3",
+  "password": "$2b$10$Ngu2S4Rn6cM0qBpyr7HcDeL0RT2RLI1xoiNZ7QatJya5r69pwWKb6",
+  "identity": "climber",
+  "email": "climber3@gmail.com"
+},
+{
+  "_id": {
+    "$oid": "6599c5948b678a123309da7f"
+  },
+  "username": "setter2",
+  "password": "$2b$10$Mwh9uhFrPnBeNLFm71DagOJjf0lVXIBLbaC9ApG1H.B3lap/ZivZa",
+  "identity": "setter",
+  "email": "vishaalagartha@gmail.com"
+}]
