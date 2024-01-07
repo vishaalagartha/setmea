@@ -39,7 +39,6 @@ const Route: React.FC = () => {
       let res = await closeRoute(route._id)
       if (res.status === 200) {
         await message.open({ type: 'success', content: 'Fulfilled request!' })
-        navigate(-1)
       } else {
         await message.open({ type: 'error', content: res.data.message })
       }
@@ -61,6 +60,7 @@ const Route: React.FC = () => {
           await message.open({ type: 'error', content: res.data.message })
         }
       }
+      navigate(-1)
     } catch (error) {
       console.error(error)
     }
