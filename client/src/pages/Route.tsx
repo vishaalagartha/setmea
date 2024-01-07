@@ -2,32 +2,15 @@ import React, { useEffect, useState } from 'react'
 import { useAppSelector } from '../store/rootReducer'
 import { userSelector } from '../store/userSlice'
 import { Identity } from '../types/user'
-import RouteRequestForm from '../components/RouteRequestForm'
-import RouteFinderForm from './FindRoutes'
-import { useNavigate, useLocation, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import type { IRoute } from '../types/route'
-import {
-  Input,
-  Modal,
-  Form,
-  Typography,
-  Flex,
-  Button,
-  Space,
-  Tag,
-  Row,
-  Col,
-  Popover,
-  Divider
-} from 'antd'
+import { Input, Form, Typography, Flex, Button, Space, Tag, Row, Col, Popover } from 'antd'
 import { useForm } from 'antd/es/form/Form'
-import { useContext } from 'react'
 import useMessage from 'antd/es/message/useMessage'
-import { closeRoute, getRoute } from '../api/route'
+import { closeRoute, getRoute, voteRoute, unvoteRoute, deleteRoute } from '../api/route'
 import { sendMessage } from '../api/messages'
 import { dateToString } from '../utils/date'
 import { LikeFilled, LikeOutlined } from '@ant-design/icons'
-import { voteRoute, unvoteRoute, deleteRoute } from '../api/route'
 
 const Route: React.FC = () => {
   const { id } = useParams() as { id: string }
@@ -133,8 +116,8 @@ const Route: React.FC = () => {
     }
   }
 
-  const LikeContent = () =>
-    route.voterUsernames.length == 0 ? (
+  const LikeContent: React.FC = () =>
+    route.voterUsernames.length === 0 ? (
       <div>This route has no votes</div>
     ) : (
       <div>
@@ -143,9 +126,7 @@ const Route: React.FC = () => {
         ))}
       </div>
     )
-  let likeClasses = 'cursor-pointer text-xl'
-  if (route.votes.includes(user._id)) likeClasses += ' text-sky-700'
-  else likeClasses += ' text-slate-500'
+
   return (
     <Flex vertical={true}>
       {contextHolder}
@@ -170,7 +151,7 @@ const Route: React.FC = () => {
             </Space>
           </Typography.Text>
           <Flex className="my-3">
-            <Popover content={LikeContent} className="cursor-pointer">
+            <Popover content={<LikeContent />} className="cursor-pointer">
               {route.votes.includes(user._id) && <LikeFilled className={'text-xl text-sky-700'} />}
               {!route.votes.includes(user._id) && <LikeOutlined className={'text-xl'} />}
               <span className="ml-1">{route.votes.length} Current Votes</span>

@@ -46,7 +46,7 @@ router.get('/route-requests', (async (req: Request, res: Response) => {
 }) as RequestHandler)
 
 // GET all set requests by user id
-router.get('/set-requests', setUserIdFromToken, (async (req: Request, res: Response) => {
+router.get('/set-requests', (async (req: Request, res: Response) => {
   try {
     const { open, userId } = req.query
     const routes = await Route.find({ requestedSetter: userId, open })

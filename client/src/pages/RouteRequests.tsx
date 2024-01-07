@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Typography, Row, Col } from 'antd'
 import { type IRoute } from '../types/route'
-import { deleteRoute, getClimberOpenRequests } from '../api/route'
+import { getClimberOpenRequests } from '../api/route'
 import useMessage from 'antd/es/message/useMessage'
 import RouteList from '../components/RouteList'
 import { useAppSelector } from '../store/rootReducer'

@@ -28,7 +28,6 @@ const FindRoutes: React.FC = () => {
   const [routes, setRoutes] = useState<IRoute[]>([])
   const [filteredRoutes, setFilteredRoutes] = useState<IRoute[]>([])
   const [message, contextHolder] = useMessage()
-  const [selectedRoute, setSelectedRoute] = useState<IRoute>()
   const user = useAppSelector(userSelector)
 
   const options = Object.values(RouteTag).map((t) => ({ name: t, value: t }))

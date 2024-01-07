@@ -12,18 +12,20 @@ const RouteHistory: React.FC = () => {
   const user = useAppSelector(userSelector)
 
   useEffect(() => {
-    const fetchSets: () => void = async () => {
-      const res =
-        user.identity === Identity.SETTER
-          ? await getSetterClosedRequests(user._id)
-          : await getClimberClosedRequests(user._id)
-      if (res.status === 200) {
-        const routes = res.data as IRoute[]
-        setRoutes(routes)
+    const fetchHistory: () => void = async () => {
+      if (user?._id.length !== 0) {
+        const res =
+          user.identity === Identity.SETTER
+            ? await getSetterClosedRequests(user._id)
+            : await getClimberClosedRequests(user._id)
+        if (res.status === 200) {
+          const routes = res.data as IRoute[]
+          setRoutes(routes)
+        }
       }
     }
-    fetchSets()
-  }, [])
+    fetchHistory()
+  }, [user])
 
   return (
     <div>

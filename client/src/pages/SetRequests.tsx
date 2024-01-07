@@ -12,7 +12,7 @@ const SetRequests: React.FC = () => {
 
   useEffect(() => {
     const fetchSets: () => void = async () => {
-      if (user?._id?.length != 0) {
+      if (user?._id?.length !== 0) {
         const res = await getSetterOpenRequests(user._id)
         if (res.status === 200) {
           const routes = res.data as IRoute[]

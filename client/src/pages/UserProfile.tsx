@@ -3,8 +3,8 @@ import { Typography, Divider, Row, Col, Space } from 'antd'
 import useMessage from 'antd/es/message/useMessage'
 import { fetchUser } from '../api/auth'
 import { useParams } from 'react-router-dom'
-import { IRoute } from '../types/route'
-import { IUser, Identity } from '../types/user'
+import { type IRoute } from '../types/route'
+import { type IUser, Identity } from '../types/user'
 import { getClimberClosedRequests, getSetterClosedRequests } from '../api/route'
 import RouteList from '../components/RouteList'
 
@@ -18,7 +18,7 @@ const UserProfile: React.FC = () => {
     const getUser: () => void = async () => {
       const res = await fetchUser({ uid: id })
       if (res.status === 200) {
-        setUser(res.data)
+        setUser(res.data as IUser)
       } else {
         await message.open({ type: 'error', content: res.data.message })
       }
@@ -32,14 +32,14 @@ const UserProfile: React.FC = () => {
       if (user?.identity === Identity.CLIMBER) {
         const res = await getClimberClosedRequests(user._id)
         if (res.status === 200) {
-          setRoutes(res.data)
+          setRoutes(res.data as IRoute[])
         } else {
           await message.open({ type: 'error', content: res.data.message })
         }
       } else if (user?.identity === Identity.SETTER) {
         const res = await getSetterClosedRequests(user._id)
         if (res.status === 200) {
-          setRoutes(res.data)
+          setRoutes(res.data as IRoute[])
         } else {
           await message.open({ type: 'error', content: res.data.message })
         }
@@ -48,7 +48,7 @@ const UserProfile: React.FC = () => {
     getUserHistory()
   }, [user])
 
-  if (!user) return null
+  if (user === undefined) return null
 
   return (
     <>
@@ -59,7 +59,7 @@ const UserProfile: React.FC = () => {
       <Row justify="center">
         <Typography.Title level={3}>
           <strong>Location: </strong>
-          {user?.location?.length ? user.location.length : '?'}
+          {user?.location?.length !== 0 ? user.location.length : '?'}
         </Typography.Title>
       </Row>
       <Row justify="center">
@@ -70,9 +70,9 @@ const UserProfile: React.FC = () => {
       </Row>
       <Row justify="center">
         <Space>
-          <Typography.Text>{user?.height ? user.height : '?'} in.</Typography.Text>
-          <Typography.Text>{user?.weight ? user.weight : '?'} lbs.</Typography.Text>
-          <Typography.Text>{user?.apeIndex ? user.apeIndex : '?'} Ape Index</Typography.Text>
+          <Typography.Text>{user?.height !== 0 ? user.height : '?'} in.</Typography.Text>
+          <Typography.Text>{user?.weight !== 0 ? user.weight : '?'} lbs.</Typography.Text>
+          <Typography.Text>{user?.apeIndex !== 0 ? user.apeIndex : '?'} Ape Index</Typography.Text>
         </Space>
       </Row>
       <Divider />
