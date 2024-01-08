@@ -1,14 +1,5 @@
 [{
   "_id": {
-    "$oid": "6598e57704345cf4a4d28eb3"
-  },
-  "username": "admin",
-  "password": "$2b$10$AfeAhNSt144WM6C75lp5mumqutiYktmfCamu3YsOYQzIxXIbzD3e.",
-  "identity": "admin",
-  "email": "test@test.com"
-},
-{
-  "_id": {
     "$oid": "65998c21d94b4aaeb9136768"
   },
   "username": "setter1",

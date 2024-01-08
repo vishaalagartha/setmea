@@ -5,11 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "cross-env NODE_ENV=dev nodemon",
+    "start": "cross-env NODE_ENV=development nodemon",
     "lint": "eslint src/**/*.ts --fix",
     "format": "prettier src/ --write",
     "build": "tsc",
-    "package": "npm run build && cp src/utils/reset-template.html dist/utils/ && zip dist.zip -r dist/* Procfile package* .env"
+    "package:test": "npm run build && cp src/utils/reset-template.html dist/utils/ && zip dist-test.zip -r dist/* Procfile package* .env",
+    "package:prod": "npm run build && cp src/utils/reset-template.html dist/utils/ && zip dist.zip -r dist/* Procfile package* .env"
   },
   "repository": {
     "type": "git",

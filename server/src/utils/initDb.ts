@@ -1,8 +1,10 @@
 import mongoose from 'mongoose'
 import User from '../models/user'
 
+const MONGO_ENDPOINT = process.env.NODE_ENV === 'production' ? process.env.MONGO_PROD : process.env.MONGO_DEV
+
 const MONGO_URL =
-  `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PW}@setmea-cluster.5fzacie.mongodb.net/?retryWrites=true&w=majority`
+  `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PW}@${MONGO_ENDPOINT}?retryWrites=true&w=majority`
 
 const init: () => Promise<void> = async () => {
   try {

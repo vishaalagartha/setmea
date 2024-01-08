@@ -16,7 +16,14 @@ const sendMail: (email: string, token: string, username: string, userId: string)
       pass: process.env.GMAIL_PASS
     }
   })
-  const url = process.env.NODE_ENV === 'dev' ? process.env.CLIENT_DEV_URL : process.env.CLIENT_PROD_URL
+  let url: string | undefined
+  if (process.env.NODE_ENV === 'production') {
+    url = process.env.CLIENT_PROD_URL
+  } else if (process.env.NODE_ENV === 'test') {
+    url = process.env.CLIENT_TEST_URL
+  } else {
+    url = process.env.CLIENT_DEV_URL
+  }
   const link = `${url}/passwordReset?token=${token}&id=${userId}`
   const filePath = path.join(__dirname, './reset-template.html')
   const file = fs.readFileSync(filePath, 'utf-8')
