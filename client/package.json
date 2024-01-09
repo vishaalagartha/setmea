@@ -36,8 +36,10 @@
     "lint": "eslint src/* --ext .tsx,.ts --no-error-on-unmatched-pattern ",
     "lint:fix": "eslint src/* --fix --ext .tsx,.ts --no-error-on-unmatched-pattern",
     "format": "prettier src/ --write --config .prettierrc",
-    "sync:test": "REACT_APP_ENV='test' react-scripts build && aws s3 sync --profile 'setmea-s3' ./build 's3://dev.setmea.com/'",
-    "sync:prod": "REACT_APP_ENV='production' react-scripts build && aws s3 sync --profile 'setmea-s3' ./build 's3://setmea.com/' && aws s3 sync --profile 'setmea-s3' ./build 's3://www.setmea.com/'"
+    "invalidate:test": "aws cloudfront create-invalidation --distribution-id E38NCCQCRKSEIG --paths '/*' --profile setmea-admin",
+    "invalidate:prod": "aws cloudfront create-invalidation --distribution-id E2AF5J40MS4FUW --paths '/*' --profile setmea-admin && aws cloudfront create-invalidation --distribution-id E3BX06C3W5NYHQ --paths '/*' --profile setmea-admin",
+    "sync:test": "REACT_APP_ENV='test' react-scripts build && aws s3 sync --profile 'setmea-s3' ./build 's3://dev.setmea.com/' && npm run invalidate:test",
+    "sync:prod": "REACT_APP_ENV='production' react-scripts build && aws s3 sync --profile 'setmea-s3' ./build 's3://setmea.com/' && aws s3 sync --profile 'setmea-s3' ./build 's3://www.setmea.com/' && npm run invalidate:prod"
   },
   "eslintConfig": {
     "extends": [
