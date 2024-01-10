@@ -43,7 +43,9 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.485.0",
     "@types/jsonwebtoken": "^9.0.5",
+    "aws-sdk": "^2.1532.0",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",

@@ -9,32 +9,51 @@ import {
   Col,
   InputNumber,
   Button,
-  Space
+  Space,
+  Image
 } from 'antd'
+import DefaultImage from '../assets/default.jpg'
+import type { UploadChangeParam } from 'antd/es/upload'
+import type { RcFile, UploadProps, UploadFile } from 'antd/es/upload/interface'
 import { useAppDispatch, useAppSelector } from '../store/rootReducer'
 import { userSelector, setUser } from '../store/userSlice'
-import { editUser } from '../api/user'
+import { editUser, updateAvatar } from '../api/user'
 import useMessage from 'antd/es/message/useMessage'
 import { resetPasswordViaPassword } from '../api/auth'
+
+const getBase64 = async (file: RcFile): Promise<string> => {
+  return await new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => {
+      resolve(reader.result as string)
+    }
+    reader.onerror = (error) => {
+      reject(error)
+    }
+  })
+}
 
 const Profile: React.FC = () => {
   const [form] = Form.useForm()
   const [passwordForm] = Form.useForm()
   const user = useAppSelector(userSelector)
   const [editing, setEditing] = useState(false)
+  // eslint-disable-next-line
+  const [avatar, setAvatar] = useState<string>()
   const dispatch = useAppDispatch()
   const [message, contextHolder] = useMessage()
 
   useEffect(() => {
     form.setFieldsValue({ ...user })
-  }, [])
+  }, [user])
 
   const handleSaveChanges: () => void = async () => {
     try {
       await form.validateFields()
       const { avatar, username, email, location, height, weight, apeIndex } =
         form.getFieldsValue() as {
-          avatar: string
+          avatar: File
           username: string
           email: string
           location: string
@@ -42,15 +61,23 @@ const Profile: React.FC = () => {
           weight: number
           apeIndex: number
         }
-      console.log(avatar)
-      const res = await editUser(user._id, username, email, location, height, weight, apeIndex)
+      const updateRes = await updateAvatar(user._id, avatar)
+      let { res } = updateRes
+      let avatarKey = ''
+      if (res.status !== 200) {
+        await message.open({ type: 'error', content: res.data.message })
+      } else {
+        avatarKey = updateRes.key
+      }
+      res = await editUser(user._id, username, email, location, height, weight, apeIndex, avatarKey)
+      console.log(res, avatarKey)
       if (res.status === 200) {
-        dispatch(setUser(res.data))
-        form.setFieldsValue(res.data)
+        dispatch(setUser({ ...res.data, avatar: avatarKey }))
+        form.setFieldsValue({ ...res.data, avatar: avatarKey })
         setEditing(false)
         await message.open({ type: 'success', content: 'Modified your profile.' })
       } else {
-        form.setFieldsValue({ ...user })
+        form.setFieldsValue({ ...user, avatar: avatarKey })
         await message.open({ type: 'error', content: res.data.message })
       }
     } catch (error) {
@@ -85,36 +112,79 @@ const Profile: React.FC = () => {
     }
   }
 
+  const handleUpload: UploadProps['onChange'] = async (info: UploadChangeParam<UploadFile>) => {
+    console.log(info)
+    // @ts-expect-error expect error
+    const base64 = await getBase64(info.file)
+    setAvatar(base64)
+    form.setFieldValue('avatar', info.fileList[0] as unknown as Blob)
+  }
+  console.log(avatar)
   return (
     <>
       <Form form={form}>
         {contextHolder}
-        <Form.Item name="avatar">
-          <Upload disabled={!editing} />
-        </Form.Item>
-        <Row justify="center">
-          <Typography.Title level={3}>General</Typography.Title>
+        <Row justify="center" className="mb-3">
+          {editing && (
+            <Space>
+              <Button type="primary" onClick={handleSaveChanges}>
+                Save Changes
+              </Button>
+              <Button
+                onClick={() => {
+                  form.setFieldsValue({ ...user })
+                  setEditing(false)
+                }}>
+                Cancel
+              </Button>
+            </Space>
+          )}
+          {!editing && (
+            <Button
+              type="primary"
+              onClick={() => {
+                setEditing(true)
+              }}>
+              Edit Settings
+            </Button>
+          )}
         </Row>
-        <Row justify="center">
-          <Col xs={{ span: 20 }} md={{ span: 8 }}>
+        <Row justify="center" align="middle">
+          <Col xs={{ span: 6 }} md={{ span: 4, offset: 2 }} className="text-center">
+            {avatar !== undefined && (
+              <Image preview={false} src={avatar} style={{ borderRadius: '50%' }} />
+            )}
+            {user?.avatar !== '' && avatar === undefined && (
+              <Image preview={false} src={user.avatar} style={{ borderRadius: '50%' }} />
+            )}
+            {user?.avatar === '' && avatar === undefined && (
+              <Image preview={false} src={DefaultImage} style={{ borderRadius: '50%' }} />
+            )}
+            <Form.Item name="avatar">
+              <Upload
+                className="flex justify-center mt-3"
+                beforeUpload={() => false}
+                multiple={false}
+                maxCount={1}
+                onChange={handleUpload}
+                showUploadList={false}>
+                <Button disabled={!editing}>Change avatar</Button>
+              </Upload>
+            </Form.Item>
+          </Col>
+          <Col xs={{ span: 12, offset: 2 }} md={{ span: 12, offset: 2 }}>
             <Form.Item
               label="Username"
               name="username"
               rules={[{ required: true, message: 'Please input a username' }]}>
               <Input disabled={!editing} />
             </Form.Item>
-          </Col>
-          <Col xs={{ span: 20 }} md={{ span: 8, offset: 1 }}>
             <Form.Item
               label="Email"
               name="email"
               rules={[{ required: true, message: 'Please input a username' }]}>
               <Input disabled={!editing} />
             </Form.Item>
-          </Col>
-        </Row>
-        <Row justify="center">
-          <Col xs={20} md={17}>
             <Form.Item label="Location" name="location">
               <Input disabled={!editing} />
             </Form.Item>
@@ -141,33 +211,7 @@ const Profile: React.FC = () => {
             </Form.Item>
           </Col>
         </Row>
-        <Row justify="center">
-          {editing && (
-            <Space>
-              <Button type="primary" onClick={handleSaveChanges}>
-                Save Changes
-              </Button>
-              <Button
-                onClick={() => {
-                  form.setFieldsValue({ ...user })
-                  setEditing(false)
-                }}>
-                Cancel
-              </Button>
-            </Space>
-          )}
-          {!editing && (
-            <Button
-              type="primary"
-              onClick={() => {
-                setEditing(true)
-              }}>
-              Edit Settings
-            </Button>
-          )}
-        </Row>
       </Form>
-
       <Divider />
       <Row justify="center">
         <Typography.Title level={4}>Password Reset</Typography.Title>

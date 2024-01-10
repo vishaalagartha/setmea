@@ -11,7 +11,8 @@ const UserSchema = new mongoose.Schema(
     height: { type: Number },
     apeIndex: { type: Number },
     weight: { type: Number },
-    location: { type: String }
+    location: { type: String },
+    avatar: { type: String }
   },
   {
     versionKey: false

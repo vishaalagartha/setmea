@@ -3,10 +3,11 @@ import { Router } from 'express'
 import type { RequestHandler } from 'express'
 import User from '../models/user'
 import setUserIdFromToken from '../middlewares/setUserIdFromToken'
-import { IUser } from 'types/user'
+import { type IUser } from '../types/user'
+import { getPresignedPutUrl } from '../controllers/user'
 const router = Router()
 
-// GET users identity
+// GET users by identity
 router.get('/', (async (req: express.Request, res: express.Response) => {
   try {
     const { identity } = req.query
@@ -87,6 +88,23 @@ router.put('/:id', (async (req: express.Request, res: express.Response) => {
     const { id } = req.params
     const user = await User.findByIdAndUpdate(id, req.body as IUser, { new: true })
     res.status(200).json(user).end()
+  } catch (error) {
+    console.error(error)
+    res
+      .status(500)
+      .json({
+        message: error.message
+      })
+      .end()
+  }
+}) as RequestHandler)
+
+router.patch('/:id/avatar', (async (req: express.Request, res: express.Response) => {
+  try {
+    const { id } = req.params
+    const ext = (req.query.fileType as string).split('/')[1]
+    const { url, key } = getPresignedPutUrl(id, ext)
+    res.status(200).json({ url, key }).end()
   } catch (error) {
     console.error(error)
     res
