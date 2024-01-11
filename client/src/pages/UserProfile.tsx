@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { Typography, Divider, Row, Col, Space } from 'antd'
+import { Typography, Divider, Row, Col, Space, Image } from 'antd'
 import useMessage from 'antd/es/message/useMessage'
 import { fetchUser } from '../api/auth'
 import { useParams } from 'react-router-dom'
 import { type IRoute } from '../types/route'
 import { type IUser, Identity } from '../types/user'
 import { getClimberClosedRequests, getSetterClosedRequests } from '../api/route'
+import DefaultImage from '../assets/default.jpg'
 import RouteList from '../components/RouteList'
 
 const UserProfile: React.FC = () => {
@@ -54,6 +55,16 @@ const UserProfile: React.FC = () => {
     <>
       {contextHolder}
       <Row justify="center">
+        <Col xs={12} md={4}>
+          {user?.avatar !== '' && (
+            <Image preview={false} src={user.avatar} style={{ borderRadius: '50%' }} />
+          )}
+          {user?.avatar === '' && (
+            <Image preview={false} src={DefaultImage} style={{ borderRadius: '50%' }} />
+          )}
+        </Col>
+      </Row>
+      <Row justify="center" className="mt-3">
         <Typography.Title level={2}>{user.username}</Typography.Title>
       </Row>
       <Row justify="center">
@@ -70,9 +81,19 @@ const UserProfile: React.FC = () => {
       </Row>
       <Row justify="center">
         <Space>
-          <Typography.Text>{user?.height !== 0 ? user.height : '?'} in.</Typography.Text>
-          <Typography.Text>{user?.weight !== 0 ? user.weight : '?'} lbs.</Typography.Text>
-          <Typography.Text>{user?.apeIndex !== 0 ? user.apeIndex : '?'} Ape Index</Typography.Text>
+          <Typography.Text>
+            Height: {user?.height !== undefined ? user.height : '?'} in.
+          </Typography.Text>
+          <Typography.Text>
+            Weight: {user?.weight !== undefined ? user.weight : '?'} lbs.
+          </Typography.Text>
+          <Typography.Text>
+            Ape Index:
+            {user?.apeIndex !== undefined && user.apeIndex > 0 && '+' + user.apeIndex}
+            {user?.apeIndex !== undefined && user.apeIndex < 0 && '-' + user.apeIndex}
+            {user?.apeIndex !== undefined && user.apeIndex === 0 && user.apeIndex}
+            {user?.apeIndex === undefined && ' ?'}
+          </Typography.Text>
         </Space>
       </Row>
       <Divider />
@@ -83,7 +104,7 @@ const UserProfile: React.FC = () => {
         <Row justify="center">
           <Col xs={20} md={12} lg={10}>
             {routes.length === 0 && (
-              <Typography.Title level={3} className="flex justify-center">
+              <Typography.Title level={5} className="flex justify-center">
                 This user has no historical{' '}
                 {user.identity === Identity.SETTER ? 'sets' : 'requests'}.
               </Typography.Title>

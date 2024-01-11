@@ -192,7 +192,11 @@ const RouteList: React.FC<RouteListProps> = ({
                   <Row>
                     <Typography.Title level={5}>
                       Requester:{' '}
-                      <Typography.Link href={`/profile/${item.user}`}>
+                      <Typography.Link
+                        onClick={(e: React.MouseEvent<HTMLElement>) => {
+                          e.stopPropagation()
+                          navigate(`/profile/${item.user}`)
+                        }}>
                         {item.username}
                       </Typography.Link>
                     </Typography.Title>
@@ -224,7 +228,11 @@ const RouteList: React.FC<RouteListProps> = ({
                     {item.requestedSetter !== undefined && (
                       <Typography.Text>
                         <strong>Requested setter:</strong>{' '}
-                        <Typography.Link href={`/profile/${item.requestedSetter}`}>
+                        <Typography.Link
+                          onClick={(e: React.MouseEvent<HTMLElement>) => {
+                            e.stopPropagation()
+                            navigate(`/profile/${item.requestedSetter}`)
+                          }}>
                           {item.requestedSetterUsername}
                         </Typography.Link>
                       </Typography.Text>
@@ -235,7 +243,11 @@ const RouteList: React.FC<RouteListProps> = ({
                       <Row>
                         <Typography.Text>
                           <strong>Setter:</strong>{' '}
-                          <Typography.Link href={`/profile/${item.setter}`}>
+                          <Typography.Link
+                            onClick={(e: React.MouseEvent<HTMLElement>) => {
+                              e.stopPropagation()
+                              navigate(`/profile/${item.setter}`)
+                            }}>
                             {item.setterUsername}
                           </Typography.Link>
                         </Typography.Text>

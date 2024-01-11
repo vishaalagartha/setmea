@@ -61,6 +61,7 @@ const Profile: React.FC = () => {
           weight: number
           apeIndex: number
         }
+      setEditing(false)
       const updateRes = await updateAvatar(user._id, avatar)
       let { res } = updateRes
       let avatarKey = ''
@@ -70,11 +71,9 @@ const Profile: React.FC = () => {
         avatarKey = updateRes.key
       }
       res = await editUser(user._id, username, email, location, height, weight, apeIndex, avatarKey)
-      console.log(res, avatarKey)
       if (res.status === 200) {
         dispatch(setUser({ ...res.data, avatar: avatarKey }))
         form.setFieldsValue({ ...res.data, avatar: avatarKey })
-        setEditing(false)
         await message.open({ type: 'success', content: 'Modified your profile.' })
       } else {
         form.setFieldsValue({ ...user, avatar: avatarKey })
@@ -113,13 +112,12 @@ const Profile: React.FC = () => {
   }
 
   const handleUpload: UploadProps['onChange'] = async (info: UploadChangeParam<UploadFile>) => {
-    console.log(info)
     // @ts-expect-error expect error
     const base64 = await getBase64(info.file)
     setAvatar(base64)
     form.setFieldValue('avatar', info.fileList[0] as unknown as Blob)
   }
-  console.log(avatar)
+
   return (
     <>
       <Form form={form}>
@@ -150,7 +148,7 @@ const Profile: React.FC = () => {
           )}
         </Row>
         <Row justify="center" align="middle">
-          <Col xs={{ span: 6 }} md={{ span: 4, offset: 2 }} className="text-center">
+          <Col xs={{ span: 24 }} md={{ span: 4, offset: 2 }} className="text-center">
             {avatar !== undefined && (
               <Image preview={false} src={avatar} style={{ borderRadius: '50%' }} />
             )}
@@ -172,7 +170,7 @@ const Profile: React.FC = () => {
               </Upload>
             </Form.Item>
           </Col>
-          <Col xs={{ span: 12, offset: 2 }} md={{ span: 12, offset: 2 }}>
+          <Col xs={{ span: 20, offset: 2 }} md={{ span: 12, offset: 2 }}>
             <Form.Item
               label="Username"
               name="username"
@@ -195,17 +193,17 @@ const Profile: React.FC = () => {
           <Typography.Title level={4}>Metrics</Typography.Title>
         </Row>
         <Row justify="center">
-          <Col xs={{ span: 13 }} md={{ span: 6 }}>
+          <Col xs={{ span: 20 }} md={{ span: 6 }}>
             <Form.Item label="Height" name="height">
               <InputNumber min={0} disabled={!editing} addonAfter="in" />
             </Form.Item>
           </Col>
-          <Col xs={{ span: 13 }} md={{ span: 6, offset: 1 }}>
+          <Col xs={{ span: 20 }} md={{ span: 6, offset: 1 }}>
             <Form.Item label="Bodyweight" name="weight">
               <InputNumber min={0} disabled={!editing} addonAfter="lbs" />
             </Form.Item>
           </Col>
-          <Col xs={{ span: 13 }} md={{ span: 6, offset: 1 }}>
+          <Col xs={{ span: 20 }} md={{ span: 6, offset: 1 }}>
             <Form.Item label="Ape Index" name="apeIndex">
               <InputNumber disabled={!editing} addonAfter="in" />
             </Form.Item>

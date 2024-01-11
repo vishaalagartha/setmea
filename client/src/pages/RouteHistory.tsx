@@ -38,7 +38,7 @@ const RouteHistory: React.FC = () => {
         <Row justify="center">
           <Col xs={20} md={12} lg={10}>
             {routes.length === 0 && (
-              <Typography.Title level={3} className="flex justify-center">
+              <Typography.Title level={5} className="flex justify-center">
                 You have no historical {user.identity === Identity.SETTER ? 'sets' : 'requests'}.
               </Typography.Title>
             )}
