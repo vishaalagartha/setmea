@@ -14,7 +14,7 @@ const RouteSchema = new mongoose.Schema(
     votes: { type: [String], default: [] },
     zone: { type: String, default: null },
     grade: { type: Number, default: null, min: 0, max: 17 },
-    date: { type: Date, default: Date.now },
+    date: { type: Date, default: Date.now }
   },
   {
     versionKey: false

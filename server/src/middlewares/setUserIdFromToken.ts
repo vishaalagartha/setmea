@@ -1,11 +1,7 @@
 import type { Request, Response, NextFunction, RequestHandler } from 'express'
 import { validate } from '../utils/auth-helpers'
 
-const setUserIdFromToken: RequestHandler = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const setUserIdFromToken: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
   // Extract the authentication token from the request header.
   const authHeader = req.header('authorization')
   if (authHeader !== undefined) {

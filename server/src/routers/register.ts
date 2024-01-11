@@ -26,7 +26,8 @@ router.post('/', setUserIdFromToken, (async (req: Request, res: Response) => {
     // Only admins can make other admins or setters
     if (identity !== 'climber') {
       const creator = await User.findById(userId)
-      if (creator === null || creator.identity !== 'admin') return res.status(401).json({ message: 'Insufficient privileges.' })
+      if (creator === null || creator.identity !== 'admin')
+        return res.status(401).json({ message: 'Insufficient privileges.' })
     }
 
     const user = new User({ username, password, identity, email })

@@ -39,7 +39,7 @@ router.put('/request', (async (req: express.Request, res: express.Response) => {
 // For forgot password use case
 router.patch('/reset', authenticate, (async (req: express.Request, res: express.Response) => {
   try {
-    const { password, userId } = req.body as { password: string, userId: string }
+    const { password, userId } = req.body as { password: string; userId: string }
     const user = await User.findById(userId)
     if (user === null || user === undefined || !(user instanceof User)) {
       res.status(404).json({ message: 'User not found' }).end()
@@ -64,7 +64,11 @@ router.patch('/reset', authenticate, (async (req: express.Request, res: express.
 // For reset password use case
 router.put('/', setUserIdFromToken, (async (req: express.Request, res: express.Response) => {
   try {
-    const { oldPassword, newPassword, userId } = req.body as { oldPassword: string, newPassword: string, userId: string }
+    const { oldPassword, newPassword, userId } = req.body as {
+      oldPassword: string
+      newPassword: string
+      userId: string
+    }
     console.log(oldPassword, newPassword, userId)
     const user = await User.findById(userId)
     if (user === null) {

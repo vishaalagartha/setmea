@@ -16,10 +16,7 @@ router.get('/', (async (req: express.Request, res: express.Response) => {
       const { password: _, ...fieldsToReturn } = u.toJSON()
       return fieldsToReturn
     })
-    res
-      .status(200)
-      .json(data)
-      .end()
+    res.status(200).json(data).end()
   } catch (error) {
     console.error(error)
     res

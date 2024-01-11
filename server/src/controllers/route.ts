@@ -6,9 +6,17 @@ const formatRoutes: (routes: IRoute[]) => Promise<IRouteData[]> = async (routes:
   const data: IRouteData[] = []
   for (const route of routes) {
     if (!(route instanceof Route)) continue
-    const routeData: IRouteData = { ...route.toObject(), username: '', requestedSetterUsername: undefined, setterUsername: undefined, voterUsernames: [] }
+    const routeData: IRouteData = {
+      ...route.toObject(),
+      username: '',
+      requestedSetterUsername: undefined,
+      setterUsername: undefined,
+      voterUsernames: []
+    }
     const user = await User.findById(route.user)
-    if (user !== null) { routeData.username = user.username }
+    if (user !== null) {
+      routeData.username = user.username
+    }
     if (route.setter !== null) {
       const setter = await User.findById(route.setter)
       if (setter !== null) {
@@ -29,11 +37,7 @@ const formatRoutes: (routes: IRoute[]) => Promise<IRouteData[]> = async (routes:
   }
   return data
 }
-const deleteRoute: (
-  routeId: string,
-) => Promise<any> = async (
-  routeId: string
-) => {
+const deleteRoute: (routeId: string) => Promise<any> = async (routeId: string) => {
   try {
     await Route.findByIdAndDelete(routeId)
   } catch (e) {

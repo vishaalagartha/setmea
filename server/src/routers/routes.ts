@@ -12,7 +12,7 @@ const router = Router()
 // GET all routes by gym
 router.get('/', (async (req: Request, res: Response) => {
   try {
-    const { gymId, open } = req.query as { gymId: string, open: boolean | undefined }
+    const { gymId, open } = req.query as { gymId: string; open: boolean | undefined }
     const routes = await Route.find({ gym: gymId, open })
     const data = await formatRoutes(routes)
     res.status(200).json(data).end()
@@ -116,7 +116,16 @@ router.post('/', setUserIdFromToken, (async (req: Request, res: Response) => {
       requestedSetterId: string
       grade: number
     }
-    const route = new Route({ goal, details, gym: gymId, tags, user: userId, zone, requestedSetter: requestedSetterId, grade })
+    const route = new Route({
+      goal,
+      details,
+      gym: gymId,
+      tags,
+      user: userId,
+      zone,
+      requestedSetter: requestedSetterId,
+      grade
+    })
     await route.save()
     res.status(201).json(route.toObject()).end()
   } catch (error) {
@@ -199,12 +208,14 @@ router.delete('/:id/votes', setUserIdFromToken, (async (req: Request, res: Respo
 router.patch('/:id', setUserIdFromToken, (async (req: Request, res: Response) => {
   try {
     const { id } = req.params
-    const { open, userId } = req.body as { open: boolean, userId: string }
+    const { open, userId } = req.body as { open: boolean; userId: string }
     const setter = await User.findById(userId)
     const route = await Route.findByIdAndUpdate(id, { open, setter: userId }, { new: true })
     if (route?.votes !== undefined && setter !== null) {
       for (const voter of route.votes) {
-        const content = `${setter.username} set a climb you liked! <a href="/routes/${route._id.toString()}">Click here to view the route.</a>`
+        const content = `${
+          setter.username
+        } set a climb you liked! <a href="/routes/${route._id.toString()}">Click here to view the route.</a>`
         await createMessage(userId, voter, content)
       }
     }

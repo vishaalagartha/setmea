@@ -4,8 +4,17 @@ import { type SentMessageInfo } from 'nodemailer/lib/smtp-transport'
 import fs from 'fs'
 import handlebars from 'handlebars'
 
-
-const sendMail: (email: string, token: string, username: string, userId: string) => Promise<SentMessageInfo> = async (email: string, token: string, username: string, userId: string) => {
+const sendMail: (
+  email: string,
+  token: string,
+  username: string,
+  userId: string
+) => Promise<SentMessageInfo> = async (
+  email: string,
+  token: string,
+  username: string,
+  userId: string
+) => {
   const transport = nodemailer.createTransport({
     service: 'Gmail',
     host: 'smtp.gmail.com',

@@ -1,12 +1,8 @@
 import type { Request, Response, NextFunction, RequestHandler } from 'express'
 import { validate } from '../utils/auth-helpers'
 
-const authenticate: RequestHandler = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  (() => {
+const authenticate: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
+  ;(() => {
     const authHeader = req.header('authorization')
     if (authHeader === '' || authHeader === undefined) {
       return res.status(401).json({ message: 'Missing authorization header.' })

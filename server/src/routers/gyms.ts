@@ -1,7 +1,14 @@
 import type { RequestHandler, Request, Response } from 'express'
 import { Router } from 'express'
 import type { State } from '../types/gym'
-import { createGym, getGyms, editGym, deleteGym, addGymZone, deleteGymZone } from '../controllers/gym'
+import {
+  createGym,
+  getGyms,
+  editGym,
+  deleteGym,
+  addGymZone,
+  deleteGymZone
+} from '../controllers/gym'
 import setUserIdFromToken from '../middlewares/setUserIdFromToken'
 import User from '../models/user'
 
