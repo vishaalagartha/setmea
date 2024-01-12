@@ -56,6 +56,41 @@ const createRoute = async ({
   }
 }
 
+const putRouteMedia = async (routeId: string, media: File): Promise <any> => {
+  try {
+    const { type } = media as { type: string }
+    const fileType = encodeURIComponent(type)
+    const res = await request(`routes/${routeId}/media?fileType=${fileType}`, {
+      method: 'PATCH'
+    })
+    if (res.status === 200) {
+      const { url, key } = res.data as { url: string; key: string }
+      const putRes = await fetch(url, { method: 'PUT', body: media })
+      return { res: putRes, key }
+    } else {
+      const { data } = res
+      const { message } = data as { message: string }
+      throw new Error(message)
+    }
+  } catch (error) {
+    console.error(error)
+    return error
+  }
+}
+
+const postRouteMedia = async (routeId: string, mediaFiles: string[]): Promise <any> => {
+  try {
+    const res = await request(`routes/${routeId}/media`, {
+      method: 'POST',
+      body: JSON.stringify(mediaFiles)
+    })
+    return res
+  } catch (error) {
+    console.error(error)
+    return error
+  }
+}
+
 const deleteRoute = async ({ routeId }: { routeId: string }): Promise<any> => {
   try {
     const res = await request(`routes/${routeId}`, {
@@ -177,5 +212,7 @@ export {
   getSetterClosedRequests,
   voteRoute,
   unvoteRoute,
-  getRoute
+  getRoute,
+  putRouteMedia,
+  postRouteMedia
 }

@@ -1,4 +1,4 @@
-import { List, Typography, Space, Row, Tag, Col, Button, Divider } from 'antd'
+import { List, Typography, Space, Row, Tag, Col, Button, Divider, Image } from 'antd'
 import { type IRoute } from '../types/route'
 import { dateToString } from '../utils/date'
 import { DeleteOutlined, LikeFilled, LikeOutlined } from '@ant-design/icons'
@@ -8,6 +8,7 @@ import useMessage from 'antd/es/message/useMessage'
 import { deleteRoute, unvoteRoute, voteRoute } from '../api/route'
 import { useNavigate } from 'react-router-dom'
 import { Identity } from '../types/user'
+import DefaultRoute from '../assets/default_route.png'
 
 interface RouteListProps {
   routes: IRoute[]
@@ -172,6 +173,22 @@ const RouteList: React.FC<RouteListProps> = ({
                 )
               return <></>
             }
+
+            const url = item.media.find(
+              (el: string) => el.endsWith('jpg') || el.endsWith('jpeg') || el.endsWith('png')
+            )
+            const RouteImage: React.FC =
+              url === undefined
+                ? () => (
+                    <Image
+                      src={DefaultRoute}
+                      preview={false}
+                      width={200}
+                      style={{ borderRadius: '50%' }}
+                    />
+                  )
+                : () => <Image src={url} preview={false} style={{ borderRadius: '50%' }} />
+
             return (
               <List.Item
                 key={i}
@@ -181,25 +198,28 @@ const RouteList: React.FC<RouteListProps> = ({
                 }}>
                 <div className="w-full">
                   <Row justify="space-between">
-                    <Typography.Title level={5}>Goal: {item.goal}</Typography.Title>
-                    <ActionButton />
-                  </Row>
-                  <Row>
-                    <Typography.Title level={5}>
-                      Requested on: {dateToString(item.date)}
-                    </Typography.Title>
-                  </Row>
-                  <Row>
-                    <Typography.Title level={5}>
-                      Requester:{' '}
-                      <Typography.Link
-                        onClick={(e: React.MouseEvent<HTMLElement>) => {
-                          e.stopPropagation()
-                          navigate(`/profile/${item.user}`)
-                        }}>
-                        {item.username}
-                      </Typography.Link>
-                    </Typography.Title>
+                    <Col xs={12}>
+                      <Typography.Title level={5}>Goal: {item.goal}</Typography.Title>
+                      <Typography.Title level={5}>
+                        Requested on: {dateToString(item.date)}
+                      </Typography.Title>
+                      <Typography.Title level={5}>
+                        Requester:{' '}
+                        <Typography.Link
+                          onClick={(e: React.MouseEvent<HTMLElement>) => {
+                            e.stopPropagation()
+                            navigate(`/profile/${item.user}`)
+                          }}>
+                          {item.username}
+                        </Typography.Link>
+                      </Typography.Title>
+                    </Col>
+                    <Col xs={11}>
+                      <RouteImage />
+                    </Col>
+                    <Col xs={1}>
+                      <ActionButton />
+                    </Col>
                   </Row>
                   <Row>Additional Details:</Row>
                   <Row>

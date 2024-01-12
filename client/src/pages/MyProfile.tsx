@@ -62,15 +62,26 @@ const Profile: React.FC = () => {
           apeIndex: number
         }
       setEditing(false)
-      const updateRes = await updateAvatar(user._id, avatar)
-      let { res } = updateRes
       let avatarKey = ''
-      if (res.status !== 200) {
-        await message.open({ type: 'error', content: res.data.message })
-      } else {
-        avatarKey = updateRes.key
+      if (avatar !== undefined) {
+        const updateRes = await updateAvatar(user._id, avatar)
+        const { res } = updateRes
+        if (res.status !== 200) {
+          await message.open({ type: 'error', content: res.data.message })
+        } else {
+          avatarKey = updateRes.key
+        }
       }
-      res = await editUser(user._id, username, email, location, height, weight, apeIndex, avatarKey)
+      const res = await editUser(
+        user._id,
+        username,
+        email,
+        location,
+        height,
+        weight,
+        apeIndex,
+        avatarKey
+      )
       if (res.status === 200) {
         dispatch(setUser({ ...res.data, avatar: avatarKey }))
         form.setFieldsValue({ ...res.data, avatar: avatarKey })
@@ -164,6 +175,7 @@ const Profile: React.FC = () => {
                 beforeUpload={() => false}
                 multiple={false}
                 maxCount={1}
+                accept={'image/png, image/jpeg, image/jpg'}
                 onChange={handleUpload}
                 showUploadList={false}>
                 <Button disabled={!editing}>Change avatar</Button>

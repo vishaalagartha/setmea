@@ -14,7 +14,8 @@ interface IRoute {
   setterUsername: string
   votes: string[]
   voterUsernames: string[]
-  open: boolean
+  open: boolean,
+  media: string[]
 }
 
 enum RouteTag {

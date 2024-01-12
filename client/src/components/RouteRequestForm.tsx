@@ -1,16 +1,31 @@
 import React, { useEffect, useState } from 'react'
-import { AutoComplete, Form, Input, Typography, Button, Select, Row, Col, InputNumber } from 'antd'
+import {
+  AutoComplete,
+  Form,
+  Input,
+  Typography,
+  Button,
+  Select,
+  Row,
+  Col,
+  InputNumber,
+  Upload
+} from 'antd'
 import { getGyms } from '../api/gym'
+import type { UploadChangeParam } from 'antd/es/upload'
+import type { UploadProps, UploadFile } from 'antd/es/upload/interface'
 import { RouteTag } from '../types/route'
 import type { IGym } from '../types/gym'
-import { createRoute } from '../api/route'
+import { createRoute, postRouteMedia, putRouteMedia } from '../api/route'
 import useMessage from 'antd/es/message/useMessage'
 import type { IUser } from '../types/user'
 import { getUsersByIdentity } from '../api/user'
+import { UploadOutlined } from '@ant-design/icons'
 
 const RouteRequestForm: React.FC = () => {
   const [form] = Form.useForm()
   const [gyms, setGyms] = useState<IGym[]>([])
+  const [fileList, setFileList] = useState<UploadFile[]>([])
   const [setters, setSetters] = useState<IUser[]>([])
   const [selectedGym, setSelectedGym] = useState<IGym>()
   const [message, contextHolder] = useMessage()
@@ -34,6 +49,34 @@ const RouteRequestForm: React.FC = () => {
     fetchGyms()
     fetchSetters()
   }, [])
+
+  const addRouteMedia: (routeId: string) => void = async (routeId: string) => {
+    try {
+      const files = fileList.map((f) => f.originFileObj)
+      const puts = files.map(
+        async (f) =>
+          await new Promise((resolve) => {
+            if (f instanceof File) resolve(putRouteMedia(routeId, f))
+          })
+      )
+      await Promise.all(puts).then(async (responses) => {
+        const mediaFiles = responses.map((resp) => {
+          const { key } = resp as { key: string }
+          return key
+        })
+        const res = await postRouteMedia(routeId, mediaFiles)
+        if (res.status === 200) {
+          await message.open({ type: 'success', content: 'Successfully uploaded media' })
+        } else {
+          await message.open({ type: 'error', content: 'Failed to upload media' })
+        }
+      })
+      setFileList([])
+    } catch (error) {
+      setFileList([])
+      console.error(error)
+    }
+  }
 
   const handleCreateRequest: () => void = async () => {
     try {
@@ -69,12 +112,17 @@ const RouteRequestForm: React.FC = () => {
           requestedSetter: ''
         })
         await message.open({ type: 'success', content: 'Successfully created route!' })
+        const routeId = res.data._id
+        addRouteMedia(routeId as string)
       } else {
         await message.open({ type: 'error', content: res.data.message })
       }
     } catch (error) {
       console.error(error)
     }
+  }
+  const handleUpload: UploadProps['onChange'] = async (info: UploadChangeParam<UploadFile>) => {
+    setFileList(info.fileList)
   }
 
   return (
@@ -179,11 +227,18 @@ const RouteRequestForm: React.FC = () => {
           </Col>
         </Row>
         <Row justify="center">
-          <Col xs={22} md={12} lg={8}>
-            <Form.Item name="grade" label="Grade request">
-              <InputNumber prefix="V" min={0} max={17} />
-            </Form.Item>
-          </Col>
+          <Form.Item name="grade" label="Grade request">
+            <InputNumber prefix="V" min={0} max={17} />
+          </Form.Item>
+        </Row>
+        <Row justify="center" className="mb-3">
+          <Upload
+            beforeUpload={() => false}
+            onChange={handleUpload}
+            fileList={fileList}
+            accept={'image/png, image/jpeg, image/jpg'}>
+            <Button icon={<UploadOutlined />}>Upload media describing route</Button>
+          </Upload>
         </Row>
         <Row justify="center">
           <Button type="primary" onClick={handleCreateRequest}>

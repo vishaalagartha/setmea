@@ -4,7 +4,20 @@ import { userSelector } from '../store/userSlice'
 import { Identity } from '../types/user'
 import { useNavigate, useParams } from 'react-router-dom'
 import type { IRoute } from '../types/route'
-import { Input, Form, Typography, Flex, Button, Space, Tag, Row, Col, Popover } from 'antd'
+import {
+  Input,
+  Image,
+  Form,
+  Typography,
+  Flex,
+  Button,
+  Space,
+  Tag,
+  Row,
+  Col,
+  Popover,
+  Divider
+} from 'antd'
 import { useForm } from 'antd/es/form/Form'
 import useMessage from 'antd/es/message/useMessage'
 import { closeRoute, getRoute, voteRoute, unvoteRoute, deleteRoute } from '../api/route'
@@ -131,7 +144,7 @@ const Route: React.FC = () => {
     <Flex vertical={true}>
       {contextHolder}
       <Row>
-        <Col xs={{ offset: 6 }}>
+        <Col md={{ offset: 6, span: 12 }}>
           <Typography.Title level={3}>Goal: {route.goal}</Typography.Title>
           <Typography.Title level={5}>
             Requester:
@@ -184,6 +197,15 @@ const Route: React.FC = () => {
               </Row>
             )}
           </div>
+          <Divider />
+          <Typography.Title level={5}>Route Media</Typography.Title>
+          {route.media.length === 0 && <Typography.Text>This route has no media</Typography.Text>}
+          <Image.PreviewGroup>
+            {route.media.map((r, i) => {
+              return <Image key={i} src={r} />
+            })}
+          </Image.PreviewGroup>
+          <Divider />
         </Col>
       </Row>
       {user.identity === Identity.SETTER && route.open && (

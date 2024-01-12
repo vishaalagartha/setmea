@@ -13,6 +13,7 @@ interface IRoute {
   grade: number
   date: Date
   open: boolean
+  media: string[]
 }
 
 interface IRouteData extends IRoute {

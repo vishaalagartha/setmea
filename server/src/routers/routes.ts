@@ -1,9 +1,9 @@
 import type { RequestHandler, Request, Response } from 'express'
 import { Router } from 'express'
 import Route from '../models/route'
-import { type RouteTag } from '../types/route'
+import { type RouteTag, type IRoute } from '../types/route'
 import User from '../models/user'
-import { deleteRoute, formatRoutes } from '../controllers/route'
+import { deleteRouteMedia, formatRoutes, getPresignedPutUrl } from '../controllers/route'
 import setUserIdFromToken from '../middlewares/setUserIdFromToken'
 import { createMessage } from '../controllers/message'
 
@@ -12,7 +12,7 @@ const router = Router()
 // GET all routes by gym
 router.get('/', (async (req: Request, res: Response) => {
   try {
-    const { gymId, open } = req.query as { gymId: string; open: boolean | undefined }
+    const { gymId, open } = req.query as { gymId: string, open: boolean | undefined }
     const routes = await Route.find({ gym: gymId, open })
     const data = await formatRoutes(routes)
     res.status(200).json(data).end()
@@ -103,6 +103,24 @@ router.get('/:id', (async (req: Request, res: Response) => {
   }
 }) as RequestHandler)
 
+// POST route media
+router.post('/:id/media', (async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+    const mediaFiles = req.body
+    const route = await Route.findByIdAndUpdate(id, { media: mediaFiles }, { new: true })
+    res.status(200).json(route).end()
+  } catch (error) {
+    console.error(error)
+    res
+      .status(500)
+      .json({
+        message: error.message
+      })
+      .end()
+  }
+}) as RequestHandler)
+
 // POST route
 router.post('/', setUserIdFromToken, (async (req: Request, res: Response) => {
   try {
@@ -143,7 +161,8 @@ router.post('/', setUserIdFromToken, (async (req: Request, res: Response) => {
 router.delete('/:id', (async (req: Request, res: Response) => {
   try {
     const { id } = req.params
-    await deleteRoute(id)
+    const deleted = await Route.findByIdAndDelete(id) as unknown as IRoute
+    await deleteRouteMedia(deleted)
     res.status(200).json({ message: 'Deleted route.' }).end()
   } catch (error) {
     console.error(error)
@@ -190,9 +209,25 @@ router.delete('/:id/votes', setUserIdFromToken, (async (req: Request, res: Respo
       route.votes = route.votes.filter((v) => v !== userId)
       await route.save()
       res.status(200).json(route.toObject()).end()
-      return
     }
-    throw new Error('Unable to find route.')
+  } catch (error) {
+    console.error(error)
+    res
+      .status(500)
+      .json({
+        message: error.message
+      })
+      .end()
+  }
+}) as RequestHandler)
+
+// PATCH media by route id - get presigned url to post
+router.patch('/:id/media', (async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+    const ext = (req.query.fileType as string).split('/')[1]
+    const { url, key } = getPresignedPutUrl(id, ext)
+    res.status(200).json({ url, key }).end()
   } catch (error) {
     console.error(error)
     res
@@ -208,7 +243,7 @@ router.delete('/:id/votes', setUserIdFromToken, (async (req: Request, res: Respo
 router.patch('/:id', setUserIdFromToken, (async (req: Request, res: Response) => {
   try {
     const { id } = req.params
-    const { open, userId } = req.body as { open: boolean; userId: string }
+    const { open, userId } = req.body as { open: boolean, userId: string }
     const setter = await User.findById(userId)
     const route = await Route.findByIdAndUpdate(id, { open, setter: userId }, { new: true })
     if (route?.votes !== undefined && setter !== null) {
