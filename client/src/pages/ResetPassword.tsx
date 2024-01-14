@@ -1,6 +1,5 @@
-import { Flex, Form, Input, Typography, Button } from 'antd'
+import { Flex, Form, Input, Typography, Button, App } from 'antd'
 import { useNavigate } from 'react-router-dom'
-import useMessage from 'antd/es/message/useMessage'
 import { useForm } from 'antd/es/form/Form'
 import { resetPasswordViaEmail } from '../api/auth'
 import React from 'react'
@@ -8,7 +7,7 @@ import React from 'react'
 const PasswordReset: React.FC = () => {
   const [form] = useForm()
   const navigate = useNavigate()
-  const [message, contextHolder] = useMessage()
+  const { message } = App.useApp()
 
   const handleResetPassword: () => void = async () => {
     try {
@@ -18,7 +17,7 @@ const PasswordReset: React.FC = () => {
         password2: string
       }
       if (password1 !== password2) {
-        await message.open({ type: 'error', content: 'Passwords must match' })
+        await message.error('Passwords must match.')
       }
       const queryParameters = new URLSearchParams(window.location.search)
       const token = queryParameters.get('token')
@@ -27,14 +26,12 @@ const PasswordReset: React.FC = () => {
         localStorage.setItem('token', token)
         const res = await resetPasswordViaEmail(userId, password1)
         if (res.status === 200) {
-          await message.open({
-            type: 'success',
-            content: 'Successfully reset password.'
-          })
+          await message.success('Successfully reset password.')
+
           localStorage.removeItem('token')
           navigate('/')
         } else {
-          await message.open({ type: 'error', content: res.data.message })
+          await message.error(JSON.stringify(res.data.message))
         }
       } else {
         navigate('/')
@@ -46,7 +43,6 @@ const PasswordReset: React.FC = () => {
 
   return (
     <Flex justify="center" align="center" className="h-screen">
-      {contextHolder}
       <Form form={form} className="w-1/2">
         <Flex justify="center">
           <Typography.Title level={3}>Reset your password</Typography.Title>

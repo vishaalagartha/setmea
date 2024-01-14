@@ -1,6 +1,5 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
-import { Form, Typography, Input, Button, Divider, Row, Col, Image } from 'antd'
-import useMessage from 'antd/es/message/useMessage'
+import { Form, Typography, Input, Button, Divider, Row, Col, Image, App } from 'antd'
 import { useForm } from 'antd/es/form/Form'
 import { useDispatch } from 'react-redux'
 import { setUser } from '../store/userSlice'
@@ -11,30 +10,21 @@ import { useNavigate } from 'react-router-dom'
 import Logo from '../assets/logo.png'
 import { useEffect, useState } from 'react'
 import Particles, { initParticlesEngine } from '@tsparticles/react'
-// import { loadAll } from "@/tsparticles/all"; // if you are going to use `loadAll`, install the "@tsparticles/all" package too.
-// import { loadFull } from "tsparticles"; // if you are going to use `loadFull`, install the "tsparticles" package too.
-import { loadSlim } from '@tsparticles/slim' // if you are going to use `loadSlim`, install the "@tsparticles/slim" package too.
-// import { loadBasic } from "@tsparticles/basic"; // if you are going to use `loadBasic`, install the "@tsparticles/basic" package too.
+import { loadSlim } from '@tsparticles/slim'
 
 const Landing: React.FC = () => {
   const [form] = useForm()
   const [registrationModalOpen, setRegistrationModalOpen] = useState(false)
   const [passwordResetModalOpen, setResetPasswordModalOpen] = useState(false)
   const dispatch = useDispatch()
-  const [message, contextHolder] = useMessage()
+  const { message } = App.useApp()
   const navigate = useNavigate()
   const [init, setInit] = useState(false)
 
   // this should be run only once per application lifetime
   useEffect(() => {
     void initParticlesEngine(async (engine) => {
-      // you can initiate the tsParticles instance (engine) here, adding custom shapes or presets
-      // this loads the tsparticles package bundle, it's the easiest method for getting everything ready
-      // starting from v2 you can add only the features you need reducing the bundle size
-      // await loadAll(engine);
-      // await loadFull(engine);
       await loadSlim(engine)
-      // await loadBasic(engine);
     }).then(() => {
       setInit(true)
     })
@@ -123,10 +113,11 @@ const Landing: React.FC = () => {
         if (identity === 'admin') navigate('/admin')
         else navigate('/')
       } else {
-        await message.open({ type: 'error', content: res.data.message })
+        await message.error(JSON.stringify(res.data.message))
       }
     } catch (error) {
       console.error(error)
+      await message.error(JSON.stringify(error))
     }
   }
   if (init)
@@ -138,7 +129,6 @@ const Landing: React.FC = () => {
           options={options}
         />
         <div className="absolute left-0 bottom-0 right-0 m-auto w-full top-48">
-          {contextHolder}
           <Row justify="center" className="mb-10">
             <Col xs={10} md={6}>
               <Image src={Logo} preview={false} />

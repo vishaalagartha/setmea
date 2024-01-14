@@ -1,14 +1,14 @@
-import { List, Typography, Space, Row, Tag, Col, Button, Divider, Image } from 'antd'
+import { List, Typography, Space, Row, Tag, Col, Button, Divider, Image, App } from 'antd'
 import { type IRoute } from '../types/route'
 import { dateToString } from '../utils/date'
 import { DeleteOutlined, LikeFilled, LikeOutlined } from '@ant-design/icons'
 import { useAppSelector } from '../store/rootReducer'
 import { userSelector } from '../store/userSlice'
-import useMessage from 'antd/es/message/useMessage'
 import { deleteRoute, unvoteRoute, voteRoute } from '../api/route'
 import { useNavigate } from 'react-router-dom'
 import { Identity } from '../types/user'
 import DefaultRoute from '../assets/default_route.png'
+import ReactPlayer from 'react-player'
 
 interface RouteListProps {
   routes: IRoute[]
@@ -24,7 +24,7 @@ const RouteList: React.FC<RouteListProps> = ({
   setFilteredRoutes
 }: RouteListProps) => {
   const user = useAppSelector(userSelector)
-  const [message, contextHolder] = useMessage()
+  const { message } = App.useApp()
 
   const navigate = useNavigate()
 
@@ -55,11 +55,11 @@ const RouteList: React.FC<RouteListProps> = ({
             ].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
           )
       } else {
-        await message.open({ type: 'error', content: res.data.message })
+        await message.error(JSON.stringify(res.data.message))
       }
     } catch (error) {
       console.error(error)
-      await message.open({ type: 'error', content: JSON.stringify(error) })
+      await message.error(JSON.stringify(error))
     }
   }
 
@@ -90,11 +90,11 @@ const RouteList: React.FC<RouteListProps> = ({
             ].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
           )
       } else {
-        await message.open({ type: 'error', content: res.data.message })
+        await message.error(JSON.stringify(res.data.message))
       }
     } catch (error) {
       console.error(error)
-      await message.open({ type: 'error', content: JSON.stringify(error) })
+      await message.error(JSON.stringify(error))
     }
   }
 
@@ -114,19 +114,18 @@ const RouteList: React.FC<RouteListProps> = ({
             .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
         )
       if (res.status === 200) {
-        await message.open({ type: 'success', content: 'Deleted request.' })
+        await message.success('Deleted request.')
       } else {
-        await message.open({ type: 'error', content: res.data.message })
+        await message.error(JSON.stringify(res.data.message))
       }
     } catch (error) {
       console.error(error)
-      await message.open({ type: 'error', content: JSON.stringify(error) })
+      await message.error(JSON.stringify(error))
     }
   }
 
   return (
     <Row justify="center">
-      {contextHolder}
       <Col xs={20} md={12} lg={10}>
         <List
           bordered={true}
@@ -175,19 +174,43 @@ const RouteList: React.FC<RouteListProps> = ({
             }
 
             const url = item.media.find(
-              (el: string) => el.endsWith('jpg') || el.endsWith('jpeg') || el.endsWith('png')
+              (el: string) =>
+                el.endsWith('jpg') ||
+                el.endsWith('jpeg') ||
+                el.endsWith('png') ||
+                el.endsWith('mp4') ||
+                el.endsWith('quicktime')
             )
-            const RouteImage: React.FC =
-              url === undefined
-                ? () => (
-                    <Image
-                      src={DefaultRoute}
-                      preview={false}
-                      width={200}
-                      style={{ borderRadius: '50%' }}
-                    />
-                  )
-                : () => <Image src={url} preview={false} style={{ borderRadius: '50%' }} />
+
+            let RoutePreview: React.FC = () => (
+              <Image src={DefaultRoute} preview={false} style={{ borderRadius: '50%' }} />
+            )
+
+            if (
+              url !== undefined &&
+              (url.endsWith('jpg') || url.endsWith('jpeg') || url.endsWith('png'))
+            ) {
+              const Route: React.FC = () => <Image src={url} preview={false} />
+              RoutePreview = Route
+            } else if (url !== undefined) {
+              const RouteVideo: React.FC = () => (
+                <ReactPlayer
+                  url={url}
+                  height={'100%'}
+                  width={'100%'}
+                  loop={true}
+                  playing={true}
+                  config={{
+                    file: {
+                      attributes: {
+                        controlsList: 'nofullscreen'
+                      }
+                    }
+                  }}
+                />
+              )
+              RoutePreview = RouteVideo
+            }
 
             return (
               <List.Item
@@ -214,10 +237,10 @@ const RouteList: React.FC<RouteListProps> = ({
                         </Typography.Link>
                       </Typography.Title>
                     </Col>
-                    <Col xs={11}>
-                      <RouteImage />
+                    <Col xs={10}>
+                      <RoutePreview />
                     </Col>
-                    <Col xs={1}>
+                    <Col xs={{ span: 1, offset: 1 }}>
                       <ActionButton />
                     </Col>
                   </Row>

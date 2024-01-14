@@ -1,10 +1,20 @@
 import React, { useEffect, useState } from 'react'
-import { AutoComplete, Flex, Button, Form, Input, Select, Typography, Divider, Tag } from 'antd'
+import {
+  AutoComplete,
+  Flex,
+  Button,
+  Form,
+  Input,
+  Select,
+  Typography,
+  Divider,
+  Tag,
+  App
+} from 'antd'
 import { useForm } from 'antd/es/form/Form'
 import GymForm from '../../components/GymForm'
 import { getGyms, editGym, deleteGym, addGymZone, deleteZone } from '../../api/gym'
 import type { IGym } from '../../types/gym'
-import useMessage from 'antd/es/message/useMessage'
 import { states } from '../../utils/constants'
 
 const AdminGyms: React.FC = () => {
@@ -13,7 +23,7 @@ const AdminGyms: React.FC = () => {
   const [form] = useForm()
   const [zoneForm] = useForm()
   const [openGymForm, setOpenGymForm] = useState(false)
-  const [message, contextHolder] = useMessage()
+  const { message } = App.useApp()
   const [selectedGym, setSelectedGym] = useState<IGym>()
 
   const fetchGyms: () => void = async () => {
@@ -39,12 +49,13 @@ const AdminGyms: React.FC = () => {
         setSelectedGym(undefined)
         form.setFieldsValue({ name: '', city: '', address: '', state: '' })
         autocompleteForm.setFieldValue('name', '')
-        await message.open({ type: 'success', content: 'Successfully edited gym!' })
+        await message.success('Successfully edited gym!')
       } else {
-        await message.open({ type: 'error', content: res.data.message })
+        await message.error(JSON.stringify(res.data.message))
       }
     } catch (error) {
       console.error(error)
+      await message.error(JSON.stringify(error))
     }
   }
 
@@ -57,13 +68,14 @@ const AdminGyms: React.FC = () => {
         setSelectedGym(undefined)
         fetchGyms()
         form.setFieldsValue({ name: '', city: '', address: '', state: '' })
-        await message.open({ type: 'success', content: 'Successfully deleted gym!' })
+        await message.success('Successfully deleted gym!')
         autocompleteForm.setFieldValue('name', '')
       } else {
-        await message.open({ type: 'error', content: res.data.message })
+        await message.error(JSON.stringify(res.data.message))
       }
     } catch (error) {
       console.error(error)
+      await message.error(JSON.stringify(error))
     }
   }
 
@@ -77,12 +89,13 @@ const AdminGyms: React.FC = () => {
         setSelectedGym({ ...selectedGym, zones: [...selectedGym.zones, zone] })
         fetchGyms()
         zoneForm.setFieldsValue({ zone: '' })
-        await message.open({ type: 'success', content: 'Successfully added zone to gym!' })
+        await message.success('Successfully added zone to gym!')
       } else {
-        await message.open({ type: 'error', content: res.data.message })
+        await message.error(JSON.stringify(res.data.message))
       }
     } catch (error) {
       console.error(error)
+      await message.error(JSON.stringify(error))
     }
   }
 
@@ -94,18 +107,18 @@ const AdminGyms: React.FC = () => {
         fetchGyms()
         setSelectedGym({ ...selectedGym, zones: selectedGym.zones.filter((z) => z !== zone) })
         zoneForm.setFieldsValue({ zone: '' })
-        await message.open({ type: 'success', content: 'Successfully deleted zone.' })
+        await message.success('Successfully deleted zone.')
       } else {
-        await message.open({ type: 'error', content: res.data.message })
+        await message.error(JSON.stringify(res.data.message))
       }
     } catch (error) {
       console.error(error)
+      await message.error(JSON.stringify(error))
     }
   }
 
   return (
     <Flex vertical={true} align="center">
-      {contextHolder}
       <Form form={autocompleteForm} className="w-1/2">
         <Form.Item name="name" className="w-full">
           <AutoComplete

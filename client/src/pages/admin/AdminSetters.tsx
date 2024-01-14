@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { AutoComplete, Flex, Button, Form, Input, Typography, Divider } from 'antd'
+import { AutoComplete, Flex, Button, Form, Input, Typography, Divider, App } from 'antd'
 import { register, requestResetPassword } from '../../api/auth'
 import { deleteUser, getUsersByIdentity } from '../../api/user'
 import { useForm } from 'antd/es/form/Form'
-import useMessage from 'antd/es/message/useMessage'
 import { type IUser } from '../../types/user'
 import { useNavigate } from 'react-router-dom'
 
 const AdminSetters: React.FC = () => {
   const [form] = useForm()
   const [setters, setSetters] = useState<IUser[]>([])
-  const [message, contextHolder] = useMessage()
+  const { message } = App.useApp()
   const navigate = useNavigate()
   const [selectedSetter, setSelectedSetter] = useState<IUser>()
 
@@ -31,11 +30,11 @@ const AdminSetters: React.FC = () => {
       if (selectedSetter === undefined) return
       const res = await deleteUser(selectedSetter._id)
       if (res.status === 200) {
-        await message.open({ type: 'success', content: 'Successfully deleted setter!' })
+        await message.success('Successfully deleted setter!')
         setSelectedSetter(undefined)
         fetchSetters()
       } else {
-        await message.open({ type: 'error', content: res.data.message })
+        await message.error(JSON.stringify(res.data.message))
       }
     } catch (error) {
       console.error(error)
@@ -58,20 +57,20 @@ const AdminSetters: React.FC = () => {
           navigate('/')
         } else {
           form.setFieldsValue({ username: '', email: '' })
-          await message.open({ type: 'error', content: requestResetResp.data.message })
+          await message.error(JSON.stringify(requestResetResp.data.message))
         }
       } else {
         form.setFieldsValue({ username: '', email: '' })
-        await message.open({ type: 'error', content: registerRes.data.message })
+        await message.error(JSON.stringify(registerRes.data.message))
       }
     } catch (error) {
       console.error(error)
+      await message.error(JSON.stringify(error))
     }
   }
 
   return (
     <Flex vertical={true} align="center">
-      {contextHolder}
       <Typography.Text>Search for a setter to remove</Typography.Text>
       <AutoComplete
         options={setters.map((g) => ({

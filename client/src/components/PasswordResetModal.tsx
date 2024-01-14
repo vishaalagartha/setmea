@@ -1,8 +1,7 @@
-import { Input, Modal, Form, Typography, Flex, Button, Space } from 'antd'
+import { Input, Modal, Form, Typography, Flex, Button, Space, App } from 'antd'
 import { useForm } from 'antd/es/form/Form'
 import { requestResetPassword } from '../api/auth'
 import { useNavigate } from 'react-router-dom'
-import useMessage from 'antd/es/message/useMessage'
 
 interface PasswordResetModalProps {
   open: boolean
@@ -15,7 +14,7 @@ const PasswordResetModal: React.FC<PasswordResetModalProps> = ({
 }: PasswordResetModalProps) => {
   const [form] = useForm()
   const navigate = useNavigate()
-  const [message, contextHolder] = useMessage()
+  const { message } = App.useApp()
 
   const handleResetPassword: () => void = async () => {
     try {
@@ -23,16 +22,14 @@ const PasswordResetModal: React.FC<PasswordResetModalProps> = ({
       const { email } = form.getFieldsValue() as { email: string }
       const res = await requestResetPassword(email)
       if (res.status === 200) {
-        await message.open({
-          type: 'success',
-          content: 'Please check your email for a link to reset your password.'
-        })
+        await message.success('Please check your email for a link to reset your password.')
         navigate('/')
       } else {
-        await message.open({ type: 'error', content: res.data.message })
+        await message.error(JSON.stringify(res.data.message))
       }
     } catch (error) {
       console.error(error)
+      await message.error(JSON.stringify(error))
     }
   }
 
@@ -49,7 +46,6 @@ const PasswordResetModal: React.FC<PasswordResetModalProps> = ({
         </Flex>
       }
       footer={null}>
-      {contextHolder}
       <Flex vertical={true} align="center">
         <Form form={form}>
           <Space direction="vertical">

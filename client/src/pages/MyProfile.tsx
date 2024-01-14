@@ -10,7 +10,8 @@ import {
   InputNumber,
   Button,
   Space,
-  Image
+  Image,
+  App
 } from 'antd'
 import DefaultImage from '../assets/default.jpg'
 import type { UploadChangeParam } from 'antd/es/upload'
@@ -18,7 +19,6 @@ import type { RcFile, UploadProps, UploadFile } from 'antd/es/upload/interface'
 import { useAppDispatch, useAppSelector } from '../store/rootReducer'
 import { userSelector, setUser } from '../store/userSlice'
 import { editUser, updateAvatar } from '../api/user'
-import useMessage from 'antd/es/message/useMessage'
 import { resetPasswordViaPassword } from '../api/auth'
 
 const getBase64 = async (file: RcFile): Promise<string> => {
@@ -39,10 +39,9 @@ const Profile: React.FC = () => {
   const [passwordForm] = Form.useForm()
   const user = useAppSelector(userSelector)
   const [editing, setEditing] = useState(false)
-  // eslint-disable-next-line
   const [avatar, setAvatar] = useState<string>()
   const dispatch = useAppDispatch()
-  const [message, contextHolder] = useMessage()
+  const { message } = App.useApp()
 
   useEffect(() => {
     form.setFieldsValue({ ...user })
@@ -67,7 +66,7 @@ const Profile: React.FC = () => {
         const updateRes = await updateAvatar(user._id, avatar)
         const { res } = updateRes
         if (res.status !== 200) {
-          await message.open({ type: 'error', content: res.data.message })
+          await message.error(JSON.stringify(res.data.message))
         } else {
           avatarKey = updateRes.key
         }
@@ -85,10 +84,10 @@ const Profile: React.FC = () => {
       if (res.status === 200) {
         dispatch(setUser({ ...res.data, avatar: avatarKey }))
         form.setFieldsValue({ ...res.data, avatar: avatarKey })
-        await message.open({ type: 'success', content: 'Modified your profile.' })
+        await message.success('Modified your profile.')
       } else {
         form.setFieldsValue({ ...user, avatar: avatarKey })
-        await message.open({ type: 'error', content: res.data.message })
+        await message.error(JSON.stringify(res.data.message))
       }
     } catch (error) {
       console.error(error)
@@ -104,7 +103,7 @@ const Profile: React.FC = () => {
         pw2: string
       }
       if (pw1 !== pw2) {
-        await message.open({ type: 'error', content: 'Passwords must match!' })
+        await message.error('Passwords must match!')
         return
       }
       const res = await resetPasswordViaPassword(pw, pw1)
@@ -115,7 +114,7 @@ const Profile: React.FC = () => {
         })
         passwordForm.setFieldsValue({ pw: '', pw1: '', pw2: '' })
       } else {
-        await message.open({ type: 'error', content: res.data.message })
+        await message.error(JSON.stringify(res.data.message))
       }
     } catch (error) {
       console.error(error)
@@ -132,7 +131,6 @@ const Profile: React.FC = () => {
   return (
     <>
       <Form form={form}>
-        {contextHolder}
         <Row justify="center" className="mb-3">
           {editing && (
             <Space>

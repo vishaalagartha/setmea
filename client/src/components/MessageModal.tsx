@@ -1,6 +1,5 @@
-import { Input, Modal, Form, Typography, Flex, Button, Divider } from 'antd'
+import { Input, Modal, Form, Typography, Flex, Button, Divider, App } from 'antd'
 import { useForm } from 'antd/es/form/Form'
-import useMessage from 'antd/es/message/useMessage'
 import { type IMessage } from '../types/message'
 import { readMessage, sendMessage } from '../api/messages'
 
@@ -12,7 +11,7 @@ interface MessageModalProps {
 const MessageModal: React.FC<MessageModalProps> = ({ message, setMessage }: MessageModalProps) => {
   if (message === null) return
   const [form] = useForm()
-  const [messageApi, contextHolder] = useMessage()
+  const { message: messageApi } = App.useApp()
 
   const handleSendMessage: () => void = async () => {
     try {
@@ -20,14 +19,15 @@ const MessageModal: React.FC<MessageModalProps> = ({ message, setMessage }: Mess
       const { content } = form.getFieldsValue() as { content: string }
       const res = await sendMessage(message.sender, content)
       if (res.status === 201) {
-        await messageApi.open({ type: 'success', content: 'Successfully sent message!' })
+        await messageApi.success('Successfully sent message!')
         handleClose()
       } else {
         form.setFieldsValue({ content: '' })
-        await messageApi.open({ type: 'error', content: res.data.message })
+        await messageApi.error(JSON.stringify(res.data.message))
       }
     } catch (error) {
       console.error(error)
+      await messageApi.error(JSON.stringify(error))
     }
   }
 
@@ -35,10 +35,11 @@ const MessageModal: React.FC<MessageModalProps> = ({ message, setMessage }: Mess
     try {
       const res = await readMessage(message._id)
       if (res.status !== 200) {
-        await messageApi.open({ type: 'error', content: res.data.message })
+        await messageApi.error(JSON.stringify(res.data.message))
       }
     } catch (error) {
       console.error(error)
+      await messageApi.error(JSON.stringify(error))
     }
     form.setFieldsValue({ content: '' })
     setMessage(null)
@@ -59,7 +60,6 @@ const MessageModal: React.FC<MessageModalProps> = ({ message, setMessage }: Mess
           </Button>
         </Flex>
       }>
-      {contextHolder}
       <Flex vertical={true} align="center">
         <Form form={form} className="w-3/4">
           <Typography.Title level={3}>{message.senderUsername} says:</Typography.Title>

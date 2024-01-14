@@ -49,7 +49,7 @@ const formatRoutes: (routes: IRoute[]) => Promise<IRouteData[]> = async (routes:
   return data
 }
 
-const getPresignedPutUrl: (routeId: string, ext: string) => { url: string, key: string } = (
+const getPresignedPutUrl: (routeId: string, ext: string) => { url: string; key: string } = (
   routeId: string,
   ext: string
 ) => {

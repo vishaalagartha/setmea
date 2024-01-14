@@ -1,10 +1,9 @@
-import { Input, Modal, Form, Typography, Flex, Button } from 'antd'
+import { Input, Modal, Form, Typography, Flex, Button, App } from 'antd'
 import { useForm } from 'antd/es/form/Form'
 import { register } from '../api/auth'
 import { useAppDispatch } from '../store/rootReducer'
 import { setUser } from '../store/userSlice'
 import { useNavigate } from 'react-router-dom'
-import useMessage from 'antd/es/message/useMessage'
 
 interface RegistrationModalProps {
   open: boolean
@@ -18,7 +17,7 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
   const [form] = useForm()
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const [message, contextHolder] = useMessage()
+  const { message } = App.useApp()
 
   const handleRegistration: () => void = async () => {
     try {
@@ -33,10 +32,11 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
         navigate('/')
       } else {
         form.setFieldsValue({ username: '', password: '', identity: 'climber' })
-        await message.open({ type: 'error', content: res.data.message })
+        await message.error(JSON.stringify(res.data.message))
       }
     } catch (error) {
       console.error(error)
+      await message.error(JSON.stringify(error))
     }
   }
 
@@ -53,7 +53,6 @@ const RegistrationModal: React.FC<RegistrationModalProps> = ({
         </Flex>
       }
       footer={null}>
-      {contextHolder}
       <Flex vertical={true} align="center">
         <Form form={form} className="w-3/4">
           <Form.Item

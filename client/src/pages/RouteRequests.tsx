@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { Typography, Row, Col } from 'antd'
+import { Typography, Row, Col, App } from 'antd'
 import { type IRoute } from '../types/route'
 import { getClimberOpenRequests } from '../api/route'
-import useMessage from 'antd/es/message/useMessage'
 import RouteList from '../components/RouteList'
 import { useAppSelector } from '../store/rootReducer'
 import { userSelector } from '../store/userSlice'
 
 const RouteRequests: React.FC = () => {
   const [routes, setRoutes] = useState<IRoute[]>([])
-  const [message, contextHolder] = useMessage()
+  const { message } = App.useApp()
   const user = useAppSelector(userSelector)
 
   useEffect(() => {
@@ -20,7 +19,7 @@ const RouteRequests: React.FC = () => {
           const routes = res.data as IRoute[]
           setRoutes(routes)
         } else {
-          await message.open({ type: 'error', content: res.data.message })
+          await message.error(JSON.stringify(res.data.message))
         }
       }
     }
@@ -29,7 +28,6 @@ const RouteRequests: React.FC = () => {
 
   return (
     <div>
-      {contextHolder}
       <Row justify="center">
         <Typography.Title level={3}>My Pending Requests</Typography.Title>
       </Row>

@@ -12,7 +12,7 @@ const router = Router()
 // GET all routes by gym
 router.get('/', (async (req: Request, res: Response) => {
   try {
-    const { gymId, open } = req.query as { gymId: string, open: boolean | undefined }
+    const { gymId, open } = req.query as { gymId: string; open: boolean | undefined }
     const routes = await Route.find({ gym: gymId, open })
     const data = await formatRoutes(routes)
     res.status(200).json(data).end()
@@ -161,7 +161,7 @@ router.post('/', setUserIdFromToken, (async (req: Request, res: Response) => {
 router.delete('/:id', (async (req: Request, res: Response) => {
   try {
     const { id } = req.params
-    const deleted = await Route.findByIdAndDelete(id) as unknown as IRoute
+    const deleted = (await Route.findByIdAndDelete(id)) as unknown as IRoute
     await deleteRouteMedia(deleted)
     res.status(200).json({ message: 'Deleted route.' }).end()
   } catch (error) {
@@ -243,7 +243,7 @@ router.patch('/:id/media', (async (req: Request, res: Response) => {
 router.patch('/:id', setUserIdFromToken, (async (req: Request, res: Response) => {
   try {
     const { id } = req.params
-    const { open, userId } = req.body as { open: boolean, userId: string }
+    const { open, userId } = req.body as { open: boolean; userId: string }
     const setter = await User.findById(userId)
     const route = await Route.findByIdAndUpdate(id, { open, setter: userId }, { new: true })
     if (route?.votes !== undefined && setter !== null) {

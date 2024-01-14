@@ -9,18 +9,19 @@ import {
   Row,
   Col,
   InputNumber,
-  Upload
+  Upload,
+  App
 } from 'antd'
 import { getGyms } from '../api/gym'
 import type { UploadChangeParam } from 'antd/es/upload'
 import type { UploadProps, UploadFile } from 'antd/es/upload/interface'
 import { RouteTag } from '../types/route'
 import type { IGym } from '../types/gym'
-import { createRoute, postRouteMedia, putRouteMedia } from '../api/route'
-import useMessage from 'antd/es/message/useMessage'
+import { createRoute, putRouteMedia, postRouteMedia } from '../api/route'
 import type { IUser } from '../types/user'
 import { getUsersByIdentity } from '../api/user'
 import { UploadOutlined } from '@ant-design/icons'
+import { resizeImage, convertFile } from '../utils/media'
 
 const RouteRequestForm: React.FC = () => {
   const [form] = Form.useForm()
@@ -28,7 +29,7 @@ const RouteRequestForm: React.FC = () => {
   const [fileList, setFileList] = useState<UploadFile[]>([])
   const [setters, setSetters] = useState<IUser[]>([])
   const [selectedGym, setSelectedGym] = useState<IGym>()
-  const [message, contextHolder] = useMessage()
+  const { message } = App.useApp()
   const options = Object.values(RouteTag).map((t) => ({ name: t, value: t }))
 
   useEffect(() => {
@@ -52,8 +53,21 @@ const RouteRequestForm: React.FC = () => {
 
   const addRouteMedia: (routeId: string) => void = async (routeId: string) => {
     try {
+      const hide = message.loading('Uploading media...', 0)
       const files = fileList.map((f) => f.originFileObj)
-      const puts = files.map(
+      setFileList([])
+      const resizedFilesPromises = files.map(
+        async (f) =>
+          await new Promise((resolve) => {
+            if (f instanceof File) {
+              if (f.name.endsWith('jpeg') || f.name.endsWith('jpg') || f.name.endsWith('png'))
+                resolve(resizeImage(f))
+              else resolve(convertFile(f))
+            }
+          })
+      )
+      const resizedFiles = await Promise.all(resizedFilesPromises)
+      const puts = resizedFiles.map(
         async (f) =>
           await new Promise((resolve) => {
             if (f instanceof File) resolve(putRouteMedia(routeId, f))
@@ -64,17 +78,19 @@ const RouteRequestForm: React.FC = () => {
           const { key } = resp as { key: string }
           return key
         })
+
         const res = await postRouteMedia(routeId, mediaFiles)
+        hide()
         if (res.status === 200) {
-          await message.open({ type: 'success', content: 'Successfully uploaded media' })
+          await message.success('Successfully uploaded media.')
         } else {
-          await message.open({ type: 'error', content: 'Failed to upload media' })
+          await message.error('Failed to upload media. Please retry creating route.')
         }
       })
-      setFileList([])
     } catch (error) {
       setFileList([])
       console.error(error)
+      await message.error(JSON.stringify(error))
     }
   }
 
@@ -111,14 +127,15 @@ const RouteRequestForm: React.FC = () => {
           zone: '',
           requestedSetter: ''
         })
-        await message.open({ type: 'success', content: 'Successfully created route!' })
+        await message.success('Successfully created route!')
         const routeId = res.data._id
         addRouteMedia(routeId as string)
       } else {
-        await message.open({ type: 'error', content: res.data.message })
+        await message.error(JSON.stringify(res.data.message))
       }
     } catch (error) {
       console.error(error)
+      await message.error(JSON.stringify(error))
     }
   }
   const handleUpload: UploadProps['onChange'] = async (info: UploadChangeParam<UploadFile>) => {
@@ -127,7 +144,6 @@ const RouteRequestForm: React.FC = () => {
 
   return (
     <Form form={form} layout={'horizontal'}>
-      {contextHolder}
       <Row justify="center">
         <Typography.Title level={3}>As a climber</Typography.Title>
       </Row>
@@ -182,7 +198,9 @@ const RouteRequestForm: React.FC = () => {
         </Row>
         <Row justify="center">
           <Col xs={20} md={12} lg={8}>
-            <Form.Item name="goal" rules={[{ required: true, message: 'Please select a gym.' }]}>
+            <Form.Item
+              name="goal"
+              rules={[{ required: true, message: 'Please describe your goal.' }]}>
               <Input placeholder="crimp endurance" />
             </Form.Item>
           </Col>
@@ -236,7 +254,7 @@ const RouteRequestForm: React.FC = () => {
             beforeUpload={() => false}
             onChange={handleUpload}
             fileList={fileList}
-            accept={'image/png, image/jpeg, image/jpg'}>
+            accept={'image/png, image/jpeg, image/jpg, video/*'}>
             <Button icon={<UploadOutlined />}>Upload media describing route</Button>
           </Upload>
         </Row>

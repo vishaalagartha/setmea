@@ -1,6 +1,6 @@
 import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { ConfigProvider, Layout } from 'antd'
+import { ConfigProvider, Layout, App as AntdApp } from 'antd'
 import Home from './pages/Home'
 import Landing from './pages/Landing'
 import MyProfile from './pages/MyProfile'
@@ -21,13 +21,6 @@ import SetRequests from './pages/SetRequests'
 import FindRoutes from './pages/FindRoutes'
 import RoutePage from './pages/Route'
 import RouteHistory from './pages/RouteHistory'
-
-/*
-Colors:
-#00538C;
-#002B5E;
-#B8C4CA;
-*/
 
 const App: React.FC = () => {
   return (
@@ -82,35 +75,37 @@ const App: React.FC = () => {
           }
         }
       }}>
-      <Layout>
-        <BrowserRouter>
-          <Routes>
-            <Route element={<ProtectedRoute identity={Identity.ADMIN} />} path="/admin">
-              <Route Component={AdminHome} path="/admin/" />
-              <Route Component={AdminGyms} path="/admin/gyms" />
-              <Route Component={AdminSetters} path="/admin/setters" />
-              <Route Component={AdminUsers} path="/admin/users" />
-            </Route>
-            <Route Component={Landing} path="/login" />
-            <Route Component={PasswordReset} path="/passwordReset" />
-            <Route element={<ProtectedRoute identity={undefined} />} path="/">
-              <Route Component={Home} path="/" />
-              <Route Component={MyProfile} path="/profile" />
-              <Route Component={UserProfile} path="/profile/:id" />
-              <Route Component={RoutePage} path="/routes/:id" />
-            </Route>
-            <Route element={<ProtectedRoute identity={Identity.SETTER} />} path="/">
-              <Route Component={SetRequests} path="/set-requests" />
-              <Route Component={RouteHistory} path="/set-history" />
-            </Route>
-            <Route element={<ProtectedRoute identity={Identity.CLIMBER} />} path="/">
-              <Route Component={FindRoutes} path="/browse" />
-              <Route Component={RouteRequests} path="/route-requests" />
-              <Route Component={RouteHistory} path="/route-history" />
-            </Route>
-          </Routes>
-        </BrowserRouter>
-      </Layout>
+      <AntdApp>
+        <Layout>
+          <BrowserRouter>
+            <Routes>
+              <Route element={<ProtectedRoute identity={Identity.ADMIN} />} path="/admin">
+                <Route Component={AdminHome} path="/admin/" />
+                <Route Component={AdminGyms} path="/admin/gyms" />
+                <Route Component={AdminSetters} path="/admin/setters" />
+                <Route Component={AdminUsers} path="/admin/users" />
+              </Route>
+              <Route Component={Landing} path="/login" />
+              <Route Component={PasswordReset} path="/passwordReset" />
+              <Route element={<ProtectedRoute identity={undefined} />} path="/">
+                <Route Component={Home} path="/" />
+                <Route Component={MyProfile} path="/profile" />
+                <Route Component={UserProfile} path="/profile/:id" />
+                <Route Component={RoutePage} path="/routes/:id" />
+              </Route>
+              <Route element={<ProtectedRoute identity={Identity.SETTER} />} path="/">
+                <Route Component={SetRequests} path="/set-requests" />
+                <Route Component={RouteHistory} path="/set-history" />
+              </Route>
+              <Route element={<ProtectedRoute identity={Identity.CLIMBER} />} path="/">
+                <Route Component={FindRoutes} path="/browse" />
+                <Route Component={RouteRequests} path="/route-requests" />
+                <Route Component={RouteHistory} path="/route-history" />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </Layout>
+      </AntdApp>
     </ConfigProvider>
   )
 }

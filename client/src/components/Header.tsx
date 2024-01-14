@@ -1,7 +1,7 @@
 import type { FC, ReactNode } from 'react'
 import { useState, useEffect } from 'react'
-import { Layout, Flex, Dropdown, Badge, Typography, Image } from 'antd'
-import { useNavigate, Link } from 'react-router-dom'
+import { Layout, Flex, Dropdown, Badge, Typography, Image, App } from 'antd'
+import { useNavigate } from 'react-router-dom'
 import { Navbar, Nav, Container } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { resetUser, userSelector } from '../store/userSlice'
@@ -17,7 +17,6 @@ import {
 import { getReceiverMessages } from '../api/messages'
 import { type IMessage } from '../types/message'
 import { useAppSelector } from '../store/rootReducer'
-import useMessage from 'antd/es/message/useMessage'
 import MessageModal from './MessageModal'
 import { dateToString } from '../utils/date'
 import Logo from '../assets/logo.png'
@@ -46,7 +45,7 @@ const Header: FC<HeaderProps> = ({ children }: { children: ReactNode }) => {
   const [toggled, setToggled] = useState(false)
   const [messages, setMessages] = useState<IMessage[]>([])
   const user = useAppSelector(userSelector)
-  const [message, contextHolder] = useMessage()
+  const { message } = App.useApp()
   const [selectedMessage, setSelectedMessage] = useState<IMessage | null>(null)
 
   useEffect(() => {
@@ -59,10 +58,11 @@ const Header: FC<HeaderProps> = ({ children }: { children: ReactNode }) => {
           setMessages(messages)
           setUnreadCount(unreadMessages.length)
         } else {
-          await message.open({ type: 'error', content: res.data.error })
+          await message.error(JSON.stringify(res.data.error))
         }
       } catch (e) {
         console.error(e)
+        await message.error(JSON.stringify(e))
       }
     }
     if (user._id !== '') fetchNotifications()
@@ -110,7 +110,6 @@ const Header: FC<HeaderProps> = ({ children }: { children: ReactNode }) => {
 
   return (
     <div>
-      {contextHolder}
       <MessageModal message={selectedMessage} setMessage={setSelectedMessage} />
       <Navbar
         expand="lg"
@@ -121,15 +120,22 @@ const Header: FC<HeaderProps> = ({ children }: { children: ReactNode }) => {
         }}>
         <Container>
           <Navbar.Brand>
-            <Link to="/">
+            <Nav.Link
+              onClick={() => {
+                navigate('/')
+              }}>
               <Image src={Logo} preview={false} width={200} />
-            </Link>
+            </Nav.Link>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse className="justify-end" id="responsive-navbar-nav">
             <Nav>
               {user.identity === Identity.CLIMBER && (
-                <Nav.Link href="/browse" className="mx-3">
+                <Nav.Link
+                  onClick={() => {
+                    navigate('/browse')
+                  }}
+                  className="mx-3">
                   <div className="flex text-slate-50 hover:text-sky-500">
                     <SearchOutlined className="text-3xl" />
                     {toggled && <div className="ml-3">Browse Requests</div>}
@@ -137,7 +143,11 @@ const Header: FC<HeaderProps> = ({ children }: { children: ReactNode }) => {
                 </Nav.Link>
               )}
               {user.identity === Identity.CLIMBER && (
-                <Nav.Link href="/route-requests" className="mx-3">
+                <Nav.Link
+                  onClick={() => {
+                    navigate('/route-requests')
+                  }}
+                  className="mx-3">
                   <div className="flex text-slate-50 hover:text-sky-500">
                     <UnorderedListOutlined className="text-3xl" />
                     {toggled && <div className="ml-3">My Requests</div>}
@@ -145,7 +155,11 @@ const Header: FC<HeaderProps> = ({ children }: { children: ReactNode }) => {
                 </Nav.Link>
               )}
               {user.identity === Identity.CLIMBER && (
-                <Nav.Link href="/route-history" className="mx-3">
+                <Nav.Link
+                  onClick={() => {
+                    navigate('/route-history')
+                  }}
+                  className="mx-3">
                   <div className="flex text-slate-50 hover:text-sky-500">
                     <HistoryOutlined className="text-3xl" />
                     {toggled && <div className="ml-3">My History</div>}
@@ -153,7 +167,11 @@ const Header: FC<HeaderProps> = ({ children }: { children: ReactNode }) => {
                 </Nav.Link>
               )}
               {user.identity === Identity.SETTER && (
-                <Nav.Link href="/set-requests" className="mx-3">
+                <Nav.Link
+                  onClick={() => {
+                    navigate('/set-requests')
+                  }}
+                  className="mx-3">
                   <div className="flex text-slate-50 hover:text-sky-500">
                     <UnorderedListOutlined className="text-3xl" />
                     {toggled && <div className="ml-3">My Set Requests</div>}
@@ -161,7 +179,11 @@ const Header: FC<HeaderProps> = ({ children }: { children: ReactNode }) => {
                 </Nav.Link>
               )}
               {user.identity === Identity.SETTER && (
-                <Nav.Link href="/set-history" className="mx-3">
+                <Nav.Link
+                  onClick={() => {
+                    navigate('/set-history')
+                  }}
+                  className="mx-3">
                   <div className="flex text-slate-50 hover:text-sky-500">
                     <HistoryOutlined className="text-3xl" />
                     {toggled && <div className="ml-3">My History</div>}

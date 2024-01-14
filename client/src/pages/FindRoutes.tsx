@@ -9,14 +9,14 @@ import {
   Row,
   Col,
   Divider,
-  Space
+  Space,
+  App
 } from 'antd'
 import { getGyms } from '../api/gym'
 import type { IGym } from '../types/gym'
 import { type IRoute, RouteTag } from '../types/route'
 import { getOpenRoutesByGym } from '../api/route'
 import RouteList from '../components/RouteList'
-import useMessage from 'antd/es/message/useMessage'
 import { useAppSelector } from '../store/rootReducer'
 import { userSelector } from '../store/userSlice'
 import { Identity } from '../types/user'
@@ -27,7 +27,7 @@ const FindRoutes: React.FC = () => {
   const [gyms, setGyms] = useState<IGym[]>([])
   const [routes, setRoutes] = useState<IRoute[]>([])
   const [filteredRoutes, setFilteredRoutes] = useState<IRoute[]>([])
-  const [message, contextHolder] = useMessage()
+  const { message } = App.useApp()
   const user = useAppSelector(userSelector)
 
   const options = Object.values(RouteTag).map((t) => ({ name: t, value: t }))
@@ -51,8 +51,7 @@ const FindRoutes: React.FC = () => {
       const routeData = res.data as IRoute[]
       setRoutes(routeData)
       setFilteredRoutes(routeData)
-      if (routeData.length === 0)
-        await message.open({ type: 'info', content: 'No routes were found.' })
+      if (routeData.length === 0) await message.info('No routes were found.')
     }
   }
 
@@ -93,7 +92,6 @@ const FindRoutes: React.FC = () => {
   }
   return (
     <div>
-      {contextHolder}
       <Form form={form}>
         <Row justify="center">
           {user.identity === Identity.CLIMBER && (

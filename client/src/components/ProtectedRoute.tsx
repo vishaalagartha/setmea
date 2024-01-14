@@ -6,7 +6,7 @@ import { setUser, userSelector } from '../store/userSlice'
 import { fetchUser as fetchUserAPI } from '../api/auth'
 import Header from './Header'
 import type { Identity } from '../types/user'
-import useMessage from 'antd/es/message/useMessage'
+import { App } from 'antd'
 
 interface ProtectedRouteProps {
   identity: Identity.ADMIN | Identity.CLIMBER | Identity.SETTER | undefined
@@ -16,7 +16,7 @@ const ProtectedRoute: FC<ProtectedRouteProps> = ({ identity }) => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const user = useAppSelector(userSelector)
-  const [message, contextHolder] = useMessage()
+  const { message } = App.useApp()
 
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -37,10 +37,7 @@ const ProtectedRoute: FC<ProtectedRouteProps> = ({ identity }) => {
   useEffect(() => {
     const checkIdentity: () => void = async () => {
       if (identity !== undefined && user.identity !== undefined && identity !== user.identity) {
-        await message.open({
-          type: 'error',
-          content: 'Sorry, you do not have access to the requested page'
-        })
+        await message.error('Sorry, you do not have access to the requested page')
         navigate('/login')
       }
     }
@@ -49,7 +46,6 @@ const ProtectedRoute: FC<ProtectedRouteProps> = ({ identity }) => {
 
   return (
     <Header>
-      {contextHolder}
       <Outlet />
     </Header>
   )

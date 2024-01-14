@@ -9,7 +9,7 @@ const s3 = new AWS.S3({
   secretAccessKey: process.env.SECRET_ACCESS_KEY
 })
 
-const getPresignedPutUrl: (userId: string, ext: string) => { url: string, key: string } = (
+const getPresignedPutUrl: (userId: string, ext: string) => { url: string; key: string } = (
   userId: string,
   ext: string
 ) => {

@@ -1,6 +1,5 @@
-import { Input, Modal, Form, Typography, Flex, Button, Select } from 'antd'
+import { Input, Modal, Form, Typography, Flex, Button, Select, App } from 'antd'
 import { useForm } from 'antd/es/form/Form'
-import useMessage from 'antd/es/message/useMessage'
 import { createGym } from '../api/gym'
 import { states } from '../utils/constants'
 interface GymFormProps {
@@ -10,7 +9,7 @@ interface GymFormProps {
 
 const GymForm: React.FC<GymFormProps> = ({ open, setOpen }: GymFormProps) => {
   const [form] = useForm()
-  const [message, contextHolder] = useMessage()
+  const { message } = App.useApp()
 
   const handleClick: () => void = async () => {
     try {
@@ -18,11 +17,11 @@ const GymForm: React.FC<GymFormProps> = ({ open, setOpen }: GymFormProps) => {
       const { name, address, city, state } = form.getFieldsValue()
       const res = await createGym({ name, address, city, state })
       if (res.status === 201) {
-        await message.open({ type: 'success', content: 'Successfully created gym!' })
+        await message.success('Successfully created gym!')
         form.setFieldsValue({ name: '', city: '', address: '', state: '' })
         setOpen(false)
       } else {
-        await message.open({ type: 'error', content: res.data.message })
+        await message.error(JSON.stringify(res.data.message))
       }
     } catch (error) {
       console.error(error)
@@ -42,7 +41,6 @@ const GymForm: React.FC<GymFormProps> = ({ open, setOpen }: GymFormProps) => {
         </Flex>
       }
       footer={null}>
-      {contextHolder}
       <Flex vertical={true} align="center">
         <Form form={form} className="w-3/4">
           <Form.Item

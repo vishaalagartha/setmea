@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Typography, Divider, Row, Col, Space, Image } from 'antd'
-import useMessage from 'antd/es/message/useMessage'
+import { Typography, Divider, Row, Col, Space, Image, App } from 'antd'
 import { fetchUser } from '../api/auth'
 import { useParams } from 'react-router-dom'
 import { type IRoute } from '../types/route'
@@ -13,7 +12,7 @@ const UserProfile: React.FC = () => {
   const { id } = useParams() as { id: string }
   const [user, setUser] = useState<IUser>()
   const [routes, setRoutes] = useState<IRoute[]>([])
-  const [message, contextHolder] = useMessage()
+  const { message } = App.useApp()
 
   useEffect(() => {
     const getUser: () => void = async () => {
@@ -21,7 +20,7 @@ const UserProfile: React.FC = () => {
       if (res.status === 200) {
         setUser(res.data as IUser)
       } else {
-        await message.open({ type: 'error', content: res.data.message })
+        await message.error(JSON.stringify(res.data.message))
       }
     }
 
@@ -35,14 +34,14 @@ const UserProfile: React.FC = () => {
         if (res.status === 200) {
           setRoutes(res.data as IRoute[])
         } else {
-          await message.open({ type: 'error', content: res.data.message })
+          await message.error(JSON.stringify(res.data.message))
         }
       } else if (user?.identity === Identity.SETTER) {
         const res = await getSetterClosedRequests(user._id)
         if (res.status === 200) {
           setRoutes(res.data as IRoute[])
         } else {
-          await message.open({ type: 'error', content: res.data.message })
+          await message.error(JSON.stringify(res.data.message))
         }
       }
     }
@@ -53,7 +52,6 @@ const UserProfile: React.FC = () => {
 
   return (
     <>
-      {contextHolder}
       <Row justify="center">
         <Col xs={12} md={4}>
           {user?.avatar !== '' && (

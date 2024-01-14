@@ -56,7 +56,7 @@ const createRoute = async ({
   }
 }
 
-const putRouteMedia = async (routeId: string, media: File): Promise <any> => {
+const putRouteMedia = async (routeId: string, media: File): Promise<any> => {
   try {
     const { type } = media as { type: string }
     const fileType = encodeURIComponent(type)
@@ -78,7 +78,7 @@ const putRouteMedia = async (routeId: string, media: File): Promise <any> => {
   }
 }
 
-const postRouteMedia = async (routeId: string, mediaFiles: string[]): Promise <any> => {
+const postRouteMedia = async (routeId: string, mediaFiles: string[]): Promise<any> => {
   try {
     const res = await request(`routes/${routeId}/media`, {
       method: 'POST',

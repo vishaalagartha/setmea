@@ -27,5 +27,5 @@
         }
       ]
     },
-    "ignorePatterns": ["src/**/*.css", "src/react-app-env.d.ts", "src/**/*.ts"]
+    "ignorePatterns": ["src/**/*.css", "src/react-app-env.d.ts"]
 }

@@ -16,20 +16,21 @@ import {
   Row,
   Col,
   Popover,
-  Divider
+  Divider,
+  App
 } from 'antd'
 import { useForm } from 'antd/es/form/Form'
-import useMessage from 'antd/es/message/useMessage'
 import { closeRoute, getRoute, voteRoute, unvoteRoute, deleteRoute } from '../api/route'
 import { sendMessage } from '../api/messages'
 import { dateToString } from '../utils/date'
 import { LikeFilled, LikeOutlined } from '@ant-design/icons'
+import ReactPlayer from 'react-player'
 
 const Route: React.FC = () => {
   const { id } = useParams() as { id: string }
   const [route, setRoute] = useState<IRoute>()
   const [form] = useForm()
-  const [message, contextHolder] = useMessage()
+  const { message } = App.useApp()
   const user = useAppSelector(userSelector)
   const navigate = useNavigate()
 
@@ -51,9 +52,9 @@ const Route: React.FC = () => {
       await form.validateFields()
       let res = await closeRoute(route._id)
       if (res.status === 200) {
-        await message.open({ type: 'success', content: 'Fulfilled request!' })
+        await message.success('Fulfilled request!')
       } else {
-        await message.open({ type: 'error', content: res.data.message })
+        await message.error(JSON.stringify(res.data.message))
       }
       res = await sendMessage(
         route.user,
@@ -70,7 +71,7 @@ const Route: React.FC = () => {
             content: `Sent response message to ${route.username}`
           })
         } else {
-          await message.open({ type: 'error', content: res.data.message })
+          await message.error(JSON.stringify(res.data.message))
         }
       }
       navigate(-1)
@@ -89,11 +90,11 @@ const Route: React.FC = () => {
           voterUsernames: [...route.voterUsernames, user.username]
         })
       } else {
-        await message.open({ type: 'error', content: res.data.message })
+        await message.error(JSON.stringify(res.data.message))
       }
     } catch (error) {
       console.error(error)
-      await message.open({ type: 'error', content: JSON.stringify(error) })
+      await message.error(JSON.stringify(error))
     }
   }
 
@@ -107,25 +108,25 @@ const Route: React.FC = () => {
           voterUsernames: route.voterUsernames.filter((v) => v !== user.username)
         })
       } else {
-        await message.open({ type: 'error', content: res.data.message })
+        await message.error(JSON.stringify(res.data.message))
       }
     } catch (error) {
       console.error(error)
-      await message.open({ type: 'error', content: JSON.stringify(error) })
+      await message.error(JSON.stringify(error))
     }
   }
   const handleDelete: () => void = async () => {
     try {
       const res = await deleteRoute({ routeId: route._id })
       if (res.status === 200) {
-        await message.open({ type: 'success', content: 'Deleted request.' })
+        await message.success('Deleted request.')
         navigate(-1)
       } else {
-        await message.open({ type: 'error', content: res.data.message })
+        await message.error(JSON.stringify(res.data.message))
       }
     } catch (error) {
       console.error(error)
-      await message.open({ type: 'error', content: JSON.stringify(error) })
+      await message.error(JSON.stringify(error))
     }
   }
 
@@ -142,7 +143,6 @@ const Route: React.FC = () => {
 
   return (
     <Flex vertical={true}>
-      {contextHolder}
       <Row>
         <Col md={{ offset: 6, span: 12 }}>
           <Typography.Title level={3}>Goal: {route.goal}</Typography.Title>
@@ -200,11 +200,24 @@ const Route: React.FC = () => {
           <Divider />
           <Typography.Title level={5}>Route Media</Typography.Title>
           {route.media.length === 0 && <Typography.Text>This route has no media</Typography.Text>}
-          <Image.PreviewGroup>
-            {route.media.map((r, i) => {
-              return <Image key={i} src={r} />
-            })}
-          </Image.PreviewGroup>
+          <Row>
+            <Image.PreviewGroup>
+              {route.media.map((r: string, i: number) => {
+                if (r.endsWith('png') || r.endsWith('jpg') || r.endsWith('jpeg')) {
+                  return (
+                    <Col key={i} xs={24} md={12}>
+                      <Image src={r} />
+                    </Col>
+                  )
+                }
+                return (
+                  <Col key={i} xs={24} md={12}>
+                    <ReactPlayer height={'100%'} width={'100%'} url={r} key={i} controls={true} />
+                  </Col>
+                )
+              })}
+            </Image.PreviewGroup>
+          </Row>
           <Divider />
         </Col>
       </Row>
