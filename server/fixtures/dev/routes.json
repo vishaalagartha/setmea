@@ -1,28 +1,28 @@
 [{
   "_id": {
-    "$oid": "6599a025d94b4aaeb9136776"
+    "$oid": "6599ee939653d78458f38ed0"
   },
   "open": true,
-  "goal": "crimp strength",
-  "details": "a 10-15 move crimp line that is very board style. My outdoor project has a lot of underclings so include a lot of undercling moves.",
+  "goal": "jumping and dyno ability",
+  "details": "awesome comp-style double clutch. Make it lateral, because I tend to do well on vertical dynos. I especially struggle jumping off of slippery feet, so make the feet very slick.",
   "gym": {
     "$oid": "6593297db8821ed7c1dcfed5"
   },
   "tags": [
-    "crimp"
+    "competition"
   ],
   "user": {
-    "$oid": "65999fd4d94b4aaeb9136771"
+    "$oid": "6599c4c68b678a123309da6d"
   },
-  "requestedSetter": null,
+  "requestedSetter": {
+    "$oid": "6599c5948b678a123309da7f"
+  },
   "setter": null,
-  "votes": [
-    "6599c5358b678a123309da75"
-  ],
-  "zone": "Solar Flare",
-  "grade": 6,
+  "votes": [],
+  "zone": "Soccer Ball",
+  "grade": 4,
   "date": {
-    "$date": "2024-01-06T18:47:01.533Z"
+    "$date": "2024-01-07T00:21:39.609Z"
   }
 },
 {
@@ -90,16 +90,71 @@
 },
 {
   "_id": {
-    "$oid": "6599ee939653d78458f38ed0"
+    "$oid": "6599a025d94b4aaeb9136776"
   },
   "open": true,
-  "goal": "jumping and dyno ability",
-  "details": "awesome comp-style double clutch. Make it lateral, because I tend to do well on vertical dynos. I especially struggle jumping off of slippery feet, so make the feet very slick.",
+  "goal": "crimp strength",
+  "details": "a 10-15 move crimp line that is very board style. My outdoor project has a lot of underclings so include a lot of undercling moves.",
   "gym": {
     "$oid": "6593297db8821ed7c1dcfed5"
   },
   "tags": [
-    "competition"
+    "crimp"
+  ],
+  "user": {
+    "$oid": "65999fd4d94b4aaeb9136771"
+  },
+  "requestedSetter": null,
+  "setter": null,
+  "votes": [
+    "6599c5358b678a123309da75"
+  ],
+  "zone": "Solar Flare",
+  "grade": 6,
+  "date": {
+    "$date": "2024-01-06T18:47:01.533Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "65a19231607a224fae0595cf"
+  },
+  "open": true,
+  "goal": "mantle strength",
+  "details": "",
+  "gym": {
+    "$oid": "6594eabb9859d6137e733d78"
+  },
+  "tags": [],
+  "user": {
+    "$oid": "65999fd4d94b4aaeb9136771"
+  },
+  "requestedSetter": null,
+  "setter": null,
+  "votes": [],
+  "zone": "Topout",
+  "grade": null,
+  "media": [
+    "https://setmea.s3.us-west-1.amazonaws.com/routes/65a19231607a224fae0595cf_04ab74b4-bf65-4451-b860-0dd1493db818.jpeg",
+    "https://setmea.s3.us-west-1.amazonaws.com/routes/65a19231607a224fae0595cf_ddc92bd5-2e13-4648-a272-9e474b01122c.jpeg"
+  ],
+  "date": {
+    "$date": "2024-01-12T19:25:37.770Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "65a34471fd1d893ba5ff3973"
+  },
+  "open": true,
+  "goal": "shoulder strength",
+  "details": "really hard right hand mantle. force me to press really hard! Please see the video for reference.",
+  "gym": {
+    "$oid": "6594eabb9859d6137e733d78"
+  },
+  "tags": [
+    "sloper",
+    "slab"
   ],
   "user": {
     "$oid": "6599c4c68b678a123309da6d"
@@ -109,9 +164,42 @@
   },
   "setter": null,
   "votes": [],
-  "zone": "Soccer Ball",
-  "grade": 4,
+  "zone": "Topout",
+  "grade": null,
+  "media": [
+    "https://setmea.s3.us-west-1.amazonaws.com/routes/65a34471fd1d893ba5ff3973_b98486bf-b218-443c-b341-d5e0c09079ae.mp4"
+  ],
   "date": {
-    "$date": "2024-01-07T00:21:39.609Z"
+    "$date": "2024-01-14T02:18:25.171Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "65a34645fd1d893ba5ff39c3"
+  },
+  "open": true,
+  "goal": "steep climbing ability",
+  "details": "i find i'm not too good at maintaining tension in the steep. set me a really steep powerful pinch climb where i have to cut feet and swing them back on. see video for reference.",
+  "gym": {
+    "$oid": "6594ea7a9859d6137e733d62"
+  },
+  "tags": [
+    "pinch"
+  ],
+  "user": {
+    "$oid": "65999fd4d94b4aaeb9136771"
+  },
+  "requestedSetter": {
+    "$oid": "65998c21d94b4aaeb9136768"
+  },
+  "setter": null,
+  "votes": [],
+  "zone": "The Cave",
+  "grade": 8,
+  "media": [
+    "https://setmea.s3.us-west-1.amazonaws.com/routes/65a34645fd1d893ba5ff39c3_18bf08ab-caf5-4ec5-9112-f4f28e2557c2.mp4"
+  ],
+  "date": {
+    "$date": "2024-01-14T02:26:13.004Z"
   }
 }]
